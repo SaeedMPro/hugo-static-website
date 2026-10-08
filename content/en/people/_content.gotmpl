@@ -1,0 +1,14 @@
+{{/* صفحهٔ هر عضو از فایل‌های data/people ساخته می‌شود. */}}
+{{ $lang := .Site.Language.Lang }}
+{{ range $id, $p := .Site.Data.people }}
+  {{ $name := index $p (printf "name_%s" $lang) }}
+  {{ $bio := index $p (printf "bio_%s" $lang) | default "" }}
+  {{ $.AddPage (dict
+    "path" $id
+    "title" $name
+    "kind" "page"
+    "weight" ($p.weight | default 99)
+    "content" (dict "mediaType" "text/markdown" "value" $bio)
+    "params" (merge $p (dict "pid" $id))
+  ) }}
+{{ end }}

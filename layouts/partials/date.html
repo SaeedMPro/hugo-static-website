@@ -1,0 +1,6 @@
+{{- $d := .Date -}}
+{{- if eq site.Language.Lang "fa" -}}
+<time datetime="{{ $d.Format "2006-01-02" }}">{{ partial "digits.html" ($d.Format "02/01/2006") }}</time>
+{{- else -}}
+<time datetime="{{ $d.Format "2006-01-02" }}">{{ $d.Format "02/01/2006" }}</time>
+{{- end -}}

@@ -1,0 +1,12 @@
+{{ $lang := site.Language.Lang }}
+<li class="person">
+  {{ partial "avatar.html" (dict "page" . "size" "sm") }}
+  <div>
+    <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+    {{ with index .Params (printf "title_%s" $lang) }}<p>{{ . }}</p>
+    {{ else }}{{ with index .Params (printf "thesis_%s" $lang) }}<p>{{ . }}</p>{{ end }}{{ end }}
+    {{ with index .Params (printf "interests_%s" $lang) }}
+      <ul class="tags">{{ range first 3 . }}<li>{{ . }}</li>{{ end }}</ul>
+    {{ end }}
+  </div>
+</li>

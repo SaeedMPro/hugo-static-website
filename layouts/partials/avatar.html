@@ -1,0 +1,7 @@
+{{/* context: dict "page" page "size" "sm"|"lg" */}}
+{{ $p := .page }}
+{{ $src := "people/default.svg" }}
+{{ $alt := "" }}
+{{ with $p.Params.photo }}{{ $src = . }}{{ $alt = $p.Title }}{{ end }}
+{{ $px := cond (eq .size "lg") 176 104 }}
+<img class="avatar{{ if eq .size "lg" }} lg{{ end }}" src="{{ $src | relURL }}" alt="{{ $alt }}" width="{{ $px }}" height="{{ $px }}" loading="lazy" decoding="async">

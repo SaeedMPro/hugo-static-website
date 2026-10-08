@@ -1,0 +1,13 @@
+title_fa: "تشخیص نفوذ برای دروازه‌های اینترنت اشیا"
+title_en: "Intrusion detection for IoT gateways"
+status: active
+weight: 2
+members: [rastegar, nouri]
+publications: [nouri2025iot]
+code: ""
+summary_fa: "مدل‌های سبک تشخیص حمله که روی سخت‌افزار کم‌توان دروازه اجرا می‌شوند."
+summary_en: "Lightweight attack detection models that run on low-power gateway hardware."
+body_fa: |
+  داده‌ها از یک بستر آزمایشی با ده‌ها دستگاه نمونه جمع‌آوری می‌شود.
+body_en: |
+  Data is collected from a testbed of sample devices.

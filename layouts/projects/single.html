@@ -1,0 +1,28 @@
+{{ define "main" }}
+{{ $lang := site.Language.Lang }}
+<article>
+  <div class="prose">
+    <span class="status {{ .Params.status }}">{{ i18n (cond (eq .Params.status "active") "status_active" "status_done") }}</span>
+    <h1>{{ .Title }}</h1>
+    <p>{{ index .Params (printf "summary_%s" $lang) }}</p>
+    {{ .Content }}
+    {{ with .Params.code }}<p><a class="btn ghost" href="{{ . }}">{{ i18n "code" }}</a></p>{{ end }}
+  </div>
+  {{ with .Params.members }}
+  <section class="section">
+    <div class="section-head"><h2>{{ i18n "members" }}</h2></div>
+    <ul class="people-grid">
+      {{ range . }}{{ with site.GetPage (printf "/people/%s" .) }}{{ partial "person-card.html" . }}{{ end }}{{ end }}
+    </ul>
+  </section>
+  {{ end }}
+  {{ with .Params.publications }}
+  <section class="section">
+    <div class="section-head"><h2>{{ i18n "relatedPubs" }}</h2></div>
+    <ul class="pubs">
+      {{ range . }}{{ $id := . }}{{ range where site.Data.publications "id" $id }}{{ partial "pub-item.html" (dict "pub" .) }}{{ end }}{{ end }}
+    </ul>
+  </section>
+  {{ end }}
+</article>
+{{ end }}

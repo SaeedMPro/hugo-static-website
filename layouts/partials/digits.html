@@ -1,0 +1,7 @@
+{{- $s := printf "%v" . -}}
+{{- if eq site.Language.Lang "fa" -}}
+{{- range $i, $d := slice "۰" "۱" "۲" "۳" "۴" "۵" "۶" "۷" "۸" "۹" -}}
+{{- $s = replace $s (string $i) $d -}}
+{{- end -}}
+{{- end -}}
+{{- $s -}}

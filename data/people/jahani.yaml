@@ -1,0 +1,19 @@
+name_fa: "سمیرا جهانی"
+name_en: "Samira Jahani"
+role: msc
+status: alumni
+weight: 2
+start_year: "1398"
+end_year: "1400"
+thesis_fa: "تشخیص حملات منع سرویس در کنترلر SDN"
+thesis_en: "DDoS detection at the SDN controller"
+position_fa: "دانشجوی دکتری"
+position_en: "PhD student"
+interests_fa: ["امنیت SDN"]
+interests_en: ["SDN security"]
+email: ""
+github: ""
+photo: ""                # مسیر عکس، مثلاً people/karimi.jpg (خالی = عکس پیش‌فرض)
+cv: ""                   # مسیر رزومه، مثلاً cv/karimi.pdf
+bio_fa: ""
+bio_en: ""

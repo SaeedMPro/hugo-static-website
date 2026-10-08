@@ -1,0 +1,30 @@
+{{ define "main" }}
+<h1>{{ .Title }}</h1>
+<div class="filters" role="group" aria-label="{{ .Title }}">
+  <button type="button" data-filter="all" aria-pressed="true">{{ i18n "all" }}</button>
+  <button type="button" data-filter="journal" aria-pressed="false">{{ i18n "journal" }}</button>
+  <button type="button" data-filter="conference" aria-pressed="false">{{ i18n "conference" }}</button>
+  <button type="button" data-filter="thesis" aria-pressed="false">{{ i18n "thesisType" }}</button>
+</div>
+{{ $years := slice }}
+{{ range site.Data.publications }}{{ $years = $years | append .year }}{{ end }}
+{{ range $y := sort (uniq $years) "value" "desc" }}
+  <section class="year-group">
+    <h2>{{ partial "digits.html" $y }}</h2>
+    <ul class="pubs">{{ range where site.Data.publications "year" $y }}{{ partial "pub-item.html" (dict "pub" .) }}{{ end }}</ul>
+  </section>
+{{ end }}
+<script>
+  (function () {
+    var btns = document.querySelectorAll('.filters button');
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var f = b.dataset.filter;
+        btns.forEach(function (x) { x.setAttribute('aria-pressed', x === b); });
+        document.querySelectorAll('.pub').forEach(function (p) { p.hidden = f !== 'all' && p.dataset.type !== f; });
+        document.querySelectorAll('.year-group').forEach(function (g) { g.hidden = !g.querySelector('.pub:not([hidden])'); });
+      });
+    });
+  })();
+</script>
+{{ end }}

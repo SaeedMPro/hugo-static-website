@@ -1,0 +1,36 @@
+# آدرس سایت را GitHub Actions موقع ساخت تنظیم می‌کند.
+baseURL = "https://example.github.io/netlab-demo/"
+defaultContentLanguage = "fa"
+defaultContentLanguageInSubdir = false
+enableRobotsTXT = true
+disableKinds = ["taxonomy", "term"]
+
+[languages]
+  [languages.fa]
+    languageName = "فارسی"
+    languageDirection = "rtl"
+    contentDir = "content/fa"
+    weight = 1
+    title = "گروه پژوهشی شبکه‌های کامپیوتری"
+    [languages.fa.params]
+      university = "دانشکده فنی و مهندسی، دانشگاه بوعلی سینا"
+  [languages.en]
+    languageName = "English"
+    languageDirection = "ltr"
+    contentDir = "content/en"
+    weight = 2
+    title = "Computer Networks Research Group"
+    [languages.en.params]
+      university = "Faculty of Engineering, Bu-Ali Sina University"
+
+[params]
+  demo = true
+  email = "netlab@example.com"
+  github = "https://github.com/"
+
+[markup.goldmark.renderer]
+  unsafe = false
+
+[outputs]
+  home = ["HTML", "RSS"]
+  section = ["HTML"]

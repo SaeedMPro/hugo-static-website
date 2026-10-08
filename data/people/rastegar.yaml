@@ -1,0 +1,18 @@
+name_fa: "دکتر حمید رستگار"
+name_en: "Dr. Hamid Rastegar"
+role: faculty
+status: current
+weight: 2
+title_fa: "استادیار"
+title_en: "Assistant Professor"
+interests_fa: ["امنیت شبکه", "تشخیص نفوذ", "اینترنت اشیا"]
+interests_en: ["Network security", "Intrusion detection", "Internet of Things"]
+email: "h.rastegar@example.com"
+scholar: "https://scholar.google.com/"
+github: ""
+photo: ""                # مسیر عکس، مثلاً people/karimi.jpg (خالی = عکس پیش‌فرض)
+cv: ""                   # مسیر رزومه، مثلاً cv/karimi.pdf
+bio_fa: |
+  روی امنیت شبکه‌های اینترنت اشیا و روش‌های سبک تشخیص نفوذ برای دستگاه‌های کم‌توان کار می‌کند.
+bio_en: |
+  Works on IoT network security and lightweight intrusion detection for constrained devices.

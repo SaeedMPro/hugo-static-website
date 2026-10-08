@@ -1,0 +1,19 @@
+name_fa: "رضا مقدم"
+name_en: "Reza Moghadam"
+role: msc
+status: alumni           # با تغییر به alumni خودکار به جدول دانش‌آموختگان می‌رود
+weight: 1
+start_year: "1399"
+end_year: "1401"
+thesis_fa: "مسیریابی آگاه از انرژی در شبکه‌های حسگر بی‌سیم"
+thesis_en: "Energy-aware routing in wireless sensor networks"
+position_fa: "مهندس شبکه، صنعت"
+position_en: "Network engineer, industry"
+interests_fa: ["شبکه‌های حسگر بی‌سیم"]
+interests_en: ["Wireless sensor networks"]
+email: ""
+github: ""
+photo: ""                # مسیر عکس، مثلاً people/karimi.jpg (خالی = عکس پیش‌فرض)
+cv: ""                   # مسیر رزومه، مثلاً cv/karimi.pdf
+bio_fa: ""
+bio_en: ""

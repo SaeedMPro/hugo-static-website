@@ -1,0 +1,21 @@
+{{/* context: dict "pub" publication "page" page */}}
+{{ $p := .pub }}
+{{ $lang := site.Language.Lang }}
+<li class="pub" data-type="{{ $p.type }}">
+  <span class="pub-title" dir="ltr">{{ $p.title }}</span>
+  <span class="pub-authors" dir="ltr">
+    {{- range $i, $a := $p.authors -}}
+      {{- if $i }}, {{ end -}}
+      {{- with index site.Data.people $a -}}
+        {{- with site.GetPage (printf "/people/%s" $a) }}<strong><a href="{{ .RelPermalink }}">{{ index .Params "name_en" }}</a></strong>{{ end -}}
+      {{- else -}}{{ $a }}{{- end -}}
+    {{- end -}}
+  </span>
+  <span class="pub-venue" dir="ltr">{{ $p.venue }}, {{ $p.year }}</span>
+  <span class="pub-links" dir="ltr">
+    <span class="badge">{{ i18n (cond (eq $p.type "thesis") "thesisType" $p.type) }}</span>
+    {{ with $p.pdf }}<a href="{{ . }}">PDF</a>{{ end }}
+    {{ with $p.doi }}<a href="https://doi.org/{{ . }}">DOI</a>{{ end }}
+    {{ with $p.code }}<a href="{{ . }}">{{ i18n "code" }}</a>{{ end }}
+  </span>
+</li>

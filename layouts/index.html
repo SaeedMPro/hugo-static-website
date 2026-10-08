@@ -1,0 +1,62 @@
+{{ define "main" }}
+<section class="hero">
+  <div>
+    <h1>{{ .Title }}</h1>
+    <p>{{ .Description }}</p>
+    <div class="actions">
+      {{ with site.GetPage "people" }}<a class="btn primary" href="{{ .RelPermalink }}">{{ i18n "seePeople" }}</a>{{ end }}
+      {{ with site.GetPage "join" }}<a class="btn ghost" href="{{ .RelPermalink }}">{{ i18n "join" }}</a>{{ end }}
+    </div>
+  </div>
+  <svg class="topology" viewBox="0 0 420 320" role="img" aria-label="{{ i18n "researchAreas" }}" direction="{{ site.Language.LanguageDirection | default "ltr" }}">
+    <g class="links">
+      <line class="link" x1="210" y1="160" x2="90" y2="70"/>
+      <line class="link" x1="210" y1="160" x2="330" y2="70"/>
+      <line class="link" x1="210" y1="160" x2="330" y2="250"/>
+      <line class="link" x1="210" y1="160" x2="90" y2="250"/>
+      <line class="link" x1="90" y1="70" x2="330" y2="70"/>
+      <line class="link" x1="90" y1="250" x2="330" y2="250"/>
+    </g>
+    <g class="node hub"><circle cx="210" cy="160" r="16"/></g>
+    <g class="node"><circle cx="90" cy="70" r="12"/><text x="90" y="40" text-anchor="middle">{{ i18n "short_sdn" }}</text></g>
+    <g class="node"><circle cx="330" cy="70" r="12"/><text x="330" y="40" text-anchor="middle">{{ i18n "short_iot" }}</text></g>
+    <g class="node"><circle cx="330" cy="250" r="12"/><text x="330" y="292" text-anchor="middle">{{ i18n "short_sec" }}</text></g>
+    <g class="node"><circle cx="90" cy="250" r="12"/><text x="90" y="292" text-anchor="middle">{{ i18n "short_te" }}</text></g>
+    <circle class="packet" r="6" cx="0" cy="0">
+      <animateMotion id="pkt" dur="4.5s" begin="0.6s" fill="freeze" calcMode="spline" keyTimes="0;1" keySplines="0.45 0 0.55 1" path="M330 70 L210 160 L90 250"/>
+    </circle>
+  </svg>
+  <script>
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      var p = document.querySelector('.topology .packet'); var a = document.getElementById('pkt');
+      if (a) a.remove(); if (p) { p.setAttribute('cx', 90); p.setAttribute('cy', 250); }
+    }
+  </script>
+</section>
+
+<section class="section" aria-labelledby="areas-h">
+  <div class="section-head"><h2 id="areas-h">{{ i18n "researchAreas" }}</h2>{{ with site.GetPage "about" }}<a href="{{ .RelPermalink }}">{{ i18n "about" }}</a>{{ end }}</div>
+  <div class="areas">
+    {{ range slice "sdn" "iot" "sec" "te" }}
+      <div><h3>{{ i18n (printf "area_%s" .) }}</h3><p>{{ i18n (printf "desc_%s" .) }}</p></div>
+    {{ end }}
+  </div>
+</section>
+
+<div class="two-col section">
+  <section aria-labelledby="news-h">
+    <div class="section-head"><h2 id="news-h">{{ i18n "latestNews" }}</h2>{{ with site.GetPage "news" }}<a href="{{ .RelPermalink }}">{{ i18n "allNews" }}</a>{{ end }}</div>
+    <ul class="news-list">
+      {{ range first 3 (where site.RegularPages "Section" "news").ByDate.Reverse }}
+        <li><span class="date">{{ partial "date.html" . }}</span><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+      {{ end }}
+    </ul>
+  </section>
+  <section aria-labelledby="pubs-h">
+    <div class="section-head"><h2 id="pubs-h">{{ i18n "recentPubs" }}</h2>{{ with site.GetPage "publications" }}<a href="{{ .RelPermalink }}">{{ i18n "allPubs" }}</a>{{ end }}</div>
+    <ul class="pubs">
+      {{ range first 3 (sort site.Data.publications "year" "desc") }}{{ partial "pub-item.html" (dict "pub" .) }}{{ end }}
+    </ul>
+  </section>
+</div>
+{{ end }}

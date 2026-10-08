@@ -1,0 +1,40 @@
+{{ define "main" }}
+{{ $lang := site.Language.Lang }}
+{{ $pid := .Params.pid }}
+<article>
+  <div class="profile">
+    {{ partial "avatar.html" (dict "page" . "size" "lg") }}
+    <div>
+      <h1>{{ .Title }}</h1>
+      <p class="muted" style="margin:0">
+        {{ with index .Params (printf "title_%s" $lang) }}{{ . }}{{ else }}{{ i18n (printf "deg_%s" $.Params.role) }}{{ if eq $.Params.status "alumni" }}، {{ i18n "alumni" }}{{ end }}{{ end }}
+      </p>
+      <div class="links">
+        {{ with .Params.email }}<a href="mailto:{{ . }}">{{ i18n "email" }}</a>{{ end }}
+        {{ with .Params.scholar }}<a href="{{ . }}">Google Scholar</a>{{ end }}
+        {{ with .Params.github }}<a href="{{ . }}">GitHub</a>{{ end }}
+        {{ with .Params.cv }}<a href="{{ . | relURL }}">{{ i18n "downloadCV" }}</a>{{ end }}
+      </div>
+    </div>
+  </div>
+
+  <div class="prose">
+    {{ .Content }}
+    <dl class="facts">
+      {{ with index .Params (printf "interests_%s" $lang) }}<dt>{{ i18n "interests" }}</dt><dd>{{ delimit . (cond (eq $lang "fa") "، " ", ") }}</dd>{{ end }}
+      {{ with index .Params (printf "thesis_%s" $lang) }}<dt>{{ i18n "thesis" }}</dt><dd>{{ . }}</dd>{{ end }}
+      {{ with .Params.start_year }}<dt>{{ i18n "started" }}</dt><dd>{{ partial "digits.html" . }}</dd>{{ end }}
+      {{ with .Params.end_year }}<dt>{{ i18n "year" }}</dt><dd>{{ partial "digits.html" . }}</dd>{{ end }}
+      {{ with index .Params (printf "position_%s" $lang) }}<dt>{{ i18n "position" }}</dt><dd>{{ . }}</dd>{{ end }}
+    </dl>
+  </div>
+
+  <section class="section" aria-labelledby="h-pubs">
+    <div class="section-head"><h2 id="h-pubs">{{ i18n "memberPubs" }}</h2></div>
+    {{ $mine := where site.Data.publications "authors" "intersect" (slice $pid) }}
+    {{ with $mine }}
+      <ul class="pubs">{{ range sort . "year" "desc" }}{{ partial "pub-item.html" (dict "pub" .) }}{{ end }}</ul>
+    {{ else }}<p class="muted">{{ i18n "noPubs" }}</p>{{ end }}
+  </section>
+</article>
+{{ end }}

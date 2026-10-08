@@ -1,0 +1,16 @@
+name_fa: "امیر توکلی"
+name_en: "Amir Tavakoli"
+role: msc
+status: current
+weight: 1
+start_year: "1403"
+thesis_fa: "توازن بار تطبیقی در شبکه‌های نرم‌افزارمحور"
+thesis_en: "Adaptive load balancing in SDN"
+interests_fa: ["SDN", "یادگیری تقویتی"]
+interests_en: ["SDN", "Reinforcement learning"]
+email: "a.tavakoli@example.com"
+github: "https://github.com/"
+photo: ""                # مسیر عکس، مثلاً people/karimi.jpg (خالی = عکس پیش‌فرض)
+cv: ""                   # مسیر رزومه، مثلاً cv/karimi.pdf
+bio_fa: ""
+bio_en: ""

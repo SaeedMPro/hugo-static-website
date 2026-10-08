@@ -1,0 +1,7 @@
+{{ define "main" }}
+<article class="prose">
+  <h1>{{ .Title }}</h1>
+  {{ if eq .Section "news" }}<p class="muted">{{ partial "date.html" . }}</p>{{ end }}
+  {{ .Content }}
+</article>
+{{ end }}

@@ -1,0 +1,13 @@
+{{ define "main" }}
+{{ $lang := site.Language.Lang }}
+<h1>{{ .Title }}</h1>
+<ul class="projects">
+  {{ range .Pages.ByWeight }}
+    <li class="project">
+      <span class="status {{ .Params.status }}">{{ i18n (cond (eq .Params.status "active") "status_active" "status_done") }}</span>
+      <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+      <p>{{ index .Params (printf "summary_%s" $lang) }}</p>
+    </li>
+  {{ end }}
+</ul>
+{{ end }}

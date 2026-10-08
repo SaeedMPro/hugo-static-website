@@ -1,0 +1,11 @@
+{{ $lang := .Site.Language.Lang }}
+{{ range $id, $p := .Site.Data.projects }}
+  {{ $.AddPage (dict
+    "path" $id
+    "title" (index $p (printf "title_%s" $lang))
+    "kind" "page"
+    "weight" $p.weight
+    "content" (dict "mediaType" "text/markdown" "value" (index $p (printf "body_%s" $lang) | default ""))
+    "params" (merge $p (dict "pid" $id))
+  ) }}
+{{ end }}

@@ -1,0 +1,20 @@
+{{ $here := .RelPermalink }}
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="{{ site.Home.RelPermalink }}">
+      {{ partial "logo.html" . }}
+      <span>{{ site.Title }}<small>{{ site.Params.university }}</small></span>
+    </a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">{{ i18n "menu" }}</button>
+    <nav class="nav" id="site-nav" aria-label="{{ i18n "menu" }}">
+      <ul>
+        {{ range $k := slice "about" "people" "projects" "publications" "news" "join" "contact" }}
+          {{ with site.GetPage $k }}
+            <li><a href="{{ .RelPermalink }}"{{ if hasPrefix $here .RelPermalink }} aria-current="page"{{ end }}>{{ i18n $k }}</a></li>
+          {{ end }}
+        {{ end }}
+        <li>{{ partial "langswitch.html" . }}</li>
+      </ul>
+    </nav>
+  </div>
+</header>

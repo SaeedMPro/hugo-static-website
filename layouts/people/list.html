@@ -1,0 +1,37 @@
+{{ define "main" }}
+{{ $lang := site.Language.Lang }}
+<h1>{{ .Title }}</h1>
+{{ $current := where .Pages "Params.status" "current" }}
+{{ range $role := slice "faculty" "phd" "msc" "bsc" }}
+  {{ $group := (where $current "Params.role" $role).ByWeight }}
+  {{ with $group }}
+    <section class="section" aria-labelledby="h-{{ $role }}">
+      <div class="section-head"><h2 id="h-{{ $role }}">{{ i18n $role }}</h2></div>
+      <ul class="people-grid">{{ range . }}{{ partial "person-card.html" . }}{{ end }}</ul>
+    </section>
+  {{ end }}
+{{ end }}
+
+{{ $alumni := sort (where .Pages "Params.status" "alumni") "Params.end_year" "desc" }}
+{{ with $alumni }}
+<section class="section" aria-labelledby="h-alumni">
+  <div class="section-head"><h2 id="h-alumni">{{ i18n "alumni" }}</h2></div>
+  <div class="table-scroll">
+    <table class="stack-table">
+      <thead><tr><th>{{ i18n "name" }}</th><th>{{ i18n "degree" }}</th><th>{{ i18n "year" }}</th><th>{{ i18n "thesis" }}</th><th>{{ i18n "position" }}</th></tr></thead>
+      <tbody>
+        {{ range . }}
+          <tr>
+            <td data-label="{{ i18n "name" }}"><a href="{{ .RelPermalink }}">{{ .Title }}</a></td>
+            <td data-label="{{ i18n "degree" }}">{{ i18n (printf "deg_%s" .Params.role) }}</td>
+            <td data-label="{{ i18n "year" }}">{{ partial "digits.html" .Params.end_year }}</td>
+            <td data-label="{{ i18n "thesis" }}">{{ index .Params (printf "thesis_%s" $lang) }}</td>
+            <td data-label="{{ i18n "position" }}">{{ index .Params (printf "position_%s" $lang) }}</td>
+          </tr>
+        {{ end }}
+      </tbody>
+    </table>
+  </div>
+</section>
+{{ end }}
+{{ end }}

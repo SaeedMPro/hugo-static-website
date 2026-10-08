@@ -1,0 +1,10 @@
+{{ define "main" }}
+<h1>{{ .Title }}</h1>
+{{ .Content }}
+<ul class="news-list prose">
+  {{ range .Pages.ByDate.Reverse }}
+    <li><span class="date">{{ partial "date.html" . }}</span><a href="{{ .RelPermalink }}">{{ .Title }}</a>
+      <p class="muted" style="margin:0">{{ .Summary | plainify | truncate 140 }}</p></li>
+  {{ end }}
+</ul>
+{{ end }}

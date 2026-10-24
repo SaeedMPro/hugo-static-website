@@ -1,0 +1,22 @@
+# Demo event — replace or delete.
+type: "seminar"
+date: "2026-11-11"
+time: "14:00–15:30"
+title_fa: "نتایج اولیهٔ پایش درون‌باندی با P4"
+title_en: "Early results on in-band telemetry with P4"
+speaker: "sadri"
+speaker_fa: ""
+speaker_en: ""
+supervisor: ""
+location_fa: "آزمایشگاه پژوهشی شبکه، دانشکده فنی و مهندسی"
+location_en: "Network research laboratory, Faculty of Engineering"
+summary_fa: "نگار صدری نتایج اولیهٔ پایش درون‌باندی برای تشخیص ازدحام را ارائه می‌کند."
+summary_en: "Negar Sadri presents early results on in-band telemetry for congestion detection."
+body_fa: ""
+body_en: ""
+slides: ""
+video: ""
+online: ""
+news: ""
+publications: ["sadri2025telemetry"]
+projects: []

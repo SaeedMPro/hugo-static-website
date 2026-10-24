@@ -1,0 +1,17 @@
+{{- /* context: page. Its <url> entry for sitemap.xml and sitemapindex.xml: no priority, no lastmod later than the build (an upcoming event's date is not a change to the page), and its language versions as alternates, x-default being the default language as in head.html. */ -}}
+{{- if .Permalink }}
+  <url>
+    <loc>{{ .Permalink }}</loc>
+    {{- if and (not .Lastmod.IsZero) (le .Lastmod.Unix now.Unix) }}
+    <lastmod>{{ .Lastmod.Format "2006-01-02T15:04:05-07:00" | safeHTML }}</lastmod>
+    {{- end }}
+    {{- if .IsTranslated }}
+    {{- range .AllTranslations }}
+    <xhtml:link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}"/>
+    {{- end }}
+    {{- range first 1 (where .AllTranslations "Language.Lang" site.Sites.Default.Language.Lang) }}
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ .Permalink }}"/>
+    {{- end }}
+    {{- end }}
+  </url>
+{{- end }}

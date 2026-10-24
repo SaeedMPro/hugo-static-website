@@ -1,0 +1,12 @@
+{{- /* A one-line description of an area's tool ({name, url}): the summary of the matching
+  software entry in data/resources (matched by URL, then by name), or "". */ -}}
+{{- $t := . -}}
+{{- $res := "" -}}
+{{- with site.Data.resources -}}
+  {{- $software := where . "category" "software" -}}
+  {{- $hit := slice -}}
+  {{- with $t.url }}{{ $hit = where $software "url" . }}{{ end -}}
+  {{- if not $hit }}{{ with $t.name }}{{ $hit = where $software "title_en" . }}{{ end }}{{ end -}}
+  {{- range first 1 $hit }}{{ $res = partial "loc.html" (dict "m" . "k" "summary") }}{{ end -}}
+{{- end -}}
+{{- return $res -}}

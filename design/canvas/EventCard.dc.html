@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="fa">
+<head>
+<meta charset="utf-8">
+<title>Event card</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&amp;family=Vazirmatn:wght@100..900&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<article dir="{{dir}}" lang="{{lang}}" style="font-family: Vazirmatn, Tahoma, 'Segoe UI', system-ui, sans-serif; color: #14212c; background: #ffffff; border: 1px solid #d6dfe5; border-radius: 12px; padding: 20px; box-sizing: border-box; display: flex; align-items: flex-start; gap: 18px; height: 100%;">
+<div style="width: 68px; flex: none; display: flex; flex-direction: column; align-items: center; padding: 10px 0; border-radius: 10px; background: {{dateBg}}; border: 1px solid {{dateLine}}; box-sizing: border-box; text-align: center;">
+<span style="font-size: 12px; line-height: 1.5; font-weight: 700; color: {{monthInk}}; letter-spacing: {{tracking}}; text-transform: {{caps}};">{{event.month}}</span>
+<span style="font-size: 26px; line-height: 1.25; font-weight: 800;">{{event.day}}</span>
+<span style="font-size: 12px; line-height: 1.5; color: #5a6a77;">{{event.year}}</span>
+</div>
+<div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 6px;">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px;">
+<span style="display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 6px; background: {{typeBg}}; color: {{typeInk}}; font-size: 12px; font-weight: 650; line-height: 1;">{{typeLabel}}</span>
+<sc-if value="{{event.upcoming}}" hint-placeholder-val="{{true}}">
+<span style="display: inline-flex; align-items: center; gap: 6px; height: 24px; padding: 0 10px; border-radius: 999px; background: #fbf1dc; color: #8a5a00; font-size: 12px; font-weight: 700; line-height: 1;"><span style="width: 6px; height: 6px; border-radius: 999px; background: #c98200;"></span>{{upcomingLabel}}</span>
+</sc-if>
+</div>
+<h3 style="margin: 0; font-size: 17px; line-height: {{lhTitle}}; font-weight: 700; text-wrap: pretty;"><a href="{{event.href}}" style="color: #14212c; text-decoration: none;">{{event.title}}</a></h3>
+<ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 2px 18px; font-size: 14px; line-height: 1.7; color: #5a6a77;">
+<sc-for list="{{meta}}" as="m" hint-placeholder-count="2">
+<li style="display: inline-flex; align-items: center; gap: 6px;">
+<sc-if value="{{m.isTime}}" hint-placeholder-val="{{true}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none;"><circle cx="12" cy="12" r="9"></circle><path d="M12 7.5V12l3 2"></path></svg></sc-if>
+<sc-if value="{{m.isPlace}}" hint-placeholder-val="{{false}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none;"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"></path><circle cx="12" cy="10" r="2.5"></circle></svg></sc-if>
+<sc-if value="{{m.isSpeaker}}" hint-placeholder-val="{{false}}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none;"><circle cx="12" cy="8" r="4"></circle><path d="M4.5 20.5c1.4-3.7 4.2-5.5 7.5-5.5s6.1 1.8 7.5 5.5"></path></svg></sc-if>
+<span>{{m.text}}</span>
+</li>
+</sc-for>
+</ul>
+<sc-if value="{{event.upcoming}}" hint-placeholder-val="{{true}}">
+<a href="{{event.href}}" style="display: inline-flex; align-items: center; gap: 6px; min-height: 44px; align-self: flex-start; color: #0b6e8a; font-size: 14px; font-weight: 650; text-decoration: none;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2"></rect><path d="M3.5 10h17"></path><path d="M8 3v4"></path><path d="M16 3v4"></path></svg><span>{{addLabel}}</span></a>
+</sc-if>
+</div>
+</article>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["fa","en"],"default":"fa"},"event":{"editor":null},"$preview":{"width":640,"height":220}}'>
+class Component extends DCLogic {
+renderVals() {
+const lang = this.props.lang ?? 'fa';
+const fa = lang === 'fa';
+const event = this.props.event ?? {
+month: 'شهریور',
+day: '۲۳',
+year: '۱۴۰۴',
+type: 'defense',
+title: 'دفاع کارشناسی ارشد: مسیریابی آگاه از انرژی در شبکه‌های حسگر بی‌سیم',
+href: 'Event-fa.dc.html',
+time: '',
+place: '',
+speaker: 'رضا مقدم',
+upcoming: false
+};
+const types = {
+seminar: { fa: 'سمینار', en: 'Seminar', bg: '#e2f0f4', ink: '#08566c' },
+defense: { fa: 'دفاع', en: 'Thesis defense', bg: '#fbf1dc', ink: '#8a5a00' },
+workshop: { fa: 'کارگاه', en: 'Workshop', bg: '#eaf0f3', ink: '#475764' },
+talk: { fa: 'سخنرانی', en: 'Talk', bg: '#eaf0f3', ink: '#475764' }
+};
+const t = types[event.type] || types.seminar;
+const meta = [
+{ kind: 'time', text: event.time },
+{ kind: 'place', text: event.place },
+{ kind: 'speaker', text: event.speaker }
+].filter((m) => !!m.text).map((m) => ({ text: m.text, isTime: m.kind === 'time', isPlace: m.kind === 'place', isSpeaker: m.kind === 'speaker' }));
+const up = !!event.upcoming;
+return {
+lang: lang,
+dir: fa ? 'rtl' : 'ltr',
+event: Object.assign({}, event, { upcoming: up }),
+meta: meta,
+typeLabel: fa ? t.fa : t.en,
+typeBg: t.bg,
+typeInk: t.ink,
+upcomingLabel: fa ? 'پیش رو' : 'Upcoming',
+addLabel: fa ? 'افزودن به تقویم' : 'Add to calendar',
+dateBg: up ? '#fbf1dc' : '#ffffff',
+dateLine: up ? '#f0d9a8' : '#d6dfe5',
+monthInk: up ? '#8a5a00' : '#0b6e8a',
+tracking: fa ? '0' : '0.06em',
+caps: fa ? 'none' : 'uppercase',
+lhTitle: fa ? '1.7' : '1.4'
+};
+}
+}
+</script>
+</body>
+</html>

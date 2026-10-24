@@ -1,0 +1,115 @@
+{{- /* Search index for this language (/index.json, /en/index.json): [{type, title, url, text, alt?}].
+  text is the short description shown under a result. alt is matched but never shown: the entry's words in the other
+  language (name or title, summary, topics or interests, type label) and a few extra words (tools, the research areas
+  in both languages, course and resource titles), so that Persian and English queries both find the entry. */ -}}
+{{- $lang := site.Language.Lang -}}
+{{- $other := cond (eq $lang "fa") "en" "fa" -}}
+{{- $dot := " · " -}}
+{{- $items := slice -}}
+
+{{- /* People: current members by role (faculty first), then alumni. */ -}}
+{{- with site.GetPage "people" -}}
+  {{- $all := .Pages.ByWeight -}}
+  {{- $roles := slice "faculty" "postdoc" "phd" "msc" "bsc" "staff" -}}
+  {{- $people := slice -}}
+  {{- range $roles }}{{ $r := . }}{{ range $all }}{{ if and (eq .Params.role $r) (ne .Params.status "alumni") }}{{ $people = $people | append . }}{{ end }}{{ end }}{{ end -}}
+  {{- range $all }}{{ if and (not (in $roles .Params.role)) (ne .Params.status "alumni") }}{{ $people = $people | append . }}{{ end }}{{ end -}}
+  {{- range $all }}{{ if eq .Params.status "alumni" }}{{ $people = $people | append . }}{{ end }}{{ end -}}
+  {{- range $people -}}
+    {{- $p := .Params -}}
+    {{- $alt := slice (index $p (printf "name_%s" $other)) (index $p (printf "title_%s" $other)) (index $p (printf "thesis_%s" $other)) -}}
+    {{- range index $p (printf "interests_%s" $other) }}{{ $alt = $alt | append . }}{{ end -}}
+    {{- $items = $items | append (partial "pubs-entry.html" (dict "type" "person" "title" .Title "url" .RelPermalink "text" (partial "people-summary.html" .) "alt" $alt)) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Research areas. */ -}}
+{{- with site.GetPage "research" -}}
+  {{- range .Pages.ByWeight -}}
+    {{- $p := .Params -}}
+    {{- $alt := slice (index $p (printf "title_%s" $other)) $p.short_fa $p.short_en (index $p (printf "summary_%s" $other)) -}}
+    {{- range index $p (printf "topics_%s" $lang) }}{{ $alt = $alt | append . }}{{ end -}}
+    {{- range index $p (printf "topics_%s" $other) }}{{ $alt = $alt | append . }}{{ end -}}
+    {{- range $p.tools }}{{ with .name }}{{ $alt = $alt | append . }}{{ end }}{{ end -}}
+    {{- $items = $items | append (partial "pubs-entry.html" (dict "type" "area" "title" .Title "url" .RelPermalink "text" (partial "loc.html" (dict "m" $p "k" "summary")) "alt" $alt)) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Projects. */ -}}
+{{- with site.GetPage "projects" -}}
+  {{- range .Pages.ByWeight -}}
+    {{- $p := .Params -}}
+    {{- $alt := slice (index $p (printf "title_%s" $other)) (index $p (printf "summary_%s" $other)) -}}
+    {{- range $p.tools }}{{ $alt = $alt | append . }}{{ end -}}
+    {{- range $p.areas }}{{ with site.GetPage (printf "/research/%s" .) }}{{ $alt = $alt | append .Params.title_fa .Params.title_en .Params.short_fa .Params.short_en }}{{ end }}{{ end -}}
+    {{- $items = $items | append (partial "pubs-entry.html" (dict "type" "project" "title" .Title "url" .RelPermalink "text" (partial "loc.html" (dict "m" $p "k" "summary")) "alt" $alt)) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Publications, newest first: authors (as cited) and venue, punctuated in the citation's language as in pub-item.html;
+  alt has the members' names in the other script, the type in both languages and the research areas. */ -}}
+{{- with site.GetPage "publications" -}}
+  {{- $base := .RelPermalink -}}
+  {{- range sort (site.Data.publications | default slice) "year" "desc" -}}
+    {{- $p := . -}}
+    {{- $plang := $p.lang | default "en" -}}
+    {{- $olang := cond (eq $plang "fa") "en" "fa" -}}
+    {{- $sep := cond (eq $plang "fa") "، " ", " -}}
+    {{- $names := slice -}}
+    {{- $alt := slice -}}
+    {{- range $p.authors -}}
+      {{- $a := . -}}
+      {{- with index site.Data.people (printf "%v" $a) -}}
+        {{- $names = $names | append (replaceRE `^(Dr\.|Prof\.|دکتر)\s*` "" (index . (printf "name_%s" $plang))) -}}
+        {{- $alt = $alt | append (index . (printf "name_%s" $olang)) -}}
+      {{- else -}}
+        {{- $names = $names | append $a -}}
+      {{- end -}}
+    {{- end -}}
+    {{- if in (slice "journal" "conference" "thesis" "preprint") $p.type }}{{ $alt = $alt | append (i18n (cond (eq $p.type "thesis") "thesisType" $p.type)) (i18n (printf "filter_other_%s" $p.type)) }}{{ end -}}
+    {{- range $p.areas }}{{ with site.GetPage (printf "/research/%s" .) }}{{ $alt = $alt | append .Params.title_fa .Params.title_en .Params.short_fa .Params.short_en }}{{ end }}{{ end -}}
+    {{- $text := printf "%s%s%s%s%s" (delimit $names $sep) $dot $p.venue $sep (partial "digits.html" (dict "v" $p.year "lang" $plang)) -}}
+    {{- $items = $items | append (partial "pubs-entry.html" (dict "type" "publication" "title" $p.title "url" (printf "%s#%s" $base $p.id) "text" $text "alt" $alt)) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* News, newest first: date and summary. */ -}}
+{{- with site.GetPage "news" -}}
+  {{- range .Pages.ByDate.Reverse -}}
+    {{- $alt := slice -}}
+    {{- range .Translations }}{{ $alt = $alt | append .Title (.Params.summary | default (.Summary | plainify)) }}{{ end -}}
+    {{- $summary := .Params.summary | default (.Summary | plainify) -}}
+    {{- $text := delimit (slice (partial "date.html" (dict "t" .Date)) $summary) $dot -}}
+    {{- $items = $items | append (partial "pubs-entry.html" (dict "type" "news" "title" .Title "url" .RelPermalink "text" $text "alt" $alt)) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Events, latest first: kind, date, time and summary. */ -}}
+{{- with site.GetPage "events" -}}
+  {{- range .Pages.ByDate.Reverse -}}
+    {{- $e := .Params -}}
+    {{- $parts := slice -}}
+    {{- with $e.type }}{{ if in (slice "seminar" "defense" "workshop" "talk") . }}{{ $parts = $parts | append (i18n (printf "ev_%s" .)) }}{{ end }}{{ end -}}
+    {{- $parts = $parts | append (partial "date.html" (dict "t" .Date)) -}}
+    {{- with $e.time }}{{ $parts = $parts | append (partial "digits.html" .) }}{{ end -}}
+    {{- with partial "loc.html" (dict "m" $e "k" "summary") }}{{ $parts = $parts | append . }}{{ end -}}
+    {{- $alt := slice (index $e (printf "title_%s" $other)) (partial "event-speaker.html" .) (index $e (printf "summary_%s" $other)) -}}
+    {{- with $e.speaker }}{{ with index site.Data.people . }}{{ $alt = $alt | append (index . (printf "name_%s" $other)) }}{{ end }}{{ else }}{{ $alt = $alt | append (index $e (printf "speaker_%s" $other)) }}{{ end -}}
+    {{- with $e.type }}{{ if in (slice "seminar" "defense" "workshop" "talk") . }}{{ $alt = $alt | append (i18n (printf "filter_other_%s" .)) }}{{ end }}{{ end -}}
+    {{- $items = $items | append (partial "pubs-entry.html" (dict "type" "event" "title" .Title "url" .RelPermalink "text" (delimit $parts $dot) "alt" $alt)) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- /* Pages; Teaching and Resources are also found by their course and resource titles, in both languages. */ -}}
+{{- range $key := slice "about" "join" "contact" "teaching" "resources" -}}
+  {{- with site.GetPage $key -}}
+    {{- $alt := slice -}}
+    {{- range .Translations }}{{ $alt = $alt | append .Title (.Params.lead | default .Description) }}{{ end -}}
+    {{- if eq $key "teaching" }}{{ range site.Data.courses }}{{ $alt = $alt | append .title_fa .title_en }}{{ end }}{{ end -}}
+    {{- if eq $key "resources" }}{{ range site.Data.resources }}{{ $alt = $alt | append .title_fa .title_en }}{{ end }}{{ end -}}
+    {{- $text := .Params.lead | default .Description | default (.Summary | plainify) -}}
+    {{- $items = $items | append (partial "pubs-entry.html" (dict "type" "page" "title" .Title "url" .RelPermalink "text" $text "alt" $alt)) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $items | jsonify -}}

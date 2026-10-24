@@ -1,10 +1,16 @@
 {{ define "main" }}
-<h1>{{ .Title }}</h1>
-{{ .Content }}
-<ul class="news-list prose">
-  {{ range .Pages.ByDate.Reverse }}
-    <li><span class="date">{{ partial "date.html" . }}</span><a href="{{ .RelPermalink }}">{{ .Title }}</a>
-      <p class="muted" style="margin:0">{{ .Summary | plainify | truncate 140 }}</p></li>
+<header class="page-head">
+  <div class="wrap">
+    <h1>{{ .Title }}</h1>
+    {{ with .Params.lead }}<p class="lead">{{ . }}</p>{{ end }}
+  </div>
+</header>
+<div class="wrap section section--end">
+  {{ with .Content }}<div class="prose">{{ . }}</div>{{ end }}
+  {{ with .Pages }}
+  <div class="list-card">
+    {{ range .ByDate.Reverse }}{{ partial "news-item.html" (dict "page" . "summary" true) }}{{ end }}
+  </div>
   {{ end }}
-</ul>
+</div>
 {{ end }}

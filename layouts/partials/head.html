@@ -1,0 +1,48 @@
+{{- $desc := .Description | default .Params.lead | default .Params.summary | default (partial "loc.html" (dict "m" .Params "k" "summary")) | default (.Summary | plainify) -}}
+{{- /* A profile without a bio is described by the person's role, thesis and interests, not by the site tagline. */ -}}
+{{- if and (not $desc) .IsPage (eq .Section "people") }}{{ $desc = partial "people-summary.html" . }}{{ end -}}
+{{- $desc = $desc | default site.Home.Description | plainify | chomp | truncate 180 -}}
+{{- /* Page 2 onwards of the news list is a page of its own: its own URL and title, and no language alternates (the other language may have fewer pages). */ -}}
+{{- $title := .Title -}}
+{{- $url := .Permalink -}}
+{{- $pageNo := 1 -}}
+{{- if and (eq .Kind "section") (eq .Section "news") -}}
+  {{- $pag := partial "news-paginator.html" . -}}
+  {{- $pageNo = $pag.PageNumber -}}
+  {{- if gt $pageNo 1 }}{{ $url = $pag.URL | absURL }}{{ $title = printf "%s · %s" .Title (partial "digits.html" (i18n "news_pageOf" (dict "Page" $pageNo "Total" $pag.TotalPages))) }}{{ end -}}
+{{- end -}}
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ if .IsHome }}{{ site.Title }} — {{ site.Params.group }}{{ else if eq .Kind "404" }}{{ i18n "pages_notFoundTitle" }} | {{ site.Title }}{{ else }}{{ $title }} | {{ site.Title }}{{ end }}</title>
+<meta name="description" content="{{ $desc }}">
+<link rel="canonical" href="{{ $url }}">
+{{- if eq $pageNo 1 }}
+{{- range .AllTranslations }}
+<link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}">
+{{- end }}
+{{- with .AllTranslations }}{{ range first 1 (where . "Language.Lang" site.Sites.Default.Language.Lang) }}
+<link rel="alternate" hreflang="x-default" href="{{ .Permalink }}">
+{{- end }}{{ end }}
+{{- end }}
+<meta name="theme-color" content="#f4f7f9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0d151c" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+<meta property="og:site_name" content="{{ site.Title }}">
+<meta property="og:title" content="{{ if .IsHome }}{{ site.Title }} — {{ site.Params.group }}{{ else if eq .Kind "404" }}{{ i18n "pages_notFoundTitle" }}{{ else }}{{ $title }}{{ end }}">
+<meta property="og:description" content="{{ $desc }}">
+<meta property="og:url" content="{{ $url }}">
+<meta property="og:locale" content="{{ cond (eq site.Language.Lang "fa") "fa_IR" "en_GB" }}">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="{{ "favicon.svg" | relURL }}" type="image/svg+xml">
+{{- with site.GetPage "news" }}{{ with .OutputFormats.Get "rss" }}
+<link rel="alternate" type="application/rss+xml" href="{{ .Permalink }}" title="{{ site.Title }} — {{ i18n "news" }}">
+{{- end }}{{ end }}
+<link rel="preload" href="{{ "fonts/Vazirmatn-Variable.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+{{- $css := slice (resources.Get "css/main.css") }}
+{{- range resources.Match "css/sections/*.css" }}{{ $css = $css | append . }}{{ end }}
+{{- $css = $css | resources.Concat "css/site.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+<script>document.documentElement.classList.add('js')</script>
+{{- if .IsHome }}
+<script type="application/ld+json">{{ dict "@context" "https://schema.org" "@type" "ResearchOrganization" "name" (printf "MCTN — %s" site.Params.group) "url" site.Home.Permalink "email" site.Params.email "address" site.Params.address "parentOrganization" (dict "@type" "CollegeOrUniversity" "name" site.Params.university) | jsonify | safeJS }}</script>
+{{- end }}

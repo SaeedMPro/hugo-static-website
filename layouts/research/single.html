@@ -1,0 +1,141 @@
+{{ define "main" }}
+{{- $id := .Params.pid -}}
+{{- $rel := partial "research-relations.html" . -}}
+{{- $summary := partial "loc.html" (dict "m" .Params "k" "summary") -}}
+{{- $topics := partial "loc.html" (dict "m" .Params "k" "topics") -}}
+{{- $tools := .Params.tools -}}
+{{- $others := slice -}}
+{{- with .Parent }}{{ $others = where .Pages.ByWeight "Params.pid" "ne" $id }}{{ end -}}
+{{- $projectsHref := "" }}{{ with site.GetPage "projects" }}{{ $projectsHref = .RelPermalink }}{{ end -}}
+{{- $pubsHref := "" }}{{ with site.GetPage "publications" }}{{ $pubsHref = .RelPermalink }}{{ end -}}
+{{- $join := site.GetPage "join" -}}
+{{- $body := trim (string .Content) " \t\r\n" -}}
+{{- $hasMain := or $topics $rel.projects $rel.pubs -}}
+{{- $hasAside := or $rel.people $others $tools -}}
+<header class="page-head">
+  <div class="wrap">
+    {{- with .Parent }}
+    {{ partial "crumbs.html" (dict "items" (slice .) "current" $.Title) }}
+    {{- end }}
+    <div class="research-title">
+      <span class="icon-tile">{{ partial "icon.html" (dict "name" (.Params.icon | default "sdn") "size" 26) }}</span>
+      <h1>{{ .Title }}</h1>
+    </div>
+    {{- /* A one-paragraph body joins the summary in a single lead paragraph; anything longer follows it. */}}
+    {{- if and $summary (strings.HasPrefix $body "<p>") (strings.HasSuffix $body "</p>") (eq (strings.Count "<p>" $body) 1) }}
+    <p class="lead">{{ $summary }} {{ strings.TrimSuffix "</p>" (strings.TrimPrefix "<p>" $body) | safeHTML }}</p>
+    {{- else }}
+    {{- with $summary }}
+    <p class="lead">{{ . }}</p>
+    {{- end }}
+    {{- with $body }}
+    <div class="lead research-body">{{ . | safeHTML }}</div>
+    {{- end }}
+    {{- end }}
+  </div>
+</header>
+{{- if or $hasMain $hasAside }}
+<div class="section{{ if not $join }} section--end{{ end }}">
+  <div class="wrap split">
+    {{- if $hasMain }}
+    <div class="main research-main">
+      {{- with $topics }}
+      <section aria-labelledby="area-topics">
+        {{ partial "section-head.html" (dict "title" (i18n "research_workOn") "id" "area-topics") }}
+        <ul class="research-worklist">
+          {{- range . }}
+          <li>{{ . }}</li>
+          {{- end }}
+        </ul>
+      </section>
+      {{- end }}
+      {{- with $rel.projects }}
+      <section aria-labelledby="area-projects">
+        {{ partial "section-head.html" (dict "title" (i18n "projects") "id" "area-projects" "href" $projectsHref "link" (i18n "allProjects")) }}
+        <div class="research-projects">
+          {{- range . }}
+          {{ partial "project-card.html" . }}
+          {{- end }}
+        </div>
+      </section>
+      {{- end }}
+      {{- with $rel.pubs }}
+      <section aria-labelledby="area-pubs">
+        {{ partial "section-head.html" (dict "title" (i18n "publications") "id" "area-pubs" "href" $pubsHref "link" (i18n "allPubs")) }}
+        <div class="list-card">
+          {{- range . }}
+          {{ partial "pub-item.html" (dict "pub" .) }}
+          {{- end }}
+        </div>
+      </section>
+      {{- end }}
+    </div>
+    {{- end }}
+    {{- if $hasAside }}
+    <aside class="aside research-aside" aria-label="{{ i18n "research_details" }}">
+      {{- with $rel.people }}
+      <section aria-labelledby="area-people">
+        <h2 id="area-people">{{ i18n "research_people" }}</h2>
+        <div class="research-people">
+          {{- range . }}
+          {{ partial "person-card.html" (dict "page" . "variant" "compact") }}
+          {{- end }}
+        </div>
+      </section>
+      {{- end }}
+      {{- with $others }}
+      <section aria-labelledby="area-related">
+        <h2 id="area-related">{{ i18n "research_related" }}</h2>
+        <ul class="research-rows">
+          {{- range . }}
+          <li>
+            <a href="{{ .RelPermalink }}">
+              <span class="icon-tile">{{ partial "icon.html" (dict "name" (.Params.icon | default "sdn") "size" 18) }}</span>
+              <span class="text"><span class="name">{{ .Title }}</span>{{ with partial "loc.html" (dict "m" .Params "k" "summary") }}<span class="desc">{{ . }}</span>{{ end }}</span>
+              {{ partial "icon.html" (dict "name" "arrow" "size" 18) }}
+            </a>
+          </li>
+          {{- end }}
+        </ul>
+      </section>
+      {{- end }}
+      {{- with $tools }}
+      <section aria-labelledby="area-tools">
+        <h2 id="area-tools">{{ i18n "research_tools" }}</h2>
+        <ul class="research-rows">
+          {{- range . }}
+          {{- $note := partial "research-tool-note.html" . }}
+          <li>
+            {{- if .url }}
+            <a href="{{ .url }}">
+              <span class="text"><span class="name">{{ .name }}</span>{{ with $note }}<span class="desc">{{ . }}</span>{{ end }}</span>
+              {{ partial "icon.html" (dict "name" "external" "size" 16) }}
+            </a>
+            {{- else }}
+            <span class="row"><span class="text"><span class="name">{{ .name }}</span>{{ with $note }}<span class="desc">{{ . }}</span>{{ end }}</span></span>
+            {{- end }}
+          </li>
+          {{- end }}
+        </ul>
+      </section>
+      {{- end }}
+    </aside>
+    {{- end }}
+  </div>
+</div>
+{{- end }}
+{{- with $join }}
+<section class="section section--end" aria-labelledby="area-thesis">
+  <div class="wrap">
+    <div class="panel research-thesis">
+      <span class="icon-tile">{{ partial "icon.html" (dict "name" "scholar" "size" 26) }}</span>
+      <div class="text">
+        <h2 id="area-thesis">{{ i18n "research_thesisTitle" (dict "Name" (partial "research-inline-name.html" $)) }}</h2>
+        <p>{{ i18n "research_thesisText" }}</p>
+      </div>
+      <a class="btn btn--primary" href="{{ .RelPermalink }}#topics">{{ i18n "howToJoin" }}{{ partial "icon.html" (dict "name" "arrow" "size" 18) }}</a>
+    </div>
+  </div>
+</section>
+{{- end }}
+{{ end }}

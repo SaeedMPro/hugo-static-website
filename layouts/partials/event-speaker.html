@@ -1,0 +1,9 @@
+{{- /* An event's speaker name: the member's name, or the free-text speaker. */ -}}
+{{- $e := . -}}
+{{- $res := "" -}}
+{{- with $e.Params.speaker -}}
+  {{- with site.GetPage (printf "/people/%s" .) }}{{ $res = .Title }}{{ end -}}
+{{- else -}}
+  {{- $res = partial "loc.html" (dict "m" $e.Params "k" "speaker") -}}
+{{- end -}}
+{{- return $res -}}

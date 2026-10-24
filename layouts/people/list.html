@@ -1,37 +1,90 @@
 {{ define "main" }}
-{{ $lang := site.Language.Lang }}
-<h1>{{ .Title }}</h1>
-{{ $current := where .Pages "Params.status" "current" }}
-{{ range $role := slice "faculty" "phd" "msc" "bsc" }}
-  {{ $group := (where $current "Params.role" $role).ByWeight }}
-  {{ with $group }}
-    <section class="section" aria-labelledby="h-{{ $role }}">
-      <div class="section-head"><h2 id="h-{{ $role }}">{{ i18n $role }}</h2></div>
-      <ul class="people-grid">{{ range . }}{{ partial "person-card.html" . }}{{ end }}</ul>
-    </section>
-  {{ end }}
-{{ end }}
-
-{{ $alumni := sort (where .Pages "Params.status" "alumni") "Params.end_year" "desc" }}
-{{ with $alumni }}
-<section class="section" aria-labelledby="h-alumni">
-  <div class="section-head"><h2 id="h-alumni">{{ i18n "alumni" }}</h2></div>
-  <div class="table-scroll">
-    <table class="stack-table">
-      <thead><tr><th>{{ i18n "name" }}</th><th>{{ i18n "degree" }}</th><th>{{ i18n "year" }}</th><th>{{ i18n "thesis" }}</th><th>{{ i18n "position" }}</th></tr></thead>
-      <tbody>
-        {{ range . }}
-          <tr>
-            <td data-label="{{ i18n "name" }}"><a href="{{ .RelPermalink }}">{{ .Title }}</a></td>
-            <td data-label="{{ i18n "degree" }}">{{ i18n (printf "deg_%s" .Params.role) }}</td>
-            <td data-label="{{ i18n "year" }}">{{ partial "digits.html" .Params.end_year }}</td>
-            <td data-label="{{ i18n "thesis" }}">{{ index .Params (printf "thesis_%s" $lang) }}</td>
-            <td data-label="{{ i18n "position" }}">{{ index .Params (printf "position_%s" $lang) }}</td>
-          </tr>
-        {{ end }}
-      </tbody>
-    </table>
+{{- /* Current members by role (faculty first, as feature cards), then alumni in a table, newest graduates first. */ -}}
+{{- $current := where .Pages "Params.status" "ne" "alumni" -}}
+{{- $alumni := where .Pages "Params.status" "alumni" -}}
+{{- $groups := slice -}}
+{{- range $role := slice "faculty" "postdoc" "phd" "msc" "bsc" "staff" -}}
+  {{- with where $current "Params.role" $role -}}
+    {{- $groups = $groups | append (dict "key" $role "pages" .ByWeight) -}}
+  {{- end -}}
+{{- end }}
+<header class="page-head">
+  <div class="wrap">
+    <h1>{{ .Title }}</h1>
+    {{- with .Params.lead }}
+    <p class="lead">{{ . }}</p>
+    {{- end }}
+    {{- if or $groups $alumni }}
+    <nav class="people-jump" aria-label="{{ i18n "people_onThisPage" }}">
+      <ul>
+        {{- range $groups }}
+        <li><a href="#{{ .key }}">{{ i18n .key }}<span class="count">{{ partial "digits.html" (len .pages) }}</span></a></li>
+        {{- end }}
+        {{- with $alumni }}
+        <li><a href="#alumni">{{ i18n "alumni" }}<span class="count">{{ partial "digits.html" (len .) }}</span></a></li>
+        {{- end }}
+      </ul>
+    </nav>
+    {{- end }}
+  </div>
+</header>
+{{- with .Content }}
+<div class="section">
+  <div class="wrap"><div class="prose">{{ . }}</div></div>
+</div>
+{{- end }}
+{{- range $groups }}
+{{- $feature := eq .key "faculty" }}
+<section class="section people-group" id="{{ .key }}" aria-labelledby="{{ .key }}-title">
+  <div class="wrap">
+    {{ partial "section-head.html" (dict "title" (i18n .key) "id" (printf "%s-title" .key)) }}
+    <div class="grid people-grid{{ if $feature }} people-grid--feature{{ end }}">
+      {{- range .pages }}
+      {{ partial "person-card.html" (dict "page" . "variant" (cond $feature "feature" "compact")) }}
+      {{- end }}
+    </div>
   </div>
 </section>
-{{ end }}
+{{- end }}
+{{- with $alumni }}
+{{- /* The table's scroller is the "Alumni" region (it has to be focusable to scroll by keyboard); naming the section
+  too would give two nested regions of the same name. */}}
+<section class="section people-group" id="alumni">
+  <div class="wrap">
+    {{ partial "section-head.html" (dict "title" (i18n "alumni") "id" "alumni-title") }}
+    <div class="table-wrap" role="region" aria-labelledby="alumni-title" tabindex="0">
+      <table class="data people-alumni" aria-labelledby="alumni-title">
+        <thead>
+          <tr>
+            <th scope="col">{{ i18n "name" }}</th>
+            <th scope="col">{{ i18n "degree" }}</th>
+            <th scope="col">{{ i18n "year" }}</th>
+            <th scope="col">{{ i18n "thesis" }}</th>
+            <th scope="col">{{ i18n "position" }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{- range $a := sort .ByWeight "Params.end_year" "desc" }}
+          <tr>
+            <th scope="row"><a class="people-who" href="{{ $a.RelPermalink }}">{{ partial "avatar.html" (dict "page" $a "size" 32) }}<span>{{ $a.Title }}</span></a></th>
+            <td class="nowrap">{{ partial "people-degree.html" $a }}</td>
+            <td class="nowrap">{{ with $a.Params.end_year }}{{ partial "year.html" (dict "y" . "en" $a.Params.end_year_en) }}{{ end }}</td>
+            <td class="thesis">{{ partial "loc.html" (dict "m" $a.Params "k" "thesis") }}</td>
+            <td class="now">{{ partial "loc.html" (dict "m" $a.Params "k" "position") }}</td>
+          </tr>
+          {{- end }}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{{- end }}
+{{- if not (or $groups $alumni) }}
+<div class="section">
+  <div class="wrap">
+    <p class="empty"><span class="icon-tile icon-tile--sm">{{ partial "icon.html" (dict "name" "people") }}</span><span>{{ i18n "people_empty" }}</span></p>
+  </div>
+</div>
+{{- end }}
+{{ partial "cta-join.html" . }}
 {{ end }}

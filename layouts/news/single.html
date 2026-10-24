@@ -1,0 +1,94 @@
+{{ define "head" }}
+{{- $ld := dict "@context" "https://schema.org" "@type" "NewsArticle" "headline" .Title "datePublished" (.Date.Format "2006-01-02") "inLanguage" site.Language.Lang "url" .Permalink -}}
+{{- with .Params.summary | default (.Summary | plainify) }}{{ $ld = merge $ld (dict "description" .) }}{{ end -}}
+{{- $ld = merge $ld (dict "publisher" (dict "@type" "ResearchOrganization" "name" (printf "MCTN — %s" site.Params.group) "url" site.Home.Permalink)) }}
+<script type="application/ld+json">{{ $ld | jsonify | safeJS }}</script>
+{{ end }}
+
+{{ define "main" }}
+{{- $news := .CurrentSection -}}
+{{- /* Neighbours by date: older and newer items in this section. */ -}}
+{{- $all := $news.RegularPages.ByDate -}}
+{{- $at := -1 -}}
+{{- range $i, $p := $all }}{{ if eq $p.RelPermalink $.RelPermalink }}{{ $at = $i }}{{ end }}{{ end -}}
+{{- $older := "" -}}
+{{- $newer := "" -}}
+{{- if gt $at 0 }}{{ $older = index $all (sub $at 1) }}{{ end -}}
+{{- if and (ge $at 0) (lt $at (sub (len $all) 1)) }}{{ $newer = index $all (add $at 1) }}{{ end -}}
+{{- /* Related publications (front matter ids, in order) and people. */ -}}
+{{- $pubs := slice -}}
+{{- range .Params.publications }}{{ range where site.Data.publications "id" . }}{{ $pubs = $pubs | append . }}{{ end }}{{ end -}}
+{{- $people := slice -}}
+{{- range .Params.people }}{{ with site.GetPage (printf "/people/%s" .) }}{{ $people = $people | append . }}{{ end }}{{ end -}}
+<header class="page-head">
+  <div class="wrap">
+    {{ partial "crumbs.html" (dict "items" (slice $news) "current" .Title) }}
+    <p class="news-dateline">{{ partial "icon.html" (dict "name" "calendar" "size" 18) }}{{ partial "date.html" (dict "t" .Date) }}</p>
+    <h1 id="article-title">{{ .Title }}</h1>
+  </div>
+</header>
+<div class="wrap section{{ if not (or $older $newer) }} section--end{{ end }}">
+  <article class="news-article" aria-labelledby="article-title">
+    {{- with .Content }}
+    <div class="prose news-body">{{ . }}</div>
+    {{- end }}
+    {{- if or $pubs $people }}
+    <section class="news-related" aria-labelledby="related-title">
+      {{ partial "section-head.html" (dict "title" (i18n "news_related") "id" "related-title") }}
+      {{- with $pubs }}
+      <div class="news-related-group">
+        <h3>{{ i18n (cond (eq (len .) 1) "news_paper" "news_papers") }}</h3>
+        <div class="list-card news-pubs">
+          {{- range . }}
+          {{ partial "pub-item.html" (dict "pub" .) }}
+          {{- end }}
+        </div>
+      </div>
+      {{- end }}
+      {{- with $people }}
+      <div class="news-related-group">
+        <h3>{{ i18n "people" }}</h3>
+        <div class="news-people">
+          {{- range . }}
+          {{ partial "person-card.html" (dict "page" . "variant" "compact") }}
+          {{- end }}
+        </div>
+      </div>
+      {{- end }}
+    </section>
+    {{- end }}
+    <div class="news-share">
+      <button class="btn btn--secondary" type="button" data-copy-url data-copied="{{ i18n "news_linkCopied" }}">{{ partial "icon.html" (dict "name" "copy" "size" 18) }}<span aria-live="polite">{{ i18n "copyLink" }}</span></button>
+    </div>
+  </article>
+</div>
+{{- if or $older $newer }}
+<div class="section section--end">
+  <div class="wrap">
+    <nav class="news-more" aria-labelledby="more-title">
+      {{ partial "section-head.html" (dict "title" (i18n "news_more") "id" "more-title" "href" $news.RelPermalink "link" (i18n "allNews")) }}
+      <ul class="news-adjacent">
+        {{- with $older }}
+        <li class="news-adjacent-older">
+          <a href="{{ .RelPermalink }}" rel="prev">
+            <span class="eyebrow news-adjacent-label">{{ partial "icon.html" (dict "name" "arrow" "size" 18 "class" "flip") }}{{ i18n "news_older" }}</span>
+            <span class="news-adjacent-date">{{ partial "date.html" (dict "t" .Date) }}</span>
+            <span class="news-adjacent-title">{{ .Title }}</span>
+          </a>
+        </li>
+        {{- end }}
+        {{- with $newer }}
+        <li class="news-adjacent-newer">
+          <a href="{{ .RelPermalink }}" rel="next">
+            <span class="eyebrow news-adjacent-label">{{ i18n "news_newer" }}{{ partial "icon.html" (dict "name" "arrow" "size" 18) }}</span>
+            <span class="news-adjacent-date">{{ partial "date.html" (dict "t" .Date) }}</span>
+            <span class="news-adjacent-title">{{ .Title }}</span>
+          </a>
+        </li>
+        {{- end }}
+      </ul>
+    </nav>
+  </div>
+</div>
+{{- end }}
+{{ end }}

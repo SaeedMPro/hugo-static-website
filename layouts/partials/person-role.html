@@ -1,0 +1,13 @@
+{{- /* One-line role for a person: their title, or e.g. "PhD student · since 2022" / "MSc graduate · 2025". */ -}}
+{{- $p := . -}}
+{{- with partial "loc.html" (dict "m" $p.Params "k" "title") -}}
+  {{- . -}}
+{{- else -}}
+  {{- if eq $p.Params.status "alumni" -}}
+    {{- i18n (printf "alum_%s" $p.Params.role) -}}
+    {{- with $p.Params.end_year }} · {{ partial "year.html" (dict "y" . "en" $p.Params.end_year_en) }}{{ end -}}
+  {{- else -}}
+    {{- i18n (printf "role_%s" $p.Params.role) -}}
+    {{- with $p.Params.start_year }} · {{ i18n "since" (dict "Year" (partial "year.html" (dict "y" . "en" $p.Params.start_year_en))) }}{{ end -}}
+  {{- end -}}
+{{- end -}}

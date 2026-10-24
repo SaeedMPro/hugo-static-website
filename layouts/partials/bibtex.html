@@ -1,0 +1,36 @@
+{{- /* A publication as a BibTeX entry (string). Members' names come from data/people in the entry's language, written "Last, First". Title words with an inner capital or a digit (P4, IoT, SDN, BMv2) are braced so that styles which lower-case titles keep them. */ -}}
+{{- $p := . -}}
+{{- $plang := $p.lang | default "en" -}}
+{{- $kind := "article" -}}
+{{- $venueKey := "journal" -}}
+{{- $venue := $p.venue -}}
+{{- if eq $p.type "conference" -}}
+  {{- $kind = "inproceedings" -}}{{- $venueKey = "booktitle" -}}
+{{- else if eq $p.type "thesis" -}}
+  {{- $kind = cond (eq $p.degree "phd") "phdthesis" "mastersthesis" -}}{{- $venueKey = "school" -}}
+  {{- $venue = $p.school | default (replaceRE `^[^,،]*[,،]\s*` "" $p.venue) -}}
+{{- else if eq $p.type "preprint" -}}
+  {{- $kind = "misc" -}}{{- $venueKey = "howpublished" -}}
+{{- end -}}
+{{- $title := replaceRE `\b([A-Za-z0-9]+[A-Z][A-Za-z0-9]*|[A-Z][A-Za-z]*[0-9][A-Za-z0-9]*)\b` "{${1}}" $p.title -}}
+{{- $names := slice -}}
+{{- range $p.authors -}}
+  {{- $n := . -}}
+  {{- with index site.Data.people . }}{{ $n = index . (printf "name_%s" $plang) | default .name_en }}{{ end -}}
+  {{- $n = replaceRE `^(Dr\.|Prof\.|دکتر)\s*` "" $n -}}
+  {{- $parts := split $n " " -}}
+  {{- if gt (len $parts) 1 -}}
+    {{- $last := index $parts (sub (len $parts) 1) -}}
+    {{- $n = printf "%s, %s" $last (delimit (first (sub (len $parts) 1) $parts) " ") -}}
+  {{- end -}}
+  {{- $names = $names | append $n -}}
+{{- end -}}
+{{- $fields := slice (slice "title" $title) (slice "author" (delimit $names " and ")) (slice $venueKey $venue) (slice "year" (string $p.year)) -}}
+{{- with $p.doi }}{{ $fields = $fields | append (slice (slice "doi" .)) }}{{ end -}}
+{{- with $p.url }}{{ $fields = $fields | append (slice (slice "url" .)) }}{{ end -}}
+{{- $width := 4 -}}
+{{- range $fields }}{{ $width = math.Max $width (len (index . 0)) }}{{ end -}}
+{{- $lines := slice -}}
+{{- range $fields }}{{ $lines = $lines | append (printf "  %-*s = {%s}" (int $width) (index . 0) (index . 1)) }}{{ end -}}
+{{- $entry := printf "@%s{%s,\n%s\n}" $kind $p.id (delimit $lines ",\n") -}}
+{{- return $entry -}}

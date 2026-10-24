@@ -1,6 +1,11 @@
-{{- $d := .Date -}}
+{{- /* context: dict "t" time. Jalali with Persian digits on Persian pages, "14 September 2025" on English pages. */ -}}
+{{- $t := .t -}}
+<time datetime="{{ $t.Format "2006-01-02" }}">
 {{- if eq site.Language.Lang "fa" -}}
-<time datetime="{{ $d.Format "2006-01-02" }}">{{ partial "digits.html" ($d.Format "02/01/2006") }}</time>
+  {{- $j := partial "jalali.html" $t -}}
+  {{- partial "digits.html" (printf "%d %s %d" $j.d (i18n (printf "jm_%d" $j.m)) $j.y) -}}
 {{- else -}}
-<time datetime="{{ $d.Format "2006-01-02" }}">{{ $d.Format "02/01/2006" }}</time>
+  {{- $t.Format "2 January 2006" -}}
 {{- end -}}
+</time>
+{{- /**/ -}}

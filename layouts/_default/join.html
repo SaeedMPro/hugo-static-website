@@ -1,0 +1,111 @@
+{{ define "main" }}
+{{- $topics := .Params.topics -}}
+<header class="page-head">
+  <div class="wrap">
+    {{- with .Params.eyebrow }}
+    <span class="eyebrow">{{ . }}</span>
+    {{- end }}
+    <h1>{{ .Title }}</h1>
+    {{- with .Params.lead }}
+    <p class="lead">{{ . }}</p>
+    {{- end }}
+    {{- if or site.Params.email $topics }}
+    <div class="actions">
+      {{- with site.Params.email }}
+      <a class="btn btn--primary" href="mailto:{{ . }}">{{ partial "icon.html" (dict "name" "mail" "size" 18) }}<span>{{ i18n "pages_sendEmail" }}</span></a>
+      {{- end }}
+      {{- with $topics }}
+      <a class="btn btn--secondary" href="#topics">{{ i18n "pages_openTopics" }}</a>
+      {{- end }}
+    </div>
+    {{- end }}
+  </div>
+</header>
+
+{{- with .Content }}
+<div class="section">
+  <div class="wrap"><div class="prose">{{ . }}</div></div>
+</div>
+{{- end }}
+
+{{- with .Params.requirements }}
+<section class="section" aria-labelledby="requirements-title">
+  <div class="wrap">
+    {{ partial "section-head.html" (dict "title" (i18n "pages_requirements") "id" "requirements-title") }}
+    <ul class="pg-checks">
+      {{- range . }}
+      <li><span class="tick" aria-hidden="true">{{ partial "icon.html" (dict "name" "check" "size" 18) }}</span><span>{{ . }}</span></li>
+      {{- end }}
+    </ul>
+  </div>
+</section>
+{{- end }}
+
+{{- with $topics }}
+<section class="section" id="topics" aria-labelledby="topics-title">
+  <div class="wrap">
+    {{ partial "section-head.html" (dict "title" (i18n "pages_openTopics") "id" "topics-title") }}
+    <ul class="grid pg-topics">
+      {{- range . }}
+      {{- $icon := "" }}
+      {{- with .areas }}{{ with site.GetPage (printf "/research/%s" (index . 0)) }}{{ $icon = .Params.icon }}{{ end }}{{ end }}
+      <li class="pg-topic">
+        {{- with $icon }}
+        <span class="icon-tile">{{ partial "icon.html" (dict "name" . "size" 26) }}</span>
+        {{- end }}
+        <div class="body">
+          <h3>{{ .title }}</h3>
+          {{ partial "area-chips.html" (dict "ids" .areas "full" true) }}
+        </div>
+        {{- with .project }}{{ with site.GetPage (printf "/projects/%s" .) }}
+        <div class="foot">
+          <span class="pg-label">{{ i18n "pages_relatedProject" }}</span>
+          <a class="pg-go" href="{{ .RelPermalink }}">{{ .Title }}{{ partial "icon.html" (dict "name" "arrow" "size" 18) }}</a>
+        </div>
+        {{- end }}{{ end }}
+      </li>
+      {{- end }}
+    </ul>
+  </div>
+</section>
+{{- end }}
+
+{{- with .Params.steps }}
+<section class="section" aria-labelledby="steps-title">
+  <div class="wrap">
+    {{ partial "section-head.html" (dict "title" (i18n "pages_howToApply") "id" "steps-title") }}
+    <ol class="pg-steps">
+      {{- range $i, $s := . }}
+      <li class="pg-step">
+        <div class="marker"><span class="num">{{ partial "digits.html" (add $i 1) }}</span></div>
+        <div class="text">
+          <h3>{{ $s.title }}</h3>
+          {{- with $s.text }}
+          <p>{{ . }}</p>
+          {{- end }}
+        </div>
+      </li>
+      {{- end }}
+    </ol>
+  </div>
+</section>
+{{- end }}
+
+{{- with .Params.faq }}
+<section class="section" aria-labelledby="faq-title">
+  <div class="wrap">
+    {{ partial "section-head.html" (dict "title" (i18n "pages_faq") "id" "faq-title") }}
+    <div class="pg-faq">
+      {{- range $i, $f := . }}
+      <details{{ if eq $i 0 }} open{{ end }}>
+        <summary><span>{{ $f.q }}</span>{{ partial "icon.html" (dict "name" "chevron-down" "size" 20) }}</summary>
+        <div class="answer">{{ $.RenderString (dict "display" "block") $f.a }}</div>
+      </details>
+      {{- end }}
+    </div>
+  </div>
+</section>
+{{- end }}
+
+{{ partial "pages-apply-band.html" . }}
+{{ end }}

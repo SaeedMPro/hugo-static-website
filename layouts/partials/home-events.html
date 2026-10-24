@@ -1,0 +1,12 @@
+{{- /* context: the events section. Returns up to two events: the upcoming ones first, soonest first, then the
+  most recent past ones to fill the remaining slots. */ -}}
+{{- $all := .RegularPages -}}
+{{- $res := slice -}}
+{{- range $all.ByDate -}}
+  {{- if partial "is-upcoming.html" . }}{{ $res = $res | append . }}{{ end -}}
+{{- end -}}
+{{- range $all.ByDate.Reverse -}}
+  {{- if not (partial "is-upcoming.html" .) }}{{ $res = $res | append . }}{{ end -}}
+{{- end -}}
+{{- $res = first 2 $res -}}
+{{- return $res -}}

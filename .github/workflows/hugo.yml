@@ -1,9 +1,11 @@
-# ساخت و انتشار خودکار سایت روی GitHub Pages با هر push به شاخهٔ main
 name: Deploy Hugo site to Pages
 
 on:
   push:
     branches: ["main"]
+  # Rebuild daily so upcoming events move to "past" on their own.
+  schedule:
+    - cron: "30 20 * * *"
   workflow_dispatch:
 
 permissions:

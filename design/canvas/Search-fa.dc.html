@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="fa">
+<head>
+<meta charset="utf-8">
+<title>Search — MCTN</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&amp;family=Vazirmatn:wght@100..900&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div dir="rtl" lang="fa" style="background: #f4f7f9; color: #14212c; font-family: Vazirmatn, Tahoma, 'Segoe UI', system-ui, sans-serif; font-size: 17px; line-height: 1.9;">
+<dc-import name="Header" lang="fa" active="none" page="Search" hint-size="100%,130px"></dc-import>
+<main>
+
+<section style="border-bottom: 1px solid #d6dfe5;">
+<div style="max-width: 1200px; margin: 0 auto; padding: 56px clamp(16px, 4vw, 40px) 44px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px;">
+<h1 style="margin: 0; font-size: clamp(32px, 1.7rem + 1.4vw, 46px); line-height: 1.4; font-weight: 800; text-wrap: balance;">جستجو</h1>
+<div role="search" style="max-width: 840px; display: flex; flex-direction: column; gap: 8px; margin-top: 6px;">
+<label for="site-q" style="font-size: 14px; line-height: 1.6; font-weight: 650;">جستجو در سایت</label>
+<div style="display: flex; flex-wrap: wrap; gap: 12px;">
+<div style="position: relative; flex: 1 1 320px; min-width: 0; display: flex; align-items: center;">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5a6a77" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position: absolute; inset-inline-start: 16px;"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>
+<input id="site-q" type="search" value="P4" placeholder="نام، موضوع یا عنوان مقاله" style="width: 100%; height: 56px; box-sizing: border-box; padding: 0 16px; padding-inline-start: 50px; border: 1px solid #b8c6d0; border-radius: 8px; background: #ffffff; font: inherit; font-size: 18px; color: #14212c;">
+</div>
+<button type="button" style="flex: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 56px; padding: 0 28px; border: 1px solid #0b6e8a; border-radius: 6px; background: #0b6e8a; color: #ffffff; font: inherit; font-size: 16px; font-weight: 650; box-sizing: border-box; cursor: pointer;">جستجو</button>
+</div>
+</div>
+<p style="margin: 0; font-size: 17px; line-height: 1.9; color: #475764;"><strong style="font-weight: 700; color: #14212c;">۶ نتیجه</strong> برای «P4»</p>
+</div>
+</section>
+
+<section style="padding: 40px 0 96px;">
+<div style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 40px); box-sizing: border-box;">
+<div style="max-width: 840px; display: flex; flex-direction: column; gap: 40px;">
+
+<div role="group" aria-label="نوع نتیجه" style="display: flex; flex-wrap: wrap; gap: 8px;">
+<button type="button" aria-pressed="{{fAll.pressed}}" aria-controls="search-results" onClick="{{pickAll}}" style="display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid {{fAll.line}}; background: {{fAll.bg}}; color: {{fAll.ink}}; font: inherit; font-size: 14px; font-weight: {{fAll.weight}}; cursor: pointer;"><span>همه</span><span style="color: {{fAll.countInk}};">۶</span></button>
+<button type="button" aria-pressed="{{fPubs.pressed}}" aria-controls="search-results" onClick="{{pickPubs}}" style="display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid {{fPubs.line}}; background: {{fPubs.bg}}; color: {{fPubs.ink}}; font: inherit; font-size: 14px; font-weight: {{fPubs.weight}}; cursor: pointer;"><span>انتشارات</span><span style="color: {{fPubs.countInk}};">۱</span></button>
+<button type="button" aria-pressed="{{fPeople.pressed}}" aria-controls="search-results" onClick="{{pickPeople}}" style="display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid {{fPeople.line}}; background: {{fPeople.bg}}; color: {{fPeople.ink}}; font: inherit; font-size: 14px; font-weight: {{fPeople.weight}}; cursor: pointer;"><span>اعضا</span><span style="color: {{fPeople.countInk}};">۲</span></button>
+<button type="button" aria-pressed="{{fNews.pressed}}" aria-controls="search-results" onClick="{{pickNews}}" style="display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid {{fNews.line}}; background: {{fNews.bg}}; color: {{fNews.ink}}; font: inherit; font-size: 14px; font-weight: {{fNews.weight}}; cursor: pointer;"><span>اخبار</span><span style="color: {{fNews.countInk}};">۲</span></button>
+<button type="button" aria-pressed="{{fEvents.pressed}}" aria-controls="search-results" onClick="{{pickEvents}}" style="display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid {{fEvents.line}}; background: {{fEvents.bg}}; color: {{fEvents.ink}}; font: inherit; font-size: 14px; font-weight: {{fEvents.weight}}; cursor: pointer;"><span>رویدادها</span><span style="color: {{fEvents.countInk}};">۱</span></button>
+</div>
+
+<div id="search-results" style="display: flex; flex-direction: column; gap: 40px;">
+
+<sc-if value="{{showPubs}}" hint-placeholder-val="{{true}}">
+<section aria-labelledby="results-pubs">
+<div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+<span aria-hidden="true" style="flex: none; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; background: #e2f0f4; color: #0b6e8a;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5"></path></svg></span>
+<h2 id="results-pubs" style="margin: 0; display: flex; align-items: center; gap: 10px; font-size: 19px; line-height: 1.6; font-weight: 750; white-space: nowrap;">انتشارات<span style="display: inline-flex; align-items: center; justify-content: center; min-width: 26px; height: 24px; padding: 0 8px; box-sizing: border-box; border-radius: 999px; background: #eaf0f3; color: #14212c; font-size: 13px; font-weight: 650; line-height: 1;">۱</span></h2>
+<span aria-hidden="true" style="flex: 1 1 auto; display: flex; align-items: center; min-width: 24px;"><span style="flex: 1 1 auto; height: 1px; background: #b8c6d0;"></span><span style="width: 9px; height: 9px; border-radius: 999px; border: 2px solid #0b6e8a; background: #f4f7f9; box-sizing: border-box;"></span></span>
+</div>
+<div style="background: #ffffff; border: 1px solid #d6dfe5; border-radius: 12px; padding: 8px 28px;">
+<sc-for list="{{pubs}}" as="p" hint-placeholder-count="1">
+<dc-import name="PubItem" lang="fa" pub="{{p}}" hint-size="100%,190px"></dc-import>
+</sc-for>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{showPeople}}" hint-placeholder-val="{{true}}">
+<section aria-labelledby="results-people">
+<div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+<span aria-hidden="true" style="flex: none; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; background: #e2f0f4; color: #0b6e8a;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8.5" r="3.5"></circle><path d="M2.5 20c1.2-3.3 3.6-5 6.5-5s5.3 1.7 6.5 5"></path><path d="M15.5 5.2a3.5 3.5 0 0 1 0 6.6"></path><path d="M18 15.3c1.6.7 2.8 2.2 3.5 4.7"></path></svg></span>
+<h2 id="results-people" style="margin: 0; display: flex; align-items: center; gap: 10px; font-size: 19px; line-height: 1.6; font-weight: 750; white-space: nowrap;">اعضا<span style="display: inline-flex; align-items: center; justify-content: center; min-width: 26px; height: 24px; padding: 0 8px; box-sizing: border-box; border-radius: 999px; background: #eaf0f3; color: #14212c; font-size: 13px; font-weight: 650; line-height: 1;">۲</span></h2>
+<span aria-hidden="true" style="flex: 1 1 auto; display: flex; align-items: center; min-width: 24px;"><span style="flex: 1 1 auto; height: 1px; background: #b8c6d0;"></span><span style="width: 9px; height: 9px; border-radius: 999px; border: 2px solid #0b6e8a; background: #f4f7f9; box-sizing: border-box;"></span></span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr)); gap: 16px;">
+<sc-for list="{{people}}" as="p" hint-placeholder-count="2">
+<dc-import name="PersonCard" lang="fa" variant="compact" person="{{p}}" hint-size="100%,150px"></dc-import>
+</sc-for>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{showNews}}" hint-placeholder-val="{{true}}">
+<section aria-labelledby="results-news">
+<div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+<span aria-hidden="true" style="flex: none; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; background: #e2f0f4; color: #0b6e8a;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5a14 14 0 0 1 14 14"></path><path d="M5 11a8 8 0 0 1 8 8"></path><circle cx="6" cy="18" r="1.5"></circle></svg></span>
+<h2 id="results-news" style="margin: 0; display: flex; align-items: center; gap: 10px; font-size: 19px; line-height: 1.6; font-weight: 750; white-space: nowrap;">اخبار<span style="display: inline-flex; align-items: center; justify-content: center; min-width: 26px; height: 24px; padding: 0 8px; box-sizing: border-box; border-radius: 999px; background: #eaf0f3; color: #14212c; font-size: 13px; font-weight: 650; line-height: 1;">۲</span></h2>
+<span aria-hidden="true" style="flex: 1 1 auto; display: flex; align-items: center; min-width: 24px;"><span style="flex: 1 1 auto; height: 1px; background: #b8c6d0;"></span><span style="width: 9px; height: 9px; border-radius: 999px; border: 2px solid #0b6e8a; background: #f4f7f9; box-sizing: border-box;"></span></span>
+</div>
+<div style="background: #ffffff; border: 1px solid #d6dfe5; border-radius: 12px; padding: 4px 24px;">
+<sc-for list="{{news}}" as="n" hint-placeholder-count="2">
+<dc-import name="NewsItem" lang="fa" item="{{n}}" hint-size="100%,140px"></dc-import>
+</sc-for>
+</div>
+</section>
+</sc-if>
+
+<sc-if value="{{showEvents}}" hint-placeholder-val="{{true}}">
+<section aria-labelledby="results-events">
+<div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+<span aria-hidden="true" style="flex: none; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 10px; background: #e2f0f4; color: #0b6e8a;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2"></rect><path d="M3.5 10h17"></path><path d="M8 3v4"></path><path d="M16 3v4"></path></svg></span>
+<h2 id="results-events" style="margin: 0; display: flex; align-items: center; gap: 10px; font-size: 19px; line-height: 1.6; font-weight: 750; white-space: nowrap;">رویدادها<span style="display: inline-flex; align-items: center; justify-content: center; min-width: 26px; height: 24px; padding: 0 8px; box-sizing: border-box; border-radius: 999px; background: #eaf0f3; color: #14212c; font-size: 13px; font-weight: 650; line-height: 1;">۱</span></h2>
+<span aria-hidden="true" style="flex: 1 1 auto; display: flex; align-items: center; min-width: 24px;"><span style="flex: 1 1 auto; height: 1px; background: #b8c6d0;"></span><span style="width: 9px; height: 9px; border-radius: 999px; border: 2px solid #0b6e8a; background: #f4f7f9; box-sizing: border-box;"></span></span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 16px;">
+<sc-for list="{{events}}" as="ev" hint-placeholder-count="1">
+<dc-import name="EventCard" lang="fa" event="{{ev}}" hint-size="100%,200px"></dc-import>
+</sc-for>
+</div>
+</section>
+</sc-if>
+
+</div>
+
+<section aria-labelledby="search-tips" style="background: #ffffff; border: 1px solid #d6dfe5; border-radius: 12px; padding: 28px; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 16px 20px;">
+<span aria-hidden="true" style="flex: none; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 12px; background: #e2f0f4; color: #0b6e8a;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg></span>
+<div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 8px;">
+<h2 id="search-tips" style="margin: 0; font-size: 19px; line-height: 1.6; font-weight: 750;">راهنمای جستجو</h2>
+<p style="margin: 0; font-size: 15px; line-height: 1.75; color: #475764; text-wrap: pretty;">با نام افراد، موضوع پژوهشی یا عنوان مقاله جستجو کنید. جستجو به فارسی و انگلیسی هر دو کار می‌کند.</p>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 6px;">
+<span style="font-size: 13px; line-height: 1.6; font-weight: 700; color: #5a6a77;">برای نمونه</span>
+<span style="display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border-radius: 999px; background: #eaf0f3; color: #14212c; font-size: 13px; line-height: 1;">کاویانی</span>
+<span style="display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border-radius: 999px; background: #eaf0f3; color: #14212c; font-size: 13px; line-height: 1;">اینترنت اشیا</span>
+<span dir="ltr" lang="en" style="display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border-radius: 999px; background: #eaf0f3; color: #14212c; font-size: 13px; line-height: 1;">Load Balancing</span>
+<span dir="ltr" lang="en" style="display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border-radius: 999px; background: #eaf0f3; color: #14212c; font-size: 13px; line-height: 1;">SDN</span>
+</div>
+</div>
+</section>
+
+</div>
+</div>
+</section>
+
+</main>
+<dc-import name="Footer" lang="fa" page="Search" hint-size="100%,500px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2600}}'>
+class Component extends DCLogic {
+renderVals() {
+const kind = (this.state && this.state.kind) || 'all';
+const pill = (key) => {
+const on = kind === key;
+return {
+pressed: on ? 'true' : 'false',
+bg: on ? '#0b6e8a' : '#ffffff',
+line: on ? '#0b6e8a' : '#b8c6d0',
+ink: on ? '#ffffff' : '#14212c',
+countInk: on ? '#ffffff' : '#5a6a77',
+weight: on ? '650' : '400'
+};
+};
+const shows = (key) => kind === 'all' || kind === key;
+return {
+fAll: pill('all'),
+fPubs: pill('pubs'),
+fPeople: pill('people'),
+fNews: pill('news'),
+fEvents: pill('events'),
+pickAll: () => this.setState({ kind: 'all' }),
+pickPubs: () => this.setState({ kind: 'pubs' }),
+pickPeople: () => this.setState({ kind: 'people' }),
+pickNews: () => this.setState({ kind: 'news' }),
+pickEvents: () => this.setState({ kind: 'events' }),
+showPubs: shows('pubs'),
+showPeople: shows('people'),
+showNews: shows('news'),
+showEvents: shows('events'),
+pubs: [
+{ type: 'conference', title: 'Lightweight In-band Telemetry for Congestion Detection with P4', authors: [{ n: 'Negar Sadri', m: true, href: 'Profile-fa.dc.html' }, { n: 'Maryam Kaviani', m: true, href: 'Profile-fa.dc.html' }], venue: 'International Conference on Network Systems', year: '2025', links: [{ kind: 'code', href: 'https://github.com/' }], bibtex: '@inproceedings{sadri2025telemetry,\n  title     = {Lightweight In-band Telemetry for Congestion Detection with P4},\n  author    = {Sadri, Negar and Kaviani, Maryam},\n  booktitle = {International Conference on Network Systems},\n  year      = {2025}\n}', href: 'Publications-fa.dc.html' }
+],
+people: [
+{ name: 'دکتر مریم کاویانی', initials: 'م ک', role: 'دانشیار، سرپرست گروه', meta: 'علاقهٔ پژوهشی: شبکه‌های برنامه‌پذیر P4', tags: ['شبکه‌های نرم‌افزارمحور', 'مهندسی ترافیک', 'شبکه‌های برنامه‌پذیر P4'], href: 'Profile-fa.dc.html', email: 'm.kaviani@example.com', scholar: 'https://scholar.google.com/' },
+{ name: 'نگار صدری', initials: 'ن ص', role: 'دانشجوی دکتری · ورودی ۱۴۰۱', meta: 'رساله: پایش درون‌باندی شبکه با سوییچ‌های P4', tags: ['پایش شبکه', 'P4'], href: 'Profile-fa.dc.html', email: 'n.sadri@example.com', scholar: '' }
+],
+news: [
+{ date: '۱۱ تیر ۱۴۰۴', iso: '2025-07-02', title: 'پذیرش مقالهٔ گروه در کنفرانس بین‌المللی', summary: 'مقالهٔ نگار صدری و دکتر کاویانی دربارهٔ پایش درون‌باندی شبکه با P4 پذیرفته شد.', href: 'Article-fa.dc.html' },
+{ date: '۳۰ آبان ۱۴۰۳', iso: '2024-11-20', title: 'سمینار هفتگی: مقدمه‌ای بر زبان P4', summary: 'جلسهٔ این هفته به معرفی زبان P4 و اجرای یک مثال ساده روی سوییچ نرم‌افزاری BMv2 اختصاص داشت. اسلایدها در مخزن گروه قرار گرفته است.', href: 'Article-fa.dc.html' }
+],
+events: [
+{ month: 'آبان', day: '۳۰', year: '۱۴۰۳', type: 'seminar', title: 'سمینار هفتگی: مقدمه‌ای بر زبان P4', href: 'Event-fa.dc.html', time: '', place: '', speaker: '', upcoming: false }
+]
+};
+}
+}
+</script>
+</body>
+</html>

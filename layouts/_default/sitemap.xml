@@ -1,0 +1,5 @@
+{{- /* One language's sitemap (/fa/sitemap.xml, /en/sitemap.xml). Hugo still writes these; nothing links to them, /sitemap.xml lists both languages. */ -}}
+{{ printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+{{- range where .Pages "Sitemap.Disable" "ne" true }}{{ partial "sitemap-url.html" . }}{{ end }}
+</urlset>

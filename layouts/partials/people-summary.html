@@ -1,0 +1,6 @@
+{{- /* context: person page. One line about the person: role · thesis · interests (the search index entry, and the meta description of a profile without a bio). */ -}}
+{{- $p := . -}}
+{{- $parts := slice (partial "person-role.html" $p) -}}
+{{- with partial "loc.html" (dict "m" $p.Params "k" "thesis") }}{{ $parts = $parts | append . }}{{ end -}}
+{{- with partial "loc.html" (dict "m" $p.Params "k" "interests") }}{{ $parts = $parts | append (delimit . (cond (eq site.Language.Lang "fa") "، " ", ")) }}{{ end -}}
+{{- return (delimit $parts " · ") -}}

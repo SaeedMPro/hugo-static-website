@@ -1,20 +1,33 @@
-{{ $here := .RelPermalink }}
-<header class="site-header">
+{{- $here := .RelPermalink -}}
+{{- $section := "" -}}
+{{- if not .IsHome -}}
+  {{- with .Section }}{{ $section = . }}{{ else }}{{ with .File }}{{ $section = .ContentBaseName }}{{ end }}{{ end -}}
+{{- end -}}
+{{- $alt := partial "lang-target.html" . -}}
+<header class="masthead">
+  {{- /* The demo notice sits inside the banner landmark, so landmark navigation reaches it. */}}
+  {{- if site.Params.demo }}
+  <div class="demo-banner">{{ i18n "demoBanner" }}</div>
+  {{- end }}
   <div class="wrap">
     <a class="brand" href="{{ site.Home.RelPermalink }}">
       {{ partial "logo.html" . }}
-      <span>{{ site.Title }}<small>{{ site.Params.university }}</small></span>
+      <span class="brand-text"><span class="brand-word">MCTN</span><span class="brand-desc">{{ site.Params.group }} · {{ site.Params.university }}</span></span>
     </a>
-    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">{{ i18n "menu" }}</button>
-    <nav class="nav" id="site-nav" aria-label="{{ i18n "menu" }}">
-      <ul>
-        {{ range $k := slice "about" "people" "projects" "publications" "news" "join" "contact" }}
-          {{ with site.GetPage $k }}
-            <li><a href="{{ .RelPermalink }}"{{ if hasPrefix $here .RelPermalink }} aria-current="page"{{ end }}>{{ i18n $k }}</a></li>
-          {{ end }}
-        {{ end }}
-        <li>{{ partial "langswitch.html" . }}</li>
-      </ul>
-    </nav>
+    <div class="tools">
+      {{- with site.GetPage "search" }}
+      <a class="search-pill" href="{{ .RelPermalink }}">{{ partial "icon.html" (dict "name" "search" "size" 18) }}<span>{{ i18n "searchSite" }}</span></a>
+      {{- end }}
+      <a class="lang-pill" href="{{ $alt.href }}" hreflang="{{ $alt.lang }}" lang="{{ $alt.lang }}">{{ partial "icon.html" (dict "name" "globe" "size" 18) }}<span>{{ i18n "switchLang" }}</span></a>
+    </div>
   </div>
 </header>
+<nav class="site-nav" aria-label="{{ i18n "mainMenu" }}">
+  <div class="wrap">
+    <ul>
+      {{- range site.Params.nav }}{{ $key := . }}{{ with site.GetPage $key }}
+      <li><a href="{{ .RelPermalink }}"{{ if eq $here .RelPermalink }} aria-current="page"{{ else if eq $section $key }} aria-current="true"{{ end }}>{{ i18n (printf "nav_%s" $key) | default .LinkTitle }}</a></li>
+      {{- end }}{{ end }}
+    </ul>
+  </div>
+</nav>

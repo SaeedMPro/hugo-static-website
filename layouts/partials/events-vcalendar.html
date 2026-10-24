@@ -1,0 +1,9 @@
+{{- /* context: dict "events" (event pages) "name" calendar name (for a subscribable feed; leave it out for a single event to add,
+  so calendar apps add the event instead of opening a new calendar). Returns an iCalendar (RFC 5545) object with CRLF line endings. */ -}}
+{{- $stamp := now.UTC.Format "20060102T150405Z" -}}
+{{- $lines := slice "BEGIN:VCALENDAR" "VERSION:2.0" (printf "PRODID:-//MCTN//Events//%s" (upper site.Language.Lang)) "CALSCALE:GREGORIAN" "METHOD:PUBLISH" -}}
+{{- with .name }}{{ $lines = $lines | append (partial "events-ics-fold.html" (printf "X-WR-CALNAME:%s" (partial "events-ics-text.html" .))) "X-PUBLISHED-TTL:P1D" "REFRESH-INTERVAL;VALUE=DURATION:P1D" }}{{ end -}}
+{{- range .events }}{{ $lines = $lines | append (partial "events-vevent.html" (dict "page" . "stamp" $stamp)) }}{{ end -}}
+{{- $lines = $lines | append "END:VCALENDAR" -}}
+{{- $res := printf "%s\r\n" (delimit $lines "\r\n") -}}
+{{- return $res -}}

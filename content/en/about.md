@@ -1,12 +1,23 @@
 ---
 title: "About"
 translationKey: "about"
+layout: "about"
+lead: "MCTN, the Computer Networks Research Group, is part of the Department of Computer Engineering, Faculty of Engineering, Bu-Ali Sina University."
+facts:
+  - value: "1999"
+    label: "Department of Computer Engineering founded"
+    href: ""
+  - value: "2011"
+    label: "First MSc intake in computer networks"
+    href: ""
+  - value: "4"
+    label: "Research areas"
+    href: "research"
+labs:
+  - title: "Network research laboratory (graduate)"
+    text: "Research workspace for the group’s graduate students."
+  - title: "Network and security laboratory (teaching)"
+    text: "Hosts the hands-on networking and security courses."
+  - title: "Software testbeds"
+    text: "Mininet, the ONOS controller, the BMv2 P4 software switch and an IoT testbed of sample devices."
 ---
-The Computer Networks Research Group is part of the Department of Computer Engineering, Faculty of Engineering, Bu-Ali Sina University. The department has been active since 1999 and has admitted MSc students in computer networks since 2011.
-
-## Research areas
-
-- **Software-defined networking:** centralised control, load balancing and programmable networks.
-- **IoT and wireless sensor networks:** energy-efficient routing and lightweight protocols.
-- **Network security:** intrusion detection and DDoS mitigation.
-- **Traffic engineering:** telemetry, measurement and flow optimisation.

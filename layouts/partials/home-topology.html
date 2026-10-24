@@ -1,0 +1,26 @@
+{{- /* context: the research area pages in weight order. The hero network: one decorative SVG (colours come from
+  the tokens in home.css) with the areas' short labels placed over the four area nodes. Areas beyond the fourth get no
+  label; nodes without an area stay unlabelled. Same geometry on fa and en pages, as in the design. The packet crosses
+  once, in under five seconds, and stays at its resting node (data-rest, where site.js parks it at once for visitors
+  who prefer reduced motion). */ -}}
+{{- $areas := . | default slice -}}
+<div class="home-topo" aria-hidden="true">
+  <svg class="home-topo__svg" viewBox="0 0 520 420" width="520" height="420" focusable="false">
+    <path class="home-topo__dash" d="M130 110L400 95M410 315L120 320" fill="none" stroke-width="2" stroke-dasharray="6 7"></path>
+    <path class="home-topo__link" d="M260 210L130 110M260 210L400 95M260 210L410 315M260 210L120 320M130 110L45 70M130 110L70 178M400 95L480 45M400 95L486 152M410 315L494 372M410 315L330 388M120 320L40 380M120 320L192 396" fill="none" stroke-width="2"></path>
+    {{- range slice (slice 45 70) (slice 70 178) (slice 480 45) (slice 486 152) (slice 494 372) (slice 330 388) (slice 40 380) (slice 192 396) }}
+    <circle class="home-topo__leaf" cx="{{ index . 0 }}" cy="{{ index . 1 }}" r="6" stroke-width="2"></circle>
+    {{- end }}
+    {{- range slice (slice 130 110) (slice 400 95) (slice 410 315) (slice 120 320) }}
+    <circle class="home-topo__area" cx="{{ index . 0 }}" cy="{{ index . 1 }}" r="15" stroke-width="3"></circle>
+    {{- end }}
+    <circle class="home-topo__halo" cx="260" cy="210" r="30"></circle>
+    <circle class="home-topo__core" cx="260" cy="210" r="19"></circle>
+    <circle class="home-topo__eye" cx="260" cy="210" r="6"></circle>
+    <circle class="home-topo__packet" r="7" data-rest="120 320"><animateMotion dur="4.5s" repeatCount="1" fill="freeze" path="M400 95 L260 210 L120 320" calcMode="spline" keyTimes="0;1" keySplines="0.45 0 0.55 1"></animateMotion></circle>
+  </svg>
+  {{- range $i, $a := first 4 $areas }}
+  <span class="home-topo__label home-topo__label--{{ add $i 1 }}">{{ partial "loc.html" (dict "m" $a.Params "k" "short") | default $a.Title }}</span>
+  {{- end }}
+</div>
+{{- /**/ -}}

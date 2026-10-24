@@ -1,5 +1,9 @@
-{{- $s := printf "%v" . -}}
-{{- if eq site.Language.Lang "fa" -}}
+{{- /* Persian digits on Persian pages. A text that keeps its own language (a Persian citation on an English page) passes dict "v" value "lang" "fa"|"en". */ -}}
+{{- $v := . -}}
+{{- $lang := site.Language.Lang -}}
+{{- if reflect.IsMap . }}{{ $v = .v }}{{ $lang = .lang | default $lang }}{{ end -}}
+{{- $s := printf "%v" $v -}}
+{{- if eq $lang "fa" -}}
 {{- range $i, $d := slice "۰" "۱" "۲" "۳" "۴" "۵" "۶" "۷" "۸" "۹" -}}
 {{- $s = replace $s (string $i) $d -}}
 {{- end -}}

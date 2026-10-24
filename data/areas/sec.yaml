@@ -1,0 +1,15 @@
+weight: 3
+icon: "sec"
+short_fa: "امنیت شبکه"
+short_en: "Security"
+title_fa: "امنیت شبکه"
+title_en: "Network security"
+summary_fa: "تشخیص نفوذ و مقابله با حملات منع سرویس."
+summary_en: "Intrusion detection and DDoS mitigation."
+topics_fa: ["تشخیص نفوذ سبک برای دستگاه‌های کم‌توان", "تشخیص حملات منع سرویس در کنترلر SDN", "امنیت دروازه‌های اینترنت اشیا"]
+topics_en: ["Lightweight intrusion detection for constrained devices", "DDoS detection at the SDN controller", "Security of IoT gateways"]
+body_fa: |
+  تمرکز ما بر روش‌های سبک تشخیص نفوذ برای دستگاه‌ها و دروازه‌های کم‌توان اینترنت اشیا است.
+body_en: |
+  Our focus is lightweight intrusion detection for constrained IoT devices and gateways.
+tools: []

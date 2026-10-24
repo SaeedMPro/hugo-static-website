@@ -1,6 +1,48 @@
+{{- $alt := partial "lang-target.html" . -}}
+{{- $year := now.Year -}}
+{{- if eq site.Language.Lang "fa" }}{{ $year = partial "digits.html" (partial "jalali.html" now).y }}{{ end -}}
 <footer class="site-footer">
   <div class="wrap">
-    <span>{{ site.Title }}{{ cond (eq site.Language.Lang "fa") "، " ", " }}{{ site.Params.university }}</span>
-    <span><a href="mailto:{{ site.Params.email }}">{{ site.Params.email }}</a></span>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="brand" href="{{ site.Home.RelPermalink }}">
+          {{ partial "logo.html" . }}
+          <span class="brand-text"><span class="brand-word">MCTN</span><span class="brand-desc">{{ site.Params.group }} · {{ site.Params.university }}</span></span>
+        </a>
+        <p class="footer-mission">{{ site.Home.Description }}</p>
+      </div>
+      {{- range slice (dict "title" "footerResearch" "keys" (slice "research" "projects" "publications")) (dict "title" "footerGroup" "keys" (slice "people" "news" "events" "teaching" "resources")) }}
+      <div class="footer-col">
+        <h2>{{ i18n .title }}</h2>
+        <ul>
+          {{- range .keys }}{{ $key := . }}{{ with site.GetPage $key }}
+          <li><a href="{{ .RelPermalink }}">{{ i18n (printf "foot_%s" $key) | default .LinkTitle }}</a></li>
+          {{- end }}{{ end }}
+        </ul>
+      </div>
+      {{- end }}
+      <div class="footer-col footer-col--contact">
+        <h2>{{ i18n "footerContact" }}</h2>
+        <ul>
+          {{- range slice "join" "contact" }}{{ with site.GetPage . }}
+          <li><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></li>
+          {{- end }}{{ end }}
+        </ul>
+        <address>{{ site.Params.address }}</address>
+        <a class="email" href="mailto:{{ site.Params.email }}" dir="ltr">{{ partial "icon.html" (dict "name" "mail" "size" 18) }}<span>{{ site.Params.email }}</span></a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© {{ $year }} MCTN · {{ site.Params.faculty }}</span>
+      <nav aria-label="{{ i18n "footerLinks" }}">
+        {{- with site.GetPage "news" }}{{ with .OutputFormats.Get "rss" }}
+        <a href="{{ .RelPermalink }}">{{ partial "icon.html" (dict "name" "feed" "size" 16) }}<span>{{ i18n "newsFeed" }}</span></a>
+        {{- end }}{{ end }}
+        {{- with site.Params.github }}
+        <a href="{{ . }}">GitHub</a>
+        {{- end }}
+        <a href="{{ $alt.href }}" hreflang="{{ $alt.lang }}" lang="{{ $alt.lang }}">{{ i18n "switchLang" }}</a>
+      </nav>
+    </div>
   </div>
 </footer>

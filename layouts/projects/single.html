@@ -1,28 +1,163 @@
+{{ define "head" }}
+{{- $ld := dict "@context" "https://schema.org" "@type" "ResearchProject" "name" .Title "url" .Permalink "parentOrganization" (dict "@type" "ResearchOrganization" "name" (printf "MCTN — %s" site.Params.group) "url" site.Home.Permalink) -}}
+{{- with partial "loc.html" (dict "m" .Params "k" "summary") }}{{ $ld = merge $ld (dict "description" .) }}{{ end -}}
+{{- $members := slice -}}
+{{- range .Params.members }}{{ with site.GetPage (printf "/people/%s" .) }}{{ $members = $members | append (dict "@type" "Person" "name" .Title "url" .Permalink) }}{{ end }}{{ end -}}
+{{- with $members }}{{ $ld = merge $ld (dict "member" .) }}{{ end }}
+<script type="application/ld+json">{{ $ld | jsonify | safeJS }}</script>
+{{ end }}
+
 {{ define "main" }}
-{{ $lang := site.Language.Lang }}
-<article>
-  <div class="prose">
-    <span class="status {{ .Params.status }}">{{ i18n (cond (eq .Params.status "active") "status_active" "status_done") }}</span>
+{{- $p := . -}}
+{{- $active := eq .Params.status "active" -}}
+{{- $summary := partial "loc.html" (dict "m" .Params "k" "summary") -}}
+{{- $code := .Params.code | default "" -}}
+{{- $github := in $code "github.com" -}}
+
+{{- $team := slice -}}
+{{- range .Params.members }}{{ with site.GetPage (printf "/people/%s" .) }}{{ $team = $team | append . }}{{ end }}{{ end -}}
+
+{{- $pubs := slice -}}
+{{- range .Params.publications }}{{ range first 1 (where (site.Data.publications | default slice) "id" .) }}{{ $pubs = $pubs | append . }}{{ end }}{{ end -}}
+
+{{- $areas := slice -}}
+{{- range .Params.areas }}{{ with site.GetPage (printf "/research/%s" .) }}{{ $areas = $areas | append .Title }}{{ end }}{{ end -}}
+
+{{- /* Period from the Jalali start/end years (Gregorian on English pages). */ -}}
+{{- $start := "" -}}
+{{- $end := "" -}}
+{{- with .Params.start_year }}{{ $start = partial "year.html" (dict "y" . "en" $p.Params.start_year_en) }}{{ end -}}
+{{- with .Params.end_year }}{{ $end = partial "year.html" (dict "y" . "en" $p.Params.end_year_en) }}{{ end -}}
+{{- $period := $end -}}
+{{- if and $start $end -}}
+  {{- $period = cond (eq $start $end) $start (printf "%s–%s" $start $end) -}}
+{{- else if $start -}}
+  {{- $period = cond $active (i18n "projects_since" (dict "Year" $start)) $start -}}
+{{- end -}}
+{{- $funding := partial "loc.html" (dict "m" .Params "k" "funding") -}}
+
+{{- /* Other projects: those sharing an area first, then the rest, by weight; at most two. */ -}}
+{{- $mine := .Params.areas | default slice -}}
+{{- $near := slice -}}
+{{- $far := slice -}}
+{{- with .Parent }}{{ range .Pages.ByWeight }}{{ if ne .RelPermalink $p.RelPermalink }}
+  {{- if intersect (.Params.areas | default slice) $mine }}{{ $near = $near | append . }}{{ else }}{{ $far = $far | append . }}{{ end -}}
+{{- end }}{{ end }}{{ end -}}
+{{- $others := first 2 ($near | append $far) -}}
+
+{{- $hasMain := or .Content $team $pubs }}
+<header class="page-head">
+  <div class="wrap">
+    {{- with .Parent }}
+    {{ partial "crumbs.html" (dict "items" (slice .) "current" $p.Title) }}
+    {{- end }}
+    <div class="projects-meta">
+      <span class="status{{ if $active }} status--active{{ end }}">{{ i18n (cond $active "status_active" "status_done") }}</span>
+      {{ partial "area-chips.html" (dict "ids" .Params.areas "link" true "full" true) }}
+    </div>
     <h1>{{ .Title }}</h1>
-    <p>{{ index .Params (printf "summary_%s" $lang) }}</p>
-    {{ .Content }}
-    {{ with .Params.code }}<p><a class="btn ghost" href="{{ . }}">{{ i18n "code" }}</a></p>{{ end }}
+    {{- with $summary }}
+    <p class="lead">{{ . }}</p>
+    {{- end }}
+    {{- if or $code $pubs }}
+    <div class="actions">
+      {{- with $code }}
+      <a class="btn btn--primary" href="{{ . }}">{{ partial "icon.html" (dict "name" "code" "size" 18) }}<span>{{ i18n (cond $github "projects_codeGithub" "code") }}</span></a>
+      {{- end }}
+      {{- with $pubs }}
+      <a class="btn btn--secondary" href="#papers">{{ partial "icon.html" (dict "name" "document" "size" 18) }}<span>{{ i18n (cond (eq (len .) 1) "projects_paper" "projects_papers") }}</span></a>
+      {{- end }}
+    </div>
+    {{- end }}
   </div>
-  {{ with .Params.members }}
-  <section class="section">
-    <div class="section-head"><h2>{{ i18n "members" }}</h2></div>
-    <ul class="people-grid">
-      {{ range . }}{{ with site.GetPage (printf "/people/%s" .) }}{{ partial "person-card.html" . }}{{ end }}{{ end }}
-    </ul>
-  </section>
-  {{ end }}
-  {{ with .Params.publications }}
-  <section class="section">
-    <div class="section-head"><h2>{{ i18n "relatedPubs" }}</h2></div>
-    <ul class="pubs">
-      {{ range . }}{{ $id := . }}{{ range where site.Data.publications "id" $id }}{{ partial "pub-item.html" (dict "pub" .) }}{{ end }}{{ end }}
-    </ul>
-  </section>
-  {{ end }}
-</article>
+</header>
+
+<section class="section projects-body{{ if not $others }} section--end{{ end }}">
+  <div class="wrap split">
+    {{- if $hasMain }}
+    <div class="main projects-main">
+      {{- with .Content }}
+      <section class="projects-overview" aria-labelledby="projects-overview-title">
+        {{ partial "section-head.html" (dict "title" (i18n "projects_overview") "id" "projects-overview-title") }}
+        <div class="prose">{{ . }}</div>
+      </section>
+      {{- end }}
+      {{- with $team }}
+      <section aria-labelledby="projects-team-title">
+        {{ partial "section-head.html" (dict "title" (i18n "team") "id" "projects-team-title") }}
+        <div class="grid" style="--min: 18.75rem">
+          {{- range . }}
+          {{ partial "person-card.html" (dict "page" . "variant" "compact") }}
+          {{- end }}
+        </div>
+      </section>
+      {{- end }}
+      {{- with $pubs }}
+      <section class="projects-papers" id="papers" aria-labelledby="projects-papers-title">
+        {{ partial "section-head.html" (dict "title" (i18n "publications") "id" "projects-papers-title") }}
+        <div class="list-card">
+          {{- range . }}
+          {{ partial "pub-item.html" (dict "pub" . "open" false) }}
+          {{- end }}
+        </div>
+      </section>
+      {{- end }}
+    </div>
+    {{- end }}
+    <aside class="aside" aria-labelledby="projects-facts-title">
+      <div class="card projects-facts">
+        <h2 id="projects-facts-title">{{ i18n "projects_details" }}</h2>
+        <dl class="facts">
+          <div>
+            <dt>{{ i18n "status" }}</dt>
+            <dd><span class="status{{ if $active }} status--active{{ end }}">{{ i18n (cond $active "status_active" "status_done") }}</span></dd>
+          </div>
+          {{- with $areas }}
+          <div>
+            <dt>{{ i18n "areas" }}</dt>
+            <dd>{{ delimit . (i18n "projects_sep") }}</dd>
+          </div>
+          {{- end }}
+          {{- with $period }}
+          <div>
+            <dt>{{ i18n "period" }}</dt>
+            <dd>{{ . }}</dd>
+          </div>
+          {{- end }}
+          {{- with $funding }}
+          <div>
+            <dt>{{ i18n "projects_funding" }}</dt>
+            <dd>{{ . }}</dd>
+          </div>
+          {{- end }}
+          {{- with $code }}
+          <div class="projects-fact-link">
+            <dt>{{ i18n "code" }}</dt>
+            <dd><a class="projects-repo" href="{{ . }}"><span>{{ i18n (cond $github "projects_repoGithub" "projects_repo") }}</span>{{ partial "icon.html" (dict "name" "external" "size" 16) }}</a></dd>
+          </div>
+          {{- end }}
+          {{- with .Params.tools }}
+          <div>
+            <dt>{{ i18n "tools" }}</dt>
+            <dd><ul class="tags">{{ range . }}<li class="tag">{{ . }}</li>{{ end }}</ul></dd>
+          </div>
+          {{- end }}
+        </dl>
+      </div>
+    </aside>
+  </div>
+</section>
+
+{{- with $others }}
+<section class="section section--end projects-others" aria-labelledby="projects-others-title">
+  <div class="wrap">
+    {{ partial "section-head.html" (dict "title" (i18n "projects_others") "id" "projects-others-title" "href" $p.Parent.RelPermalink "link" (i18n "allProjects")) }}
+    <div class="grid" style="--min: 22.5rem">
+      {{- range . }}
+      {{ partial "project-card.html" . }}
+      {{- end }}
+    </div>
+  </div>
+</section>
+{{- end }}
 {{ end }}

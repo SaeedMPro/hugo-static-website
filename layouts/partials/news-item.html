@@ -1,0 +1,9 @@
+{{- /* context: dict "page" news page "summary" bool */ -}}
+{{- $p := .page -}}
+<article class="news-item">
+  <p class="date">{{ partial "icon.html" (dict "name" "calendar" "size" 15) }}{{ partial "date.html" (dict "t" $p.Date) }}</p>
+  <h3><a class="stretched" href="{{ $p.RelPermalink }}">{{ $p.Title }}</a></h3>
+  {{- if .summary }}{{ with $p.Params.summary | default ($p.Summary | plainify) }}
+  <p class="summary">{{ . }}</p>
+  {{- end }}{{ end }}
+</article>

@@ -1,0 +1,11 @@
+{{- /* context: dict "ids" area ids "link" bool "full" bool (full titles instead of short labels) */ -}}
+{{- $link := .link -}}
+{{- $full := .full -}}
+{{- with .ids -}}
+<ul class="chips">
+  {{- range . }}{{ with site.GetPage (printf "/research/%s" .) }}
+  {{- $label := cond $full .Title (partial "loc.html" (dict "m" .Params "k" "short") | default .Title) }}
+  <li>{{ if $link }}<a class="chip" href="{{ .RelPermalink }}">{{ $label }}</a>{{ else }}<span class="chip">{{ $label }}</span>{{ end }}</li>
+  {{- end }}{{ end }}
+</ul>
+{{- end -}}

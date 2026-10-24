@@ -1,0 +1,7 @@
+{{- /* Day, month and year strings for a date block: dict "d" "m" "y" "iso". */ -}}
+{{- $res := dict "iso" (.Format "2006-01-02") "d" (.Format "2") "m" (.Format "Jan") "y" (.Format "2006") -}}
+{{- if eq site.Language.Lang "fa" -}}
+  {{- $j := partial "jalali.html" . -}}
+  {{- $res = merge $res (dict "d" (partial "digits.html" $j.d) "m" (i18n (printf "jm_%d" $j.m)) "y" (partial "digits.html" $j.y)) -}}
+{{- end -}}
+{{- return $res -}}

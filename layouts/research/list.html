@@ -1,0 +1,43 @@
+{{ define "main" }}
+{{- $areas := .Pages.ByWeight -}}
+{{- $ids := slice -}}
+{{- range $areas }}{{ $ids = $ids | append .Params.pid }}{{ end -}}
+<header class="page-head">
+  <div class="wrap">
+    <h1>{{ .Title }}</h1>
+    {{- with .Params.lead }}
+    <p class="lead">{{ . }}</p>
+    {{- end }}
+  </div>
+</header>
+<section class="section" aria-labelledby="research-areas">
+  <div class="wrap">
+    <h2 class="visually-hidden" id="research-areas">{{ i18n "researchAreas" }}</h2>
+    {{- with $areas }}
+    <ul class="research-areas">
+      {{- range . }}
+      <li>{{ partial "research-panel.html" . }}</li>
+      {{- end }}
+    </ul>
+    {{- else }}
+    <p class="empty">{{ i18n "research_noAreas" }}</p>
+    {{- end }}
+  </div>
+</section>
+{{- with site.GetPage "projects" }}
+{{- with where .Pages.ByWeight "Params.areas" "intersect" $ids }}
+<section class="section" aria-labelledby="research-projects">
+  <div class="wrap">
+    {{ partial "section-head.html" (dict "title" (i18n "research_projectsTitle") "id" "research-projects" "href" (site.GetPage "projects").RelPermalink "link" (i18n "allProjects")) }}
+    <div class="grid" style="--min: 22.5rem">
+      {{- range . }}
+      {{ partial "project-card.html" . }}
+      {{- end }}
+    </div>
+  </div>
+</section>
+{{- end }}
+{{- end }}
+{{- /* The design gives this page its own join-band copy; cta-join.html uses these options once it accepts them, and the shared copy until then. */}}
+{{ partial "cta-join.html" (dict "title" (i18n "research_ctaTitle") "text" (i18n "research_ctaText") "label" (i18n "research_ctaLabel") "anchor" "topics") }}
+{{ end }}

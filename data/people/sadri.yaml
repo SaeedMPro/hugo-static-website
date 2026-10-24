@@ -3,6 +3,8 @@ name_en: "Negar Sadri"
 role: phd
 status: current
 weight: 1
+areas: ["te", "sdn"]
+advisors: ["kaviani"]
 start_year: "1401"
 thesis_fa: "پایش درون‌باندی شبکه با سوییچ‌های P4"
 thesis_en: "In-band network telemetry with P4 switches"
@@ -10,8 +12,8 @@ interests_fa: ["پایش شبکه", "P4"]
 interests_en: ["Network telemetry", "P4"]
 email: "n.sadri@example.com"
 github: "https://github.com/"
-photo: ""                # مسیر عکس، مثلاً people/karimi.jpg (خالی = عکس پیش‌فرض)
-cv: ""                   # مسیر رزومه، مثلاً cv/karimi.pdf
+photo: ""                
+cv: ""                   
 bio_fa: |
   دانشجوی دکتری. پیش از این کارشناسی ارشد را در همین گروه گذرانده است.
 bio_en: |

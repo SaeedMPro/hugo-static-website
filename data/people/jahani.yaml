@@ -3,8 +3,11 @@ name_en: "Samira Jahani"
 role: msc
 status: alumni
 weight: 2
+areas: ["sdn", "sec"]
+advisors: []
 start_year: "1398"
 end_year: "1400"
+end_year_en: "2022"
 thesis_fa: "تشخیص حملات منع سرویس در کنترلر SDN"
 thesis_en: "DDoS detection at the SDN controller"
 position_fa: "دانشجوی دکتری"
@@ -13,7 +16,7 @@ interests_fa: ["امنیت SDN"]
 interests_en: ["SDN security"]
 email: ""
 github: ""
-photo: ""                # مسیر عکس، مثلاً people/karimi.jpg (خالی = عکس پیش‌فرض)
-cv: ""                   # مسیر رزومه، مثلاً cv/karimi.pdf
+photo: ""                
+cv: ""                  
 bio_fa: ""
 bio_en: ""

@@ -1,0 +1,15 @@
+weight: 2
+icon: "iot"
+short_fa: "اینترنت اشیا"
+short_en: "IoT"
+title_fa: "اینترنت اشیا و شبکه‌های حسگر"
+title_en: "IoT and sensor networks"
+summary_fa: "مسیریابی کم‌مصرف و پروتکل‌های سبک برای دستگاه‌های کوچک."
+summary_en: "Low-energy routing and lightweight protocols for small devices."
+topics_fa: ["مسیریابی کم‌مصرف", "پروتکل‌های سبک", "افزایش طول عمر شبکه‌های حسگر بی‌سیم"]
+topics_en: ["Energy-efficient routing", "Lightweight protocols", "Longer-lived wireless sensor networks"]
+body_fa: |
+  این حوزه پروتکل‌های خوشه‌بندی برای افزایش طول عمر شبکه‌های حسگر بی‌سیم را هم در بر می‌گیرد.
+body_en: |
+  This includes clustering protocols that extend the lifetime of wireless sensor networks.
+tools: []

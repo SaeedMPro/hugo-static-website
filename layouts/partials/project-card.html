@@ -1,0 +1,22 @@
+{{- /* context: project page */ -}}
+{{- $p := . -}}
+{{- $active := eq $p.Params.status "active" -}}
+<article class="project-card" data-filter-item data-type="{{ $p.Params.status }}">
+  <div class="top">
+    <span class="status{{ if $active }} status--active{{ end }}">{{ i18n (cond $active "status_active" "status_done") }}</span>
+    {{ partial "area-chips.html" (dict "ids" $p.Params.areas) }}
+  </div>
+  <h3><a class="stretched" href="{{ $p.RelPermalink }}">{{ $p.Title }}</a></h3>
+  <p class="summary">{{ partial "loc.html" (dict "m" $p.Params "k" "summary") }}</p>
+  <div class="foot">
+    {{- with $p.Params.members }}
+    <div class="team">
+      <span class="avatars">{{ range . }}{{ with site.GetPage (printf "/people/%s" .) }}{{ partial "avatar.html" (dict "page" . "size" 32) }}{{ end }}{{ end }}</span>
+      <span>{{ partial "digits.html" (i18n "membersCount" (len .)) }}</span>
+    </div>
+    {{- end }}
+    {{- with $p.Params.code }}
+    <a class="code" href="{{ . }}">{{ partial "icon.html" (dict "name" "code" "size" 18) }}<span>{{ i18n "code" }}</span></a>
+    {{- end }}
+  </div>
+</article>

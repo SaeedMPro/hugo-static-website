@@ -2,9 +2,11 @@ title_fa: "مسیریابی کم‌مصرف در شبکه‌های حسگر"
 title_en: "Energy-efficient routing in sensor networks"
 status: done
 weight: 3
+areas: ["iot"]
 members: [kaviani, moghadam]
 publications: [moghadam2023wsn]
 code: ""
+tools: []
 summary_fa: "پروتکل خوشه‌بندی برای افزایش طول عمر شبکه‌های حسگر بی‌سیم."
 summary_en: "A clustering protocol that extends the lifetime of wireless sensor networks."
 body_fa: ""

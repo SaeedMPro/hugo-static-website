@@ -1,0 +1,8 @@
+{{- /* A linked person row for profile asides: dict "page" person page "line" second line (optional). 32px avatar, name, line. */ -}}
+{{- $p := .page -}}
+<a class="people-row" href="{{ $p.RelPermalink }}">
+  {{- partial "avatar.html" (dict "page" $p "size" 32) -}}
+  <span class="txt"><span class="n">{{ $p.Title }}</span>{{ with .line }}<span class="r">{{ . }}</span>{{ end }}</span>
+{{- /**/ -}}
+</a>
+{{- /**/ -}}

@@ -1,0 +1,100 @@
+{{ define "head" }}
+<meta name="robots" content="noindex">
+{{ end }}
+
+{{ define "main" }}
+{{- /* Site search. search.js loads this language's index.json, reads ?q= and renders the results into the
+  <template> blocks below, so every label comes from i18n and the script carries no language strings. */ -}}
+{{- $index := "" -}}
+{{- with site.Home.OutputFormats.Get "json" }}{{ $index = .RelPermalink }}{{ end -}}
+{{- $alt := partial "lang-target.html" . -}}
+{{- $groups := slice
+  (dict "type" "publication" "label" (i18n "publications") "icon" "document" "item" "row")
+  (dict "type" "person" "label" (i18n "people") "icon" "people" "item" "person")
+  (dict "type" "area" "label" (i18n "researchAreas") "icon" "sdn" "item" "row")
+  (dict "type" "project" "label" (i18n "projects") "icon" "code" "item" "row")
+  (dict "type" "news" "label" (i18n "news") "icon" "feed" "item" "row")
+  (dict "type" "event" "label" (i18n "events") "icon" "calendar" "item" "card")
+  (dict "type" "page" "label" (i18n "pubs_typePages") "icon" "link" "item" "row")
+-}}
+{{- $lists := dict "row" "list-card srch-rows" "person" "srch-grid" "card" "srch-stack" -}}
+<div class="srch" data-srch data-index="{{ $index }}" data-alt-url="{{ $alt.href }}" data-all="{{ i18n "all" }}" data-results-one="{{ i18n "pubs_resultsOne" }}" data-results="{{ i18n "pubs_results" }}" data-for="{{ i18n "pubs_resultsFor" }}" data-none="{{ i18n "pubs_noResults" }}" data-loading="{{ i18n "pubs_searching" }}" data-error="{{ i18n "pubs_searchError" }}">
+  <header class="page-head">
+    <div class="wrap">
+      <h1>{{ .Title }}</h1>
+      <form class="srch-form" role="search" method="get" action="{{ .RelPermalink }}" data-srch-form>
+        <label for="srch-q">{{ i18n "searchSite" }}</label>
+        <div class="srch-row">
+          <div class="search-field srch-field">
+            {{ partial "icon.html" (dict "name" "search" "size" 22) }}
+            <input class="input" id="srch-q" type="search" name="q" placeholder="{{ i18n "pubs_searchPagePlaceholder" }}" autocomplete="off" spellcheck="false" enterkeyhint="search" aria-controls="srch-results" data-srch-input>
+          </div>
+          <button class="btn btn--primary srch-submit" type="submit">{{ i18n "search" }}</button>
+        </div>
+      </form>
+      <p class="srch-summary" role="status" aria-live="polite" data-srch-summary></p>
+    </div>
+  </header>
+
+  <div class="srch-body">
+    <div class="wrap">
+      <div class="srch-col">
+        <div class="pills srch-pills" role="group" aria-label="{{ i18n "pubs_resultTypes" }}" data-srch-pills hidden></div>
+        <div class="srch-results" id="srch-results" data-srch-results></div>
+        <noscript>
+          <div class="empty">
+            <span class="icon-tile icon-tile--sm" aria-hidden="true">{{ partial "icon.html" (dict "name" "search") }}</span>
+            <p>{{ i18n "pubs_noscript" }}</p>
+          </div>
+        </noscript>
+        <section class="card srch-tips" aria-labelledby="srch-tips-title">
+          <span class="icon-tile" aria-hidden="true">{{ partial "icon.html" (dict "name" "search" "size" 26) }}</span>
+          <div class="srch-tips-body">
+            <h2 id="srch-tips-title">{{ i18n "pubs_tipsTitle" }}</h2>
+            <p>{{ i18n "pubs_tipsText" }}</p>
+            {{- with split (i18n "pubs_examples") "|" }}
+            <div class="srch-examples">
+              <span class="srch-examples-label" id="srch-examples-label">{{ i18n "pubs_examplesLabel" }}</span>
+              <ul aria-labelledby="srch-examples-label">
+                {{- range . }}
+                {{- $script := cond (gt (len (findRE `[\x{0600}-\x{06FF}]` . 1)) 0) "fa" "en" }}
+                <li><a class="srch-example" href="{{ $.RelPermalink }}?q={{ . }}"{{ if ne $script site.Language.Lang }} lang="{{ $script }}" dir="{{ cond (eq $script "fa") "rtl" "ltr" }}"{{ end }}><span>{{ . }}</span></a></li>
+                {{- end }}
+              </ul>
+            </div>
+            {{- end }}
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  {{- range $groups }}
+  <template data-srch-group="{{ .type }}" data-label="{{ .label }}" data-item="{{ .item }}">
+    <section class="srch-group">
+      <div class="srch-head">
+        <span class="icon-tile srch-tile" aria-hidden="true">{{ partial "icon.html" (dict "name" .icon) }}</span>
+        <h2><span>{{ .label }}</span><span class="srch-count" data-slot="count"></span></h2>
+        <span class="rule" aria-hidden="true"></span>
+      </div>
+      <div class="{{ index $lists .item }}" data-slot="items"></div>
+    </section>
+  </template>
+  {{- end }}
+  {{- /* Result items: search.js puts a link with the entry's title into [data-slot="title"] (with the class in data-link) and its text into [data-slot="text"]. */}}
+  <template data-srch-item="row">
+    <article class="srch-hit"><h3 data-slot="title" data-link="stretched"></h3><p data-slot="text"></p></article>
+  </template>
+  <template data-srch-item="person">
+    <article class="person-card srch-person"><span class="avatar" aria-hidden="true">{{ partial "icon.html" (dict "name" "person" "size" 24) }}</span><div class="body"><h3 data-slot="title" data-link="stretched"></h3><p class="role" data-slot="text"></p></div></article>
+  </template>
+  <template data-srch-item="card">
+    <article class="srch-card"><span class="icon-tile icon-tile--sm" aria-hidden="true">{{ partial "icon.html" (dict "name" "calendar") }}</span><div class="body"><h3 data-slot="title" data-link="stretched"></h3><p data-slot="text"></p></div></article>
+  </template>
+</div>
+{{ end }}
+
+{{ define "scripts" }}
+{{- $js := resources.Get "js/search.js" | minify | fingerprint }}
+<script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>
+{{ end }}

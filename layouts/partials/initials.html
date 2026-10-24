@@ -1,0 +1,13 @@
+{{- /* Initials for an avatar without a photo, skipping titles such as "Dr.". */ -}}
+{{- $words := slice -}}
+{{- range split (trim . " ") " " -}}
+  {{- if and . (not (in (slice "دکتر" "مهندس" "Dr." "Dr" "Prof." "Prof") .)) -}}{{- $words = $words | append . -}}{{- end -}}
+{{- end -}}
+{{- $res := "" -}}
+{{- with $words -}}
+  {{- $first := substr (index . 0) 0 1 -}}
+  {{- $last := "" -}}
+  {{- if gt (len .) 1 -}}{{- $last = substr (index . (sub (len .) 1)) 0 1 -}}{{- end -}}
+  {{- $res = cond (eq site.Language.Lang "fa") (trim (printf "%s %s" $first $last) " ") (upper (printf "%s%s" $first $last)) -}}
+{{- end -}}
+{{- return $res -}}

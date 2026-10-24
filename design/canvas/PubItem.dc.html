@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="fa">
+<head>
+<meta charset="utf-8">
+<title>Publication item</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&amp;family=Vazirmatn:wght@100..900&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<article dir="ltr" lang="en" style="font-family: Vazirmatn, Tahoma, 'Segoe UI', system-ui, sans-serif; color: #14212c; text-align: left; padding: 20px 0 14px; border-bottom: 1px solid #d6dfe5; display: flex; flex-direction: column; gap: 6px;">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px;">
+<span dir="{{dir}}" lang="{{lang}}" style="display: inline-flex; align-items: center; height: 24px; padding: 0 8px; border-radius: 6px; border: 1px solid #b8c6d0; color: #475764; font-size: 12px; font-weight: 650; line-height: 1;">{{typeLabel}}</span>
+<span style="font-size: 13px; color: #5a6a77; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;">{{pub.year}}</span>
+</div>
+<h3 style="margin: 0; font-size: 17px; line-height: 1.45; font-weight: 700; text-wrap: pretty;"><a href="{{titleHref}}" style="color: #14212c; text-decoration: none;">{{pub.title}}</a></h3>
+<p style="margin: 0; font-size: 15px; line-height: 1.55; color: #475764;"><sc-for list="{{authors}}" as="a" hint-placeholder-count="2"><sc-if value="{{a.m}}" hint-placeholder-val="{{true}}"><a href="{{a.href}}" style="color: #14212c; font-weight: 650; text-decoration: underline; text-decoration-color: #b8c6d0; text-underline-offset: 3px;">{{a.n}}</a></sc-if><sc-if value="{{a.ext}}" hint-placeholder-val="{{false}}"><span>{{a.n}}</span></sc-if><span>{{a.sep}}</span></sc-for></p>
+<p style="margin: 0; font-size: 15px; line-height: 1.55; color: #5a6a77;">{{pub.venue}}, {{pub.year}}</p>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0 20px;">
+<sc-for list="{{links}}" as="l" hint-placeholder-count="1">
+<a href="{{l.href}}" style="display: inline-flex; align-items: center; gap: 6px; min-height: 44px; color: #0b6e8a; font-size: 14px; font-weight: 650; text-decoration: none;"><span dir="{{l.dir}}" lang="{{l.lang}}">{{l.label}}</span></a>
+</sc-for>
+<button type="button" aria-expanded="{{bibExpanded}}" onClick="{{toggleBib}}" style="display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0; border: 0; background: none; color: #0b6e8a; font: inherit; font-size: 14px; font-weight: 650; cursor: pointer;">
+<span>BibTeX</span>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: rotate({{chevronTurn}});"><path d="M6 9l6 6 6-6"></path></svg>
+</button>
+</div>
+<sc-if value="{{bibOpen}}" hint-placeholder-val="{{false}}">
+<div style="position: relative; margin: 2px 0 6px;">
+<pre style="margin: 0; padding: 14px 112px 14px 16px; background: #f4f7f9; border: 1px solid #d6dfe5; border-radius: 8px; font-family: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace; font-size: 13px; line-height: 1.6; color: #14212c; white-space: pre; overflow-x: auto;">{{pub.bibtex}}</pre>
+<button type="button" style="position: absolute; top: 6px; right: 6px; display: inline-flex; align-items: center; gap: 6px; height: 44px; padding: 0 14px; border: 1px solid #d6dfe5; border-radius: 6px; background: #ffffff; color: #14212c; font: inherit; font-size: 14px; font-weight: 650; cursor: pointer;">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8.5" y="8.5" width="11.5" height="11.5" rx="2"></rect><path d="M15.5 8.5V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7.5a2 2 0 0 0 2 2h2.5"></path></svg>
+<span dir="{{dir}}" lang="{{lang}}">{{copyLabel}}</span>
+</button>
+</div>
+</sc-if>
+</article>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["fa","en"],"default":"fa"},"showBib":{"editor":"boolean","default":false},"pub":{"editor":null},"$preview":{"width":820,"height":300}}'>
+class Component extends DCLogic {
+renderVals() {
+const lang = this.props.lang ?? 'fa';
+const fa = lang === 'fa';
+const pub = this.props.pub ?? {
+type: 'conference',
+title: 'Lightweight In-band Telemetry for Congestion Detection with P4',
+authors: [{ n: 'Negar Sadri', m: true, href: 'Profile-fa.dc.html' }, { n: 'Maryam Kaviani', m: true, href: 'Profile-fa.dc.html' }],
+venue: 'International Conference on Network Systems',
+year: '2025',
+links: [{ kind: 'code', href: 'https://github.com/' }],
+bibtex: '@inproceedings{sadri2025telemetry,\n  title     = {Lightweight In-band Telemetry for Congestion Detection with P4},\n  author    = {Sadri, Negar and Kaviani, Maryam},\n  booktitle = {International Conference on Network Systems},\n  year      = {2025}\n}'
+};
+const types = fa
+? { journal: 'مجله', conference: 'کنفرانس', thesis: 'پایان‌نامه', preprint: 'پیش‌انتشار' }
+: { journal: 'Journal', conference: 'Conference', thesis: 'Thesis', preprint: 'Preprint' };
+const linkNames = fa
+? { pdf: 'PDF', doi: 'DOI', code: 'کد', slides: 'اسلاید', data: 'داده' }
+: { pdf: 'PDF', doi: 'DOI', code: 'Code', slides: 'Slides', data: 'Data' };
+const list = pub.authors || [];
+const authors = list.map((a, i) => ({
+n: a.n,
+m: !!a.m,
+ext: !a.m,
+href: a.href || '#',
+sep: i < list.length - 1 ? ', ' : ''
+}));
+const links = (pub.links || []).map((l) => {
+const label = linkNames[l.kind] || l.kind;
+const persian = fa && (l.kind === 'code' || l.kind === 'slides' || l.kind === 'data');
+return { href: l.href, label: label, dir: persian ? 'rtl' : 'ltr', lang: persian ? 'fa' : 'en' };
+});
+const hasState = this.state && this.state.open !== undefined;
+const open = hasState ? this.state.open : !!this.props.showBib;
+return {
+lang: lang,
+dir: fa ? 'rtl' : 'ltr',
+pub: pub,
+authors: authors,
+links: links,
+typeLabel: types[pub.type] || pub.type,
+titleHref: pub.href || ('Publications-' + lang + '.dc.html'),
+bibOpen: open,
+bibExpanded: open ? 'true' : 'false',
+chevronTurn: open ? '180deg' : '0deg',
+toggleBib: () => this.setState({ open: !open }),
+copyLabel: fa ? 'کپی' : 'Copy'
+};
+}
+}
+</script>
+</body>
+</html>

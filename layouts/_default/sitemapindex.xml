@@ -1,0 +1,5 @@
+{{- /* /sitemap.xml, the sitemap to submit: every page of both languages. Hugo's default here is an index of /fa/sitemap.xml and /en/sitemap.xml, but the Persian pages live at the site root, outside /fa/, so a sitemap there may not list them. */ -}}
+{{ printf "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" | safeHTML }}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+{{- range . }}{{ range where .Pages "Sitemap.Disable" "ne" true }}{{ partial "sitemap-url.html" . }}{{ end }}{{ end }}
+</urlset>

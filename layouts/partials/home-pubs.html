@@ -1,0 +1,13 @@
+{{- /* context: how many. Returns the newest publications: years in descending order, entries of the same year
+  in the order of data/publications.yaml. */ -}}
+{{- $n := . -}}
+{{- $pubs := site.Data.publications | default slice -}}
+{{- $years := slice -}}
+{{- range $pubs }}{{ $years = $years | append (int .year) }}{{ end -}}
+{{- $res := slice -}}
+{{- range sort (uniq $years) "value" "desc" -}}
+  {{- $y := . -}}
+  {{- range $pubs }}{{ if eq (int .year) $y }}{{ $res = $res | append . }}{{ end }}{{ end -}}
+{{- end -}}
+{{- $res = first $n $res -}}
+{{- return $res -}}

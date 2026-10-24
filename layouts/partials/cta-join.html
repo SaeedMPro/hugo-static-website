@@ -1,0 +1,20 @@
+{{- /* The night join band. context: a page (shared copy), or dict with optional "title", "text", "label" (main button) and "anchor" (a section id on the join page). */ -}}
+{{- $o := cond (reflect.IsMap .) . dict -}}
+<section class="section section--lg section--end">
+  <div class="wrap">
+    <div class="cta-band">
+      <svg class="decor" viewBox="0 0 360 220" aria-hidden="true" focusable="false"><path d="M40 60L150 110L290 50M150 110L120 190M150 110L250 170M290 50L330 140" fill="none" stroke="#253945" stroke-width="2"/><circle cx="40" cy="60" r="7" fill="#0f1c26" stroke="#253945" stroke-width="2"/><circle cx="290" cy="50" r="9" fill="#0f1c26" stroke="#253945" stroke-width="2"/><circle cx="120" cy="190" r="6" fill="#0f1c26" stroke="#253945" stroke-width="2"/><circle cx="250" cy="170" r="7" fill="#0f1c26" stroke="#253945" stroke-width="2"/><circle cx="330" cy="140" r="6" fill="#0f1c26" stroke="#253945" stroke-width="2"/><circle cx="150" cy="110" r="11" fill="#162733" stroke="#7fd0e6" stroke-width="2"/><circle cx="220" cy="80" r="5" fill="#f2b33d"/></svg>
+      <div class="text">
+        <span class="eyebrow">{{ i18n "ctaJoinEyebrow" }}</span>
+        <h2>{{ $o.title | default (i18n "ctaJoinTitle") }}</h2>
+        <p>{{ $o.text | default (i18n "ctaJoinText") }}</p>
+      </div>
+      <div class="actions">
+        {{- with site.GetPage "join" }}
+        <a class="btn btn--lg btn--night" href="{{ .RelPermalink }}{{ with $o.anchor }}#{{ . }}{{ end }}">{{ $o.label | default (i18n "howToJoin") }}{{ partial "icon.html" (dict "name" "arrow" "size" 18) }}</a>
+        {{- end }}
+        <a class="btn btn--lg btn--night-outline" href="mailto:{{ site.Params.email }}">{{ i18n "emailGroup" }}</a>
+      </div>
+    </div>
+  </div>
+</section>

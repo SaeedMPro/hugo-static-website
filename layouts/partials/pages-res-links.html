@@ -1,0 +1,35 @@
+{{- /* context: one entry of data/resources.yaml. Returns its links as dict:
+  "href" (its own url, site-relative when local) "name" (button label: "GitHub" or the host) "short" (host and path, for display)
+  "icon" ("external" for other sites, "arrow" for a file on this site),
+  "project" (related project page) and "pub" (related publication entry) with "pubHref" (its anchor on the publications page). Missing ones are "". */ -}}
+{{- $r := . -}}
+{{- $href := "" }}{{ $name := "" }}{{ $short := "" }}{{ $icon := "external" -}}
+{{- with $r.url -}}
+  {{- $href = partial "pages-url.html" . -}}
+  {{- $u := urls.Parse . -}}
+  {{- $host := strings.TrimPrefix "www." $u.Host -}}
+  {{- if $host -}}
+    {{- $name = cond (eq $host "github.com") "GitHub" $host -}}
+    {{- $short = strings.TrimSuffix "/" (printf "%s%s" $host $u.Path) -}}
+  {{- else -}}
+    {{- $name = i18n "pages_openLink" -}}
+    {{- $short = . -}}
+    {{- $icon = "arrow" -}}
+  {{- end -}}
+{{- end -}}
+{{- $project := "" -}}
+{{- with $r.project -}}
+  {{- with site.GetPage (printf "/projects/%s" .) }}{{ $project = . }}{{ else }}{{ warnf "resources: %q has an unknown project %q" $r.id . }}{{ end -}}
+{{- end -}}
+{{- $pub := "" }}{{ $pubHref := "" -}}
+{{- with $r.publication -}}
+  {{- $id := . -}}
+  {{- with where (site.Data.publications | default slice) "id" $id -}}
+    {{- $pub = index . 0 -}}
+    {{- $pubHref = printf "#%s" $id -}}
+    {{- with site.GetPage "publications" }}{{ $pubHref = printf "%s#%s" .RelPermalink $id }}{{ end -}}
+  {{- else -}}
+    {{- warnf "resources: %q has an unknown publication %q" $r.id $id -}}
+  {{- end -}}
+{{- end -}}
+{{- return (dict "href" $href "name" $name "short" $short "icon" $icon "project" $project "pub" $pub "pubHref" $pubHref) -}}

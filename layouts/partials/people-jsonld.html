@@ -1,0 +1,24 @@
+{{- /* schema.org Person for a profile page. Only fields that are set. */ -}}
+{{- $p := . -}}
+{{- $s := newScratch -}}
+{{- $s.SetInMap "ld" "@context" "https://schema.org" -}}
+{{- $s.SetInMap "ld" "@type" "Person" -}}
+{{- $s.SetInMap "ld" "name" $p.Title -}}
+{{- $s.SetInMap "ld" "url" $p.Permalink -}}
+{{- with partial "loc.html" (dict "m" $p.Params "k" "title") }}{{ $s.SetInMap "ld" "jobTitle" . }}{{ end -}}
+{{- with $p.Params.email }}{{ $s.SetInMap "ld" "email" (printf "mailto:%s" .) }}{{ end -}}
+{{- with $p.Params.photo }}{{ $s.SetInMap "ld" "image" ((partial "pages-url.html" .) | absURL) }}{{ end -}}
+{{- with $p.Params.phone }}{{ $s.SetInMap "ld" "telephone" . }}{{ end -}}
+{{- with partial "loc.html" (dict "m" $p.Params "k" "interests") }}{{ $s.SetInMap "ld" "knowsAbout" . }}{{ end -}}
+{{- $same := slice -}}
+{{- range slice $p.Params.scholar $p.Params.github $p.Params.website -}}{{ with . }}{{ $same = $same | append . }}{{ end }}{{- end -}}
+{{- with $p.Params.orcid }}{{ $same = $same | append (cond (hasPrefix . "http") . (printf "https://orcid.org/%s" .)) }}{{ end -}}
+{{- with $same }}{{ $s.SetInMap "ld" "sameAs" . }}{{ end -}}
+{{- $uni := dict "@type" "CollegeOrUniversity" "name" site.Params.university -}}
+{{- if eq $p.Params.status "alumni" -}}
+  {{- $s.SetInMap "ld" "alumniOf" $uni -}}
+{{- else -}}
+  {{- $s.SetInMap "ld" "affiliation" $uni -}}
+  {{- $s.SetInMap "ld" "memberOf" (dict "@type" "ResearchOrganization" "name" (printf "MCTN — %s" site.Params.group) "url" site.Home.Permalink) -}}
+{{- end }}
+<script type="application/ld+json">{{ $s.Get "ld" | jsonify | safeJS }}</script>

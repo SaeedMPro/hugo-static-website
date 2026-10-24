@@ -1,0 +1,76 @@
+{{ define "main" }}
+{{- $courses := site.Data.courses | default slice -}}
+{{- $groups := slice
+  (dict "id" "graduate" "title" (i18n "pages_graduate") "items" (where $courses "level" "in" (slice "msc" "phd")))
+  (dict "id" "undergraduate" "title" (i18n "pages_undergraduate") "items" (where $courses "level" "bsc"))
+-}}
+{{- $join := site.GetPage "join" -}}
+{{- $research := site.GetPage "research" -}}
+<header class="page-head">
+  <div class="wrap">
+    <h1>{{ .Title }}</h1>
+    {{- with .Params.lead }}
+    <p class="lead">{{ . }}</p>
+    {{- end }}
+  </div>
+</header>
+
+<div class="section--end">
+  {{- with .Content }}
+  <div class="section">
+    <div class="wrap"><div class="prose">{{ . }}</div></div>
+  </div>
+  {{- end }}
+
+  {{- range $groups }}{{ $g := . }}{{ with .items }}
+  <section class="section" id="{{ $g.id }}" aria-labelledby="{{ $g.id }}-title">
+    <div class="wrap">
+      {{ partial "section-head.html" (dict "title" $g.title "id" (printf "%s-title" $g.id)) }}
+      <div class="grid pg-courses">
+        {{- range . }}
+        {{ partial "pages-course.html" . }}
+        {{- end }}
+      </div>
+    </div>
+  </section>
+  {{- end }}{{ end }}
+
+  {{- if not (or (index $groups 0).items (index $groups 1).items) }}
+  <div class="section">
+    <div class="wrap">
+      <p class="empty"><span class="icon-tile icon-tile--sm">{{ partial "icon.html" (dict "name" "course") }}</span><span>{{ i18n "pages_noCourses" }}</span></p>
+    </div>
+  </div>
+  {{- end }}
+
+  {{- if or .Params.supervision_title .Params.supervision_text }}
+  <section class="section" id="supervision" aria-labelledby="supervision-title">
+    <div class="wrap">
+      <div class="pg-supervise">
+        <div class="text">
+          <h2 id="supervision-title">{{ .Params.supervision_title | default (i18n "pages_openThesisTopics") }}</h2>
+          {{- with .Params.supervision_text }}
+          <p>{{ . }}</p>
+          {{- end }}
+          {{- with $join }}
+          <div class="actions">
+            <a class="btn btn--primary" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+            {{- with .Params.topics }}
+            <a class="link-more" href="{{ $join.RelPermalink }}#topics">{{ i18n "pages_openThesisTopics" }}{{ partial "icon.html" (dict "name" "arrow" "size" 18) }}</a>
+            {{- end }}
+          </div>
+          {{- end }}
+        </div>
+        {{- with $research }}{{ with .Pages.ByWeight }}
+        <ul class="pg-areas pg-areas--compact" aria-label="{{ i18n "researchAreas" }}">
+          {{- range . }}
+          <li>{{ partial "pages-area-row.html" (dict "page" . "summary" false) }}</li>
+          {{- end }}
+        </ul>
+        {{- end }}{{ end }}
+      </div>
+    </div>
+  </section>
+  {{- end }}
+</div>
+{{ end }}

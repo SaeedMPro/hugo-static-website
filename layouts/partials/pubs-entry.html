@@ -1,0 +1,7 @@
+{{- /* One search-index entry: dict "type" "title" "url" "text" and optional "alt" (a list of names in the other language
+  and other words that should find the entry; matched by search.js, never shown) → a clean dict for jsonify. */ -}}
+{{- $out := dict "type" .type "title" (partial "pubs-plain.html" .title) "url" .url "text" (partial "pubs-plain.html" .text) -}}
+{{- $alt := slice -}}
+{{- range .alt }}{{ with partial "pubs-plain.html" . }}{{ if not (in $alt .) }}{{ $alt = $alt | append . }}{{ end }}{{ end }}{{ end -}}
+{{- with $alt }}{{ $out = merge $out (dict "alt" (delimit . " · ")) }}{{ end -}}
+{{- return $out -}}

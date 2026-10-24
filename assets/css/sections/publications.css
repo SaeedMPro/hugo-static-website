@@ -1,0 +1,134 @@
+/* Publications page (.pubs-*) and site search (.srch-*). Tokens and logical properties only. */
+
+/* Publications */
+.pubs-total { font-size: 0.9375rem; line-height: var(--lh-small); color: var(--muted); }
+.pubs-body { padding-block: 2.5rem 6rem; }
+.pubs-stack { display: flex; flex-direction: column; gap: 3rem; }
+
+/* The toolbar filters with JavaScript only, so it is shown only when scripts run. */
+.pubs-toolbar { display: none; flex-direction: column; gap: 1.25rem; }
+.js .pubs-toolbar { display: flex; }
+.pubs-fields { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 1rem; }
+.pubs-field-q { flex: 3 1 20rem; }
+.pubs-field-area { flex: 1 1 13.75rem; }
+.pubs-field-year { flex: 1 1 10rem; }
+.pubs-toolbar .field label, .pubs-types-label { font-size: 0.875rem; line-height: var(--lh-small); font-weight: 650; }
+.pubs-types {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1rem;
+  padding-top: 1.25rem; border-top: 1px solid var(--line-faint);
+}
+
+/* Counts inside filter pills: muted when off, like the label when on. */
+.pubs-toolbar .pill, .srch-pills .pill { gap: 0.5rem; }
+.pubs-toolbar .pill .count, .srch-pills .pill .count { color: var(--muted); opacity: 1; }
+.pubs-toolbar .pill[aria-pressed="true"] .count, .srch-pills .pill[aria-pressed="true"] .count { color: inherit; }
+
+.pubs-list { display: flex; flex-direction: column; gap: 3rem; }
+.pubs-year .section-head { margin-bottom: 1.25rem; }
+.pubs-list .list-card { padding: 0.5rem 1.75rem; }
+/* Links from search land on an entry (/publications/#id): keep it clear of the sticky menu. */
+.pubs-list .pub { scroll-margin-top: 5rem; }
+.pubs-empty { flex-wrap: wrap; }
+.pubs-empty p { flex: 1 1 14rem; margin: 0; }
+
+.pubs-card { display: flex; flex-direction: column; gap: 0.25rem; }
+.pubs-card h2 { display: flex; align-items: center; gap: 0.625rem; margin: 0; font-size: 1.0625rem; line-height: var(--lh-h3); font-weight: 750; }
+.pubs-card h2 .icon { color: var(--primary); }
+/* The per-entry BibTeX buttons need JavaScript, and so does this note about them. */
+.pubs-card--bib { display: none; gap: 0.625rem; }
+.js .pubs-card--bib { display: flex; }
+.pubs-card--bib p { margin: 0; font-size: 0.9375rem; line-height: var(--lh-small); color: var(--ink-2); text-wrap: pretty; }
+.pubs-scholars { list-style: none; padding: 0; display: flex; flex-direction: column; }
+.pubs-scholars li { display: flex; border-bottom: 1px solid var(--line-faint); }
+.pubs-scholars li:last-child { border-bottom: 0; }
+.pubs-scholars a {
+  flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 0.75rem; min-height: 64px;
+  padding-block: 0.625rem; color: var(--ink); text-decoration: none;
+}
+.pubs-scholars .avatar { width: 40px; height: 40px; font-size: 0.8125rem; }
+.pubs-scholars .who { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; }
+.pubs-scholars .name { font-size: 0.9375rem; line-height: var(--lh-small); font-weight: 650; color: var(--primary); }
+.pubs-scholars .role { font-size: 0.8125rem; line-height: calc(var(--lh-small) - 0.12); color: var(--muted); }
+.pubs-scholars a:hover .name { color: var(--primary-strong); text-decoration: underline; }
+.pubs-scholars a > .icon { color: var(--muted); }
+
+/* Site search */
+.srch-form { width: 100%; max-width: 52.5rem; display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.375rem; }
+.srch-form label { font-size: 0.875rem; line-height: var(--lh-small); font-weight: 650; }
+.srch-row { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.srch-field { flex: 1 1 20rem; min-width: 0; }
+.srch-field .icon { inset-inline-start: 1rem; }
+.srch-field .input { min-height: 56px; padding-inline: 1rem; padding-inline-start: 3.125rem; font-size: 1.125rem; }
+.srch-submit { flex: none; min-height: 56px; padding-inline: 1.75rem; font-size: 1rem; }
+.srch-summary { margin: 0; font-size: 1.0625rem; color: var(--ink-2); }
+.srch-summary strong { color: var(--ink); font-weight: 700; }
+
+.srch-body { padding-block: 2.5rem 6rem; }
+.srch-col { max-width: 52.5rem; display: flex; flex-direction: column; gap: 2.5rem; }
+.srch-results { display: flex; flex-direction: column; gap: 2.5rem; }
+.srch-results:empty { display: none; }
+
+.srch-head { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+.srch-tile { width: 36px; height: 36px; border-radius: var(--radius-d); }
+.srch-head h2 { display: flex; align-items: center; gap: 0.625rem; font-size: 1.1875rem; line-height: var(--lh-h3); font-weight: 750; white-space: nowrap; }
+.srch-count {
+  display: inline-flex; align-items: center; justify-content: center; min-width: 26px; height: 24px; padding-inline: 0.5rem;
+  border-radius: 999px; background: var(--sunken); color: var(--ink); font-size: 0.8125rem; font-weight: 650; line-height: 1;
+}
+.srch-head .rule { flex: 1 1 auto; display: flex; align-items: center; min-width: 1.5rem; }
+.srch-head .rule::before { content: ""; flex: 1 1 auto; height: 1px; background: var(--line-strong); }
+.srch-head .rule::after { content: ""; flex: none; width: 9px; height: 9px; border-radius: 50%; border: 2px solid var(--primary); background: var(--bg); }
+
+.srch-rows { padding: 0.5rem 1.75rem; }
+.srch-hit { position: relative; display: flex; flex-direction: column; gap: 0.25rem; padding: 1.125rem 0; border-bottom: 1px solid var(--line); }
+.srch-hit h3, .srch-card h3 { font-size: 1.0625rem; line-height: calc(var(--lh-h3) + 0.05); font-weight: 700; text-wrap: pretty; }
+.srch-hit h3 a, .srch-card h3 a { color: var(--ink); text-decoration: none; }
+.srch-hit h3 a:hover, .srch-card h3 a:hover { color: var(--primary); text-decoration: underline; }
+.srch-hit p, .srch-card p {
+  margin: 0; font-size: 0.9375rem; line-height: calc(var(--lh-body) - 0.1); color: var(--ink-2);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+
+.srch-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(21.25rem, 100%), 1fr)); gap: 1rem; }
+.srch-person .role { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-wrap: pretty; }
+
+.srch-stack { display: flex; flex-direction: column; gap: 1rem; }
+.srch-card {
+  position: relative; display: flex; align-items: flex-start; gap: 1rem; padding: 1.25rem;
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-m);
+}
+.srch-card:hover, .srch-person:hover { border-color: var(--primary); }
+.srch-card .body { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 0.25rem; }
+
+.srch-tips { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 1rem 1.25rem; padding: 1.75rem; }
+.srch-tips-body { flex: 1 1 18.75rem; min-width: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+.srch-tips h2 { margin: 0; font-size: 1.1875rem; line-height: var(--lh-h3); font-weight: 750; }
+.srch-tips p { margin: 0; font-size: 0.9375rem; line-height: var(--lh-small); color: var(--ink-2); text-wrap: pretty; }
+.srch-examples { display: flex; flex-wrap: wrap; align-items: center; gap: 0 0.5rem; margin-top: 0.25rem; }
+.srch-examples ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0 0.5rem; }
+.srch-examples li { display: flex; }
+.srch-examples-label {
+  font-size: 0.8125rem; line-height: 1.6; font-weight: 700; color: var(--muted);
+  letter-spacing: var(--label-tracking); text-transform: var(--label-case);
+}
+/* A 28px chip inside a 44px target. */
+.srch-example { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); text-decoration: none; }
+.srch-example span {
+  display: inline-flex; align-items: center; min-height: 28px; padding: 0.125rem 0.75rem;
+  border-radius: 999px; background: var(--sunken); font-size: 0.8125rem; line-height: 1.3;
+}
+.srch-example:hover { color: var(--primary-strong); }
+.srch-example:hover span { box-shadow: inset 0 0 0 1px var(--primary); }
+.srch-example:focus-visible { outline: none; }
+.srch-example:focus-visible span { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+@media (max-width: 30rem) {
+  .pubs-list .list-card, .srch-rows { padding-inline: 1.125rem; }
+  .srch-submit { flex: 1 1 100%; }
+  .srch-hit p, .srch-card p { -webkit-line-clamp: 3; }
+  .srch-tips { padding: 1.25rem; }
+}
+
+@media print {
+  .pubs-toolbar, .srch-form, .srch-pills, .srch-tips { display: none !important; }
+}

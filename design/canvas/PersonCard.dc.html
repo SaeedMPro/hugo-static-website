@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="fa">
+<head>
+<meta charset="utf-8">
+<title>Person card</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&amp;family=Vazirmatn:wght@100..900&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<article dir="{{dir}}" lang="{{lang}}" style="font-family: Vazirmatn, Tahoma, 'Segoe UI', system-ui, sans-serif; color: #14212c; background: #ffffff; border: 1px solid #d6dfe5; border-radius: 12px; padding: {{pad}}px; box-sizing: border-box; display: flex; align-items: flex-start; gap: {{gap}}px; height: 100%;">
+<span aria-hidden="true" style="flex: none; width: {{avatar}}px; height: {{avatar}}px; border-radius: 999px; background: #e2f0f4; color: #08566c; display: flex; align-items: center; justify-content: center; font-size: {{avatarFont}}px; font-weight: 700; line-height: 1;">{{person.initials}}</span>
+<div style="flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px;">
+<h3 style="margin: 0; font-size: {{nameSize}}px; line-height: {{lhTitle}}; font-weight: 750;"><a href="{{person.href}}" style="color: #14212c; text-decoration: none;">{{person.name}}</a></h3>
+<p style="margin: 0; font-size: {{roleSize}}px; line-height: {{lhSmall}}; color: #475764;">{{person.role}}</p>
+<sc-if value="{{hasMeta}}" hint-placeholder-val="{{false}}">
+<p style="margin: 0; font-size: 14px; line-height: {{lhSmall}}; color: #5a6a77; text-wrap: pretty;">{{person.meta}}</p>
+</sc-if>
+<sc-if value="{{hasTags}}" hint-placeholder-val="{{true}}">
+<ul style="list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px;">
+<sc-for list="{{tags}}" as="t" hint-placeholder-count="2">
+<li style="display: inline-flex; align-items: center; height: 26px; padding: 0 10px; border-radius: 999px; background: #eaf0f3; color: #14212c; font-size: 13px; line-height: 1;">{{t}}</li>
+</sc-for>
+</ul>
+</sc-if>
+<sc-if value="{{showLinks}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;">
+<sc-if value="{{hasEmail}}" hint-placeholder-val="{{true}}">
+<a href="{{mailHref}}" aria-label="{{mailLabel}}" style="width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid #d6dfe5; border-radius: 6px; color: #14212c; box-sizing: border-box;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3.5 6.5L12 13l8.5-6.5"></path></svg></a>
+</sc-if>
+<sc-if value="{{hasScholar}}" hint-placeholder-val="{{true}}">
+<a href="{{person.scholar}}" aria-label="Google Scholar" style="width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid #d6dfe5; border-radius: 6px; color: #14212c; box-sizing: border-box;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 9.5L12 5l9.5 4.5L12 14z"></path><path d="M6.5 11.6V16c0 1.4 2.5 2.8 5.5 2.8s5.5-1.4 5.5-2.8v-4.4"></path></svg></a>
+</sc-if>
+</div>
+</sc-if>
+</div>
+</article>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["fa","en"],"default":"fa"},"variant":{"editor":"enum","options":["feature","compact"],"default":"feature"},"person":{"editor":null},"$preview":{"width":440,"height":220}}'>
+class Component extends DCLogic {
+renderVals() {
+const lang = this.props.lang ?? 'fa';
+const fa = lang === 'fa';
+const feature = (this.props.variant ?? 'feature') === 'feature';
+const person = this.props.person ?? {
+name: 'دکتر مریم کاویانی',
+initials: 'م ک',
+role: 'دانشیار، سرپرست گروه',
+meta: '',
+tags: ['شبکه‌های نرم‌افزارمحور', 'مهندسی ترافیک', 'شبکه‌های برنامه‌پذیر P4'],
+href: 'Profile-fa.dc.html',
+email: 'm.kaviani@example.com',
+scholar: 'https://scholar.google.com/'
+};
+const tags = (person.tags || []).slice(0, feature ? 3 : 2);
+return {
+lang: lang,
+dir: fa ? 'rtl' : 'ltr',
+person: person,
+tags: tags,
+hasTags: tags.length > 0,
+hasMeta: !!person.meta,
+showLinks: feature && (!!person.email || !!person.scholar),
+hasEmail: !!person.email,
+hasScholar: !!person.scholar,
+mailHref: 'mailto:' + (person.email || ''),
+mailLabel: (fa ? 'ایمیل به ' : 'Email ') + person.name,
+pad: feature ? 24 : 18,
+gap: feature ? 20 : 14,
+avatar: feature ? 88 : 56,
+avatarFont: feature ? 26 : 18,
+nameSize: feature ? 20 : 16,
+roleSize: feature ? 15 : 14,
+lhTitle: fa ? '1.6' : '1.3',
+lhSmall: fa ? '1.75' : '1.5'
+};
+}
+}
+</script>
+</body>
+</html>

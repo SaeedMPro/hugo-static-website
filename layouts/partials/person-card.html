@@ -1,12 +1,26 @@
-{{ $lang := site.Language.Lang }}
-<li class="person">
-  {{ partial "avatar.html" (dict "page" . "size" "sm") }}
-  <div>
-    <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-    {{ with index .Params (printf "title_%s" $lang) }}<p>{{ . }}</p>
-    {{ else }}{{ with index .Params (printf "thesis_%s" $lang) }}<p>{{ . }}</p>{{ end }}{{ end }}
-    {{ with index .Params (printf "interests_%s" $lang) }}
-      <ul class="tags">{{ range first 3 . }}<li>{{ . }}</li>{{ end }}</ul>
-    {{ end }}
+{{- /* context: dict "page" person page "variant" "feature"|"compact" */ -}}
+{{- $p := .page -}}
+{{- $feature := eq .variant "feature" -}}
+<article class="person-card{{ if $feature }} person-card--feature{{ end }}">
+  {{ partial "avatar.html" (dict "page" $p "size" (cond $feature 88 56)) }}
+  <div class="body">
+    <h3><a class="stretched" href="{{ $p.RelPermalink }}">{{ $p.Title }}</a></h3>
+    <p class="role">{{ partial "person-role.html" $p }}</p>
+    {{- if not $feature }}{{ with partial "loc.html" (dict "m" $p.Params "k" "thesis") }}
+    <p class="meta">{{ . }}</p>
+    {{- end }}{{ end }}
+    {{- with partial "loc.html" (dict "m" $p.Params "k" "interests") }}
+    <ul class="tags">{{ range first (cond $feature 3 2) . }}<li class="tag">{{ . }}</li>{{ end }}</ul>
+    {{- end }}
+    {{- if and $feature (or $p.Params.email $p.Params.scholar) }}
+    <div class="links">
+      {{- with $p.Params.email }}
+      <a class="icon-btn" href="mailto:{{ . }}" aria-label="{{ i18n "emailTo" (dict "Name" $p.Title) }}">{{ partial "icon.html" (dict "name" "mail") }}</a>
+      {{- end }}
+      {{- with $p.Params.scholar }}
+      <a class="icon-btn" href="{{ . }}" aria-label="{{ i18n "scholarFor" (dict "Name" $p.Title) }}">{{ partial "icon.html" (dict "name" "scholar") }}</a>
+      {{- end }}
+    </div>
+    {{- end }}
   </div>
-</li>
+</article>

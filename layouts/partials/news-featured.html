@@ -1,0 +1,18 @@
+{{- /* context: news page — the newest item at the top of the news list. */ -}}
+{{- $p := . -}}
+<article class="news-featured" aria-labelledby="featured-title">
+  <svg class="news-decor" viewBox="0 0 200 100" width="200" height="100" aria-hidden="true" focusable="false"><path class="ln" d="M28 26L96 52L168 20M96 52L76 88M96 52L150 82"/><circle class="nd" cx="28" cy="26" r="5"/><circle class="nd" cx="168" cy="20" r="6"/><circle class="nd" cx="76" cy="88" r="4.5"/><circle class="nd" cx="150" cy="82" r="5"/><circle class="hub" cx="96" cy="52" r="8"/></svg>
+  <div class="news-featured-body">
+    <div class="news-featured-meta">
+      <span class="eyebrow">{{ i18n "news_latest" }}</span>
+      <span class="news-featured-date">{{ partial "icon.html" (dict "name" "calendar" "size" 16) }}{{ partial "date.html" (dict "t" $p.Date) }}</span>
+    </div>
+    <h2 id="featured-title"><a href="{{ $p.RelPermalink }}">{{ $p.Title }}</a></h2>
+    {{- with $p.Params.summary | default ($p.Summary | plainify) }}
+    <p class="news-featured-summary">{{ . }}</p>
+    {{- end }}
+    <div class="news-featured-foot">
+      <a class="link-more" href="{{ $p.RelPermalink }}" aria-describedby="featured-title">{{ i18n "news_readStory" }}{{ partial "icon.html" (dict "name" "arrow" "size" 18) }}</a>
+    </div>
+  </div>
+</article>

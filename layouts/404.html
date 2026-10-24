@@ -1,0 +1,41 @@
+{{ define "head" }}<meta name="robots" content="noindex">{{ end }}
+{{ define "main" }}
+{{- /* GitHub Pages serves the root /404.html for every missing path, so every link here is site-relative (RelPermalink). */ -}}
+<section class="pg-nf">
+  <div class="wrap">
+    <div class="pg-nf-inner">
+      <svg class="pg-nf-art" viewBox="0 0 360 180" width="400" height="200" aria-hidden="true" focusable="false"><path class="edge" d="M42 34L100 70L54 122M318 34L260 70L306 122"/><path class="cut" d="M114 70H148Q154 70 157 79M246 70H212Q206 70 203 79"/><circle class="gap" cx="180" cy="70" r="6"/><path class="fall" d="M180 86V124"/><circle class="halo" cx="180" cy="144" r="13"/><circle class="packet" cx="180" cy="144" r="7"/><circle class="leaf" cx="42" cy="34" r="6"/><circle class="leaf" cx="54" cy="122" r="6"/><circle class="leaf" cx="318" cy="34" r="6"/><circle class="leaf" cx="306" cy="122" r="6"/><circle class="hub" cx="100" cy="70" r="14"/><circle class="hub" cx="260" cy="70" r="14"/></svg>
+      <div class="pg-nf-text">
+        <span class="pg-nf-code" dir="ltr">404</span>
+        <h1 class="h1">{{ i18n "pages_notFoundTitle" }}</h1>
+        <p class="lead">{{ i18n "pages_notFoundText" }}</p>
+      </div>
+      {{- with site.GetPage "search" }}
+      <form class="pg-nf-search" role="search" action="{{ .RelPermalink }}" method="get">
+        <label for="nf-q">{{ i18n "searchSite" }}</label>
+        <div class="row">
+          <div class="search-field">
+            {{ partial "icon.html" (dict "name" "search") }}
+            <input class="input" id="nf-q" type="search" name="q" placeholder="{{ i18n "pages_searchPlaceholder" }}" autocomplete="off">
+          </div>
+          <button class="btn btn--primary" type="submit">{{ i18n "search" }}</button>
+        </div>
+      </form>
+      {{- end }}
+      <nav class="pg-nf-links" aria-labelledby="nf-links">
+        <h2 id="nf-links">{{ i18n "pages_quickLinks" }}</h2>
+        <ul>
+          <li><a href="{{ site.Home.RelPermalink }}">{{ i18n "home" }}</a></li>
+          {{- range slice "people" "publications" "contact" }}{{ $key := . }}{{ with site.GetPage $key }}
+          <li><a href="{{ .RelPermalink }}">{{ i18n $key }}</a></li>
+          {{- end }}{{ end }}
+        </ul>
+      </nav>
+      {{- /* The root 404 is Persian, but English visitors land on it too. */ -}}
+      {{- if ne site.Language.Lang "en" }}{{ range where site.Home.Translations "Language.Lang" "en" }}
+      <p class="pg-nf-alt" lang="en" dir="ltr">{{ i18n "pages_notFoundEn" }} <a href="{{ .RelPermalink }}" hreflang="en">{{ i18n "pages_notFoundEnLink" }}</a></p>
+      {{- end }}{{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}

@@ -1,0 +1,6 @@
+{{- /* /publications/publications.bib: every publication, newest first, one blank line between entries. */ -}}
+{{- $entries := slice -}}
+{{- range sort (site.Data.publications | default slice) "year" "desc" -}}
+  {{- $entries = $entries | append (partial "bibtex.html" .) -}}
+{{- end -}}
+{{- delimit $entries "\n\n" }}

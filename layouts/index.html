@@ -1,62 +1,121 @@
 {{ define "main" }}
-<section class="hero">
-  <div>
-    <h1>{{ .Title }}</h1>
-    <p>{{ .Description }}</p>
-    <div class="actions">
-      {{ with site.GetPage "people" }}<a class="btn primary" href="{{ .RelPermalink }}">{{ i18n "seePeople" }}</a>{{ end }}
-      {{ with site.GetPage "join" }}<a class="btn ghost" href="{{ .RelPermalink }}">{{ i18n "join" }}</a>{{ end }}
+{{- $areas := slice -}}
+{{- $researchHref := "" -}}
+{{- with site.GetPage "research" }}{{ $areas = .RegularPages.ByWeight }}{{ $researchHref = .RelPermalink }}{{ end -}}
+
+<header class="home-hero">
+  <div class="wrap home-hero__inner">
+    <div class="home-hero__text">
+      {{- $tag := slice }}
+      {{- range slice site.Params.group site.Params.university }}{{ with . }}{{ $tag = $tag | append . }}{{ end }}{{ end }}
+      {{- with $tag }}
+      <p class="home-hero__tag"><span class="home-hero__dot" aria-hidden="true"></span><span>{{ range $i, $part := . }}{{ if $i }} · {{ end }}<span class="home-hero__part">{{ $part }}</span>{{ end }}</span></p>
+      {{- end }}
+      <h1>{{ .Params.hero_title | default .Title }}</h1>
+      {{- with .Params.hero_lead | default .Description }}
+      <p class="lead">{{ . }}</p>
+      {{- end }}
+      <div class="home-hero__actions">
+        {{- with site.GetPage "people" }}
+        <a class="btn btn--lg btn--primary" href="{{ .RelPermalink }}">{{ i18n "seePeople" }}{{ partial "icon.html" (dict "name" "arrow" "size" 18) }}</a>
+        {{- end }}
+        {{- with site.GetPage "join" }}
+        <a class="btn btn--lg btn--secondary" href="{{ .RelPermalink }}">{{ i18n "join" }}</a>
+        {{- end }}
+      </div>
+    </div>
+    {{ partial "home-topology.html" $areas }}
+  </div>
+</header>
+
+{{- with $areas }}
+<section class="section section--lg" aria-labelledby="home-areas">
+  <div class="wrap home-areas">
+    {{ partial "section-head.html" (dict "title" (i18n "researchAreas") "id" "home-areas" "href" $researchHref "link" (i18n "allResearch")) }}
+    <div class="home-grid home-grid--areas">
+      {{- range . }}
+      {{ partial "area-card.html" . }}
+      {{- end }}
     </div>
   </div>
-  <svg class="topology" viewBox="0 0 420 320" role="img" aria-label="{{ i18n "researchAreas" }}" direction="{{ site.Language.LanguageDirection | default "ltr" }}">
-    <g class="links">
-      <line class="link" x1="210" y1="160" x2="90" y2="70"/>
-      <line class="link" x1="210" y1="160" x2="330" y2="70"/>
-      <line class="link" x1="210" y1="160" x2="330" y2="250"/>
-      <line class="link" x1="210" y1="160" x2="90" y2="250"/>
-      <line class="link" x1="90" y1="70" x2="330" y2="70"/>
-      <line class="link" x1="90" y1="250" x2="330" y2="250"/>
-    </g>
-    <g class="node hub"><circle cx="210" cy="160" r="16"/></g>
-    <g class="node"><circle cx="90" cy="70" r="12"/><text x="90" y="40" text-anchor="middle">{{ i18n "short_sdn" }}</text></g>
-    <g class="node"><circle cx="330" cy="70" r="12"/><text x="330" y="40" text-anchor="middle">{{ i18n "short_iot" }}</text></g>
-    <g class="node"><circle cx="330" cy="250" r="12"/><text x="330" y="292" text-anchor="middle">{{ i18n "short_sec" }}</text></g>
-    <g class="node"><circle cx="90" cy="250" r="12"/><text x="90" y="292" text-anchor="middle">{{ i18n "short_te" }}</text></g>
-    <circle class="packet" r="6" cx="0" cy="0">
-      <animateMotion id="pkt" dur="4.5s" begin="0.6s" fill="freeze" calcMode="spline" keyTimes="0;1" keySplines="0.45 0 0.55 1" path="M330 70 L210 160 L90 250"/>
-    </circle>
-  </svg>
-  <script>
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      var p = document.querySelector('.topology .packet'); var a = document.getElementById('pkt');
-      if (a) a.remove(); if (p) { p.setAttribute('cx', 90); p.setAttribute('cy', 250); }
-    }
-  </script>
 </section>
+{{- end }}
 
-<section class="section" aria-labelledby="areas-h">
-  <div class="section-head"><h2 id="areas-h">{{ i18n "researchAreas" }}</h2>{{ with site.GetPage "about" }}<a href="{{ .RelPermalink }}">{{ i18n "about" }}</a>{{ end }}</div>
-  <div class="areas">
-    {{ range slice "sdn" "iot" "sec" "te" }}
-      <div><h3>{{ i18n (printf "area_%s" .) }}</h3><p>{{ i18n (printf "desc_%s" .) }}</p></div>
-    {{ end }}
+{{- with site.GetPage "projects" }}
+{{- $projectsHref := .RelPermalink }}
+{{- $all := .RegularPages.ByWeight }}
+{{- $shown := first 4 (where $all "Params.status" "active") }}
+{{- $title := i18n "activeProjects" }}
+{{- if not $shown }}
+  {{- /* No active project: show the newest ones — by date when projects carry dates, else in list (weight) order. */}}
+  {{- $recent := $all }}
+  {{- range $all }}{{ if not .Date.IsZero }}{{ $recent = $all.ByDate.Reverse }}{{ end }}{{ end }}
+  {{- $shown = first 2 $recent }}
+  {{- $title = i18n "home_recentProjects" }}
+{{- end }}
+{{- with $shown }}
+<section class="section section--lg" aria-labelledby="home-projects">
+  <div class="wrap">
+    {{ partial "section-head.html" (dict "title" $title "id" "home-projects" "href" $projectsHref "link" (i18n "allProjects")) }}
+    <div class="home-grid home-grid--projects">
+      {{- range . }}
+      {{ partial "project-card.html" . }}
+      {{- end }}
+    </div>
   </div>
 </section>
+{{- end }}
+{{- end }}
 
-<div class="two-col section">
-  <section aria-labelledby="news-h">
-    <div class="section-head"><h2 id="news-h">{{ i18n "latestNews" }}</h2>{{ with site.GetPage "news" }}<a href="{{ .RelPermalink }}">{{ i18n "allNews" }}</a>{{ end }}</div>
-    <ul class="news-list">
-      {{ range first 3 (where site.RegularPages "Section" "news").ByDate.Reverse }}
-        <li><span class="date">{{ partial "date.html" . }}</span><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
-      {{ end }}
-    </ul>
-  </section>
-  <section aria-labelledby="pubs-h">
-    <div class="section-head"><h2 id="pubs-h">{{ i18n "recentPubs" }}</h2>{{ with site.GetPage "publications" }}<a href="{{ .RelPermalink }}">{{ i18n "allPubs" }}</a>{{ end }}</div>
-    <ul class="pubs">
-      {{ range first 3 (sort site.Data.publications "year" "desc") }}{{ partial "pub-item.html" (dict "pub" .) }}{{ end }}
-    </ul>
-  </section>
+{{- $news := slice }}
+{{- $newsHref := "" }}
+{{- with site.GetPage "news" }}{{ $news = first 3 .RegularPages.ByDate.Reverse }}{{ $newsHref = .RelPermalink }}{{ end }}
+{{- $eventsSection := site.GetPage "events" }}
+{{- if or $news $eventsSection }}
+<div class="section section--lg">
+  <div class="wrap home-pair">
+    {{- with $news }}
+    <section class="home-pair__main" aria-labelledby="home-news">
+      {{ partial "section-head.html" (dict "title" (i18n "latestNews") "id" "home-news" "href" $newsHref "link" (i18n "allNews")) }}
+      <div class="list-card">
+        {{- range . }}
+        {{ partial "news-item.html" (dict "page" . "summary" true) }}
+        {{- end }}
+      </div>
+    </section>
+    {{- end }}
+    {{- with $eventsSection }}
+    <section class="home-pair__side" aria-labelledby="home-events">
+      {{ partial "section-head.html" (dict "title" (i18n "events") "id" "home-events" "href" .RelPermalink "link" (i18n "allEvents")) }}
+      {{- with partial "home-events.html" . }}
+      <div class="home-events">
+        {{- range . }}
+        {{ partial "event-card.html" . }}
+        {{- end }}
+      </div>
+      {{- else }}
+      <p class="empty"><span class="icon-tile icon-tile--sm">{{ partial "icon.html" (dict "name" "calendar" "size" 20) }}</span><span>{{ i18n "noUpcoming" }}</span></p>
+      {{- end }}
+    </section>
+    {{- end }}
+  </div>
 </div>
+{{- end }}
+
+{{- with partial "home-pubs.html" 3 }}
+{{- $pubsHref := "" }}
+{{- with site.GetPage "publications" }}{{ $pubsHref = .RelPermalink }}{{ end }}
+<section class="section section--lg home-pubs" aria-labelledby="home-pubs">
+  <div class="wrap">
+    {{ partial "section-head.html" (dict "title" (i18n "recentPubs") "id" "home-pubs" "href" $pubsHref "link" (i18n "allPubs")) }}
+    <div class="list-card home-pubs__list">
+      {{- range . }}
+      {{ partial "pub-item.html" (dict "pub" . "open" false) }}
+      {{- end }}
+    </div>
+  </div>
+</section>
+{{- end }}
+
+{{ partial "cta-join.html" . }}
 {{ end }}

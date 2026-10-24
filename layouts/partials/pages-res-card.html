@@ -1,0 +1,65 @@
+{{- /* context: dict "r" resource entry "icon" icon name "wide" bool. A resource card: icon tile, title, summary; the narrow card ends with its link and related project/paper links, the wide card (data, guides) lists them in a side box. */ -}}
+{{- $r := .r -}}
+{{- $l := partial "pages-res-links.html" $r -}}
+{{- $title := partial "loc.html" (dict "m" $r "k" "title") -}}
+{{- $summary := partial "loc.html" (dict "m" $r "k" "summary") -}}
+{{- $access := partial "loc.html" (dict "m" $r "k" "access") -}}
+{{- $icon := .icon -}}
+{{- if .wide }}
+<article class="pg-res pg-res--wide">
+  <div class="main">
+    <span class="icon-tile">{{ partial "icon.html" (dict "name" $icon "size" 26) }}</span>
+    <div class="body">
+      <h3>{{ $title }}</h3>
+      {{- with $summary }}
+      <p class="summary">{{ . }}</p>
+      {{- end }}
+    </div>
+  </div>
+  {{- if or $l.href $l.project $l.pub $access }}
+  <dl>
+    {{- with $l.href }}
+    <div><dt>{{ i18n "pages_keptIn" }}</dt><dd><a class="pg-go" href="{{ . }}" aria-label="{{ i18n "pages_linkFor" (dict "Name" $l.name "Title" $title) }}">{{ $l.name }}{{ partial "icon.html" (dict "name" $l.icon "size" 16) }}</a></dd></div>
+    {{- end }}
+    {{- with $l.project }}
+    <div><dt>{{ i18n "pages_project" }}</dt><dd><a class="pg-go" href="{{ .RelPermalink }}">{{ .Title }}{{ partial "icon.html" (dict "name" "arrow" "size" 16) }}</a></dd></div>
+    {{- end }}
+    {{- with $l.pub }}
+    {{- $plang := .lang | default "en" }}
+    <div><dt>{{ i18n "pages_paper" }}</dt><dd><a class="pg-go" href="{{ $l.pubHref }}"><span lang="{{ $plang }}" dir="{{ cond (eq $plang "fa") "rtl" "ltr" }}">{{ .title }}</span>{{ partial "icon.html" (dict "name" "arrow" "size" 16) }}</a></dd></div>
+    {{- end }}
+    {{- with $access }}
+    <div><dt>{{ i18n "pages_access" }}</dt><dd>{{ . }}</dd></div>
+    {{- end }}
+  </dl>
+  {{- end }}
+</article>
+{{- else }}
+<article class="pg-res">
+  <span class="icon-tile">{{ partial "icon.html" (dict "name" $icon "size" 26) }}</span>
+  <div class="body">
+    <h3>{{ $title }}</h3>
+    {{- with $summary }}
+    <p class="summary">{{ . }}</p>
+    {{- end }}
+    {{- with $access }}
+    <p class="access"><span class="k">{{ i18n "pages_access" }}:</span> {{ . }}</p>
+    {{- end }}
+  </div>
+  {{- if or $l.href $l.project $l.pub }}
+  <div class="foot">
+    {{- with $l.href }}
+    <a class="btn btn--ghost btn--sm" href="{{ . }}" aria-label="{{ i18n "pages_linkFor" (dict "Name" $l.name "Title" $title) }}">{{ $l.name }}{{ partial "icon.html" (dict "name" $l.icon "size" 16) }}</a>
+    {{- end }}
+    {{- /* The related project and paper are named in hidden text, not an aria-label: an aria-label cannot mark the language of an English paper title on a Persian page. */}}
+    {{- with $l.project }}
+    <a class="link-more" href="{{ .RelPermalink }}">{{ i18n "pages_relatedProject" }}<span class="visually-hidden">: {{ .Title }}</span>{{ partial "icon.html" (dict "name" "arrow" "size" 16) }}</a>
+    {{- end }}
+    {{- with $l.pub }}
+    {{- $plang := .lang | default "en" }}
+    <a class="link-more" href="{{ $l.pubHref }}">{{ i18n "pages_relatedPaper" }}<span class="visually-hidden">: <span lang="{{ $plang }}" dir="{{ cond (eq $plang "fa") "rtl" "ltr" }}">{{ .title }}</span></span>{{ partial "icon.html" (dict "name" "arrow" "size" 16) }}</a>
+    {{- end }}
+  </div>
+  {{- end }}
+</article>
+{{- end }}

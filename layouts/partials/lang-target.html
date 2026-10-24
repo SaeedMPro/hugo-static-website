@@ -1,0 +1,6 @@
+{{- /* The same page in the other language, or that language's home page: dict "href" "lang". */ -}}
+{{- $href := "" -}}
+{{- if ne .Kind "404" }}{{ range .Translations }}{{ $href = .RelPermalink }}{{ end }}{{ end -}}
+{{- if not $href }}{{ range site.Home.Translations }}{{ $href = .RelPermalink }}{{ end }}{{ end -}}
+{{- $res := dict "href" $href "lang" (cond (eq site.Language.Lang "en") "fa" "en") -}}
+{{- return $res -}}

@@ -1,0 +1,23 @@
+type: "defense"
+date: "2025-09-14"
+time: ""
+title_fa: "مسیریابی آگاه از انرژی در شبکه‌های حسگر بی‌سیم"
+title_en: "Energy-aware routing in wireless sensor networks"
+speaker: "moghadam"
+speaker_fa: ""
+speaker_en: ""
+supervisor: "kaviani"
+location_fa: ""
+location_en: ""
+summary_fa: "دفاع از پایان‌نامهٔ کارشناسی ارشد رضا مقدم."
+summary_en: "MSc thesis defence by Reza Moghadam."
+body_fa: |
+  این پایان‌نامه روشی خوشه‌مبنا و آگاه از انرژی برای مسیریابی در شبکه‌های حسگر بی‌سیم ارائه می‌کند تا طول عمر شبکه افزایش یابد.
+body_en: |
+  The thesis proposes cluster-based, energy-aware routing to extend the lifetime of wireless sensor networks.
+slides: ""
+video: ""
+online: ""
+news: "defense-moghadam"
+publications: ["moghadam2023wsn"]
+projects: ["wsn-energy"]

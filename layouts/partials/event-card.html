@@ -1,0 +1,27 @@
+{{- /* context: event page */ -}}
+{{- $e := . -}}
+{{- $up := partial "is-upcoming.html" $e -}}
+{{- $b := partial "datebits.html" $e.Date -}}
+<article class="event-card{{ if $up }} event-card--upcoming{{ end }}" data-filter-item data-type="{{ $e.Params.type }}">
+  <time class="dateblock" datetime="{{ $b.iso }}"><span class="d">{{ $b.d }}</span><span class="m">{{ $b.m }}</span><span class="y">{{ $b.y }}</span></time>
+  <div class="body">
+    <div class="tags">
+      <span class="badge badge--{{ $e.Params.type }}">{{ i18n (printf "ev_%s" $e.Params.type) }}</span>
+      {{- if $up }}<span class="upcoming">{{ i18n "upcoming" }}</span>{{ end }}
+    </div>
+    <h3><a class="stretched" href="{{ $e.RelPermalink }}">{{ $e.Title }}</a></h3>
+    {{- $place := partial "loc.html" (dict "m" $e.Params "k" "location") }}
+    {{- $speaker := partial "event-speaker.html" $e }}
+    {{- if or $e.Params.time $place $speaker }}
+    <ul class="event-meta">
+      {{- with $e.Params.time }}<li>{{ partial "icon.html" (dict "name" "clock" "size" 15) }}<span>{{ partial "digits.html" . }}</span></li>{{ end }}
+      {{- with $place }}<li>{{ partial "icon.html" (dict "name" "pin" "size" 15) }}<span>{{ . }}</span></li>{{ end }}
+      {{- with $speaker }}<li>{{ partial "icon.html" (dict "name" "person" "size" 15) }}<span>{{ . }}</span></li>{{ end }}
+    </ul>
+    {{- end }}
+    {{- if $up }}
+    {{- $ics := resources.FromString (printf "events/%s.%s.ics" $e.Params.pid site.Language.Lang) (partialCached "events-vcalendar.html" (dict "events" (slice $e)) $e.Params.pid site.Language.Lang) }}
+    <a class="add" href="{{ $ics.RelPermalink }}" type="text/calendar" download="{{ $e.Params.pid }}.ics">{{ partial "icon.html" (dict "name" "calendar" "size" 16) }}<span>{{ i18n "addToCalendar" }}</span></a>
+    {{- end }}
+  </div>
+</article>

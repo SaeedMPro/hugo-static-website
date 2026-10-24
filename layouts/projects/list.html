@@ -1,13 +1,63 @@
 {{ define "main" }}
-{{ $lang := site.Language.Lang }}
-<h1>{{ .Title }}</h1>
-<ul class="projects">
-  {{ range .Pages.ByWeight }}
-    <li class="project">
-      <span class="status {{ .Params.status }}">{{ i18n (cond (eq .Params.status "active") "status_active" "status_done") }}</span>
-      <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
-      <p>{{ index .Params (printf "summary_%s" $lang) }}</p>
-    </li>
-  {{ end }}
-</ul>
+{{- $pages := .Pages.ByWeight -}}
+{{- $ids := slice -}}
+{{- range $pages }}{{ with .Params.pid }}{{ $ids = $ids | append . }}{{ end }}{{ end -}}
+{{- /* The resources panel only shows when the Resources page exists and lists code or data from one of these projects. */ -}}
+{{- $resources := site.GetPage "resources" -}}
+{{- $linked := where (site.Data.resources | default slice) "project" "in" $ids -}}
+{{- $panel := and $resources $linked -}}
+<header class="page-head">
+  <div class="wrap">
+    <h1>{{ .Title }}</h1>
+    {{- with .Params.lead }}
+    <p class="lead">{{ . }}</p>
+    {{- end }}
+  </div>
+</header>
+<section class="projects-list{{ if not $panel }} section--end{{ end }}" aria-labelledby="projects-list-title">
+  <div class="wrap">
+    <h2 class="visually-hidden" id="projects-list-title">{{ i18n "projects_listTitle" }}</h2>
+    {{- if $pages }}
+    {{- $filters := slice
+      (dict "key" "all" "label" (i18n "all") "count" (len $pages))
+      (dict "key" "active" "label" (i18n "status_active") "count" (len (where $pages "Params.status" "active")))
+      (dict "key" "done" "label" (i18n "status_done") "count" (len (where $pages "Params.status" "done"))) }}
+    <div class="pills projects-filter" role="group" aria-label="{{ i18n "projects_statusFilter" }}" data-filter-group="projects">
+      {{- range $filters }}
+      <button class="pill" type="button" data-filter="{{ .key }}" aria-pressed="{{ cond (eq .key "all") "true" "false" }}" aria-controls="projects-grid">{{ .label }} ({{ partial "digits.html" .count }})</button>
+      {{- end }}
+    </div>
+    <div data-filter-scope="projects">
+      <div class="grid" id="projects-grid" style="--min: 22.5rem">
+        {{- range $pages }}
+        {{ partial "project-card.html" . }}
+        {{- end }}
+      </div>
+      <p class="empty projects-empty" data-filter-empty hidden><span class="icon-tile icon-tile--sm">{{ partial "icon.html" (dict "name" "code" "size" 22) }}</span><span>{{ i18n "projects_filterEmpty" }}</span></p>
+      {{- /* site.js says here how many projects a status pill leaves (and, with none, the empty-state sentence). */}}
+      <p class="visually-hidden" role="status" data-filter-status data-shown="{{ i18n "filter_projectsShown" }}" data-shown-one="{{ i18n "filter_projectsShownOne" }}" data-shown-none="{{ i18n "projects_filterEmpty" }}"></p>
+    </div>
+    {{- else }}
+    <p class="empty projects-empty"><span class="icon-tile icon-tile--sm">{{ partial "icon.html" (dict "name" "code" "size" 22) }}</span><span>{{ i18n "projects_none" }}</span>
+      {{- with site.GetPage "research" }}
+      <a class="link-more" href="{{ .RelPermalink }}">{{ i18n "allResearch" }}{{ partial "icon.html" (dict "name" "arrow" "size" 18) }}</a>
+      {{- end }}
+    </p>
+    {{- end }}
+  </div>
+</section>
+{{- if $panel }}
+<section class="projects-res section--end" aria-labelledby="projects-res-title">
+  <div class="wrap">
+    <div class="panel projects-panel">
+      <span class="icon-tile">{{ partial "icon.html" (dict "name" "code" "size" 26) }}</span>
+      <div class="text">
+        <h2 id="projects-res-title">{{ i18n "projects_resTitle" }}</h2>
+        <p>{{ i18n "projects_resText" }}</p>
+      </div>
+      <a class="btn btn--secondary" href="{{ $resources.RelPermalink }}">{{ i18n "projects_resLink" }}{{ partial "icon.html" (dict "name" "arrow" "size" 18) }}</a>
+    </div>
+  </div>
+</section>
+{{- end }}
 {{ end }}

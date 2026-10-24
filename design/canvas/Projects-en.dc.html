@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Projects — MCTN</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&amp;family=Vazirmatn:wght@100..900&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div dir="ltr" lang="en" style="background: #f4f7f9; color: #14212c; font-family: Vazirmatn, Tahoma, 'Segoe UI', system-ui, sans-serif; font-size: 17px; line-height: 1.65;">
+<dc-import name="Header" lang="en" active="projects" page="Projects" hint-size="100%,130px"></dc-import>
+<main>
+
+<section style="border-bottom: 1px solid #d6dfe5;">
+<div style="max-width: 1200px; margin: 0 auto; padding: 56px clamp(16px, 4vw, 40px) 44px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px;">
+<h1 style="margin: 0; font-size: clamp(32px, 1.7rem + 1.4vw, 46px); line-height: 1.15; font-weight: 800; letter-spacing: -0.01em; text-wrap: balance;">Projects</h1>
+<p style="margin: 0; max-width: 760px; font-size: 19px; line-height: 1.6; color: #475764; text-wrap: pretty;">Current and completed research projects.</p>
+</div>
+</section>
+
+<section aria-labelledby="list-title" style="padding: 40px 0 0;">
+<div style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 40px); box-sizing: border-box; display: flex; flex-direction: column; gap: 24px;">
+<h2 id="list-title" style="position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; border: 0; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;">Project list</h2>
+<div role="group" aria-label="Project status" style="display: flex; flex-wrap: wrap; gap: 8px;">
+<button type="button" aria-pressed="{{pillAll.pressed}}" aria-controls="project-grid" onClick="{{setAll}}" style="height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid {{pillAll.line}}; background: {{pillAll.bg}}; color: {{pillAll.ink}}; font: inherit; font-size: 14px; font-weight: {{pillAll.weight}}; cursor: pointer;">All (3)</button>
+<button type="button" aria-pressed="{{pillActive.pressed}}" aria-controls="project-grid" onClick="{{setActive}}" style="height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid {{pillActive.line}}; background: {{pillActive.bg}}; color: {{pillActive.ink}}; font: inherit; font-size: 14px; font-weight: {{pillActive.weight}}; cursor: pointer;">Active (2)</button>
+<button type="button" aria-pressed="{{pillDone.pressed}}" aria-controls="project-grid" onClick="{{setDone}}" style="height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid {{pillDone.line}}; background: {{pillDone.bg}}; color: {{pillDone.ink}}; font: inherit; font-size: 14px; font-weight: {{pillDone.weight}}; cursor: pointer;">Completed (1)</button>
+</div>
+<div id="project-grid">
+<sc-if value="{{showAll}}" hint-placeholder-val="{{true}}">
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr)); gap: 20px;">
+<sc-for list="{{allProjects}}" as="p" hint-placeholder-count="3">
+<dc-import name="ProjectCard" lang="en" project="{{p}}" hint-size="100%,300px"></dc-import>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{showActive}}" hint-placeholder-val="{{false}}">
+<div style="max-width: 740px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr)); gap: 20px;">
+<sc-for list="{{activeProjects}}" as="p" hint-placeholder-count="2">
+<dc-import name="ProjectCard" lang="en" project="{{p}}" hint-size="100%,300px"></dc-import>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{showDone}}" hint-placeholder-val="{{false}}">
+<div style="max-width: 360px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr)); gap: 20px;">
+<sc-for list="{{doneProjects}}" as="p" hint-placeholder-count="1">
+<dc-import name="ProjectCard" lang="en" project="{{p}}" hint-size="100%,300px"></dc-import>
+</sc-for>
+</div>
+</sc-if>
+</div>
+</div>
+</section>
+
+<section aria-labelledby="resources-title" style="padding: 48px 0 96px;">
+<div style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 40px); box-sizing: border-box;">
+<div style="background: #eaf0f3; border-radius: 16px; padding: 28px clamp(20px, 3vw, 32px); display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px;">
+<span aria-hidden="true" style="flex: none; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 12px; background: #ffffff; color: #0b6e8a;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 8L4.5 12l4 4"></path><path d="M15.5 8l4 4-4 4"></path><path d="M13.5 5.5l-3 13"></path></svg></span>
+<div style="flex: 1 1 360px; min-width: 0; display: flex; flex-direction: column; gap: 2px;">
+<h2 id="resources-title" style="margin: 0; font-size: 19px; line-height: 1.35; font-weight: 700;">Code and data</h2>
+<p style="margin: 0; font-size: 15px; line-height: 1.5; color: #475764; text-wrap: pretty;">Code and datasets from these projects are collected on the Resources page.</p>
+</div>
+<a href="Resources-en.dc.html" style="display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 20px; border-radius: 6px; border: 1px solid #0b6e8a; background: #ffffff; color: #0b6e8a; font-size: 15px; font-weight: 650; text-decoration: none; box-sizing: border-box;">Go to Resources<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg></a>
+</div>
+</div>
+</section>
+
+</main>
+<dc-import name="Footer" lang="en" page="Projects" hint-size="100%,500px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2600}}'>
+class Component extends DCLogic {
+renderVals() {
+const filter = (this.state && this.state.filter) ? this.state.filter : 'all';
+const projects = [
+{ title: 'Smart load balancing in SDN', summary: 'An SDN controller that spreads flows across data-centre paths with reinforcement learning.', status: 'active', areas: ['Software-defined networking', 'Traffic engineering'], members: [{ initials: 'MK', name: 'Dr. Maryam Kaviani' }, { initials: 'AT', name: 'Amir Tavakoli' }], href: 'Project-en.dc.html', code: 'https://github.com/' },
+{ title: 'Intrusion detection for IoT gateways', summary: 'Lightweight attack detection models that run on low-power gateway hardware.', status: 'active', areas: ['Network security', 'IoT and sensor networks'], members: [{ initials: 'HR', name: 'Dr. Hamid Rastegar' }, { initials: 'EN', name: 'Elham Nouri' }], href: 'Project-en.dc.html', code: '' },
+{ title: 'Energy-efficient routing in sensor networks', summary: 'A clustering protocol that extends the lifetime of wireless sensor networks.', status: 'done', areas: ['IoT and sensor networks'], members: [{ initials: 'MK', name: 'Dr. Maryam Kaviani' }, { initials: 'RM', name: 'Reza Moghadam' }], href: 'Project-en.dc.html', code: '' }
+];
+const pill = (on) => ({
+pressed: on ? 'true' : 'false',
+bg: on ? '#0b6e8a' : '#ffffff',
+line: on ? '#0b6e8a' : '#b8c6d0',
+ink: on ? '#ffffff' : '#14212c',
+weight: on ? '650' : '400'
+});
+return {
+showAll: filter === 'all',
+showActive: filter === 'active',
+showDone: filter === 'done',
+allProjects: projects,
+activeProjects: projects.filter((p) => p.status === 'active'),
+doneProjects: projects.filter((p) => p.status === 'done'),
+pillAll: pill(filter === 'all'),
+pillActive: pill(filter === 'active'),
+pillDone: pill(filter === 'done'),
+setAll: () => this.setState({ filter: 'all' }),
+setActive: () => this.setState({ filter: 'active' }),
+setDone: () => this.setState({ filter: 'done' })
+};
+}
+}
+</script>
+</body>
+</html>

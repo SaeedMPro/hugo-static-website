@@ -1,0 +1,90 @@
+{{ define "main" }}
+{{- $faculty := partial "pages-faculty.html" . -}}
+{{- $peopleHref := "" }}{{ with site.GetPage "people" }}{{ $peopleHref = .RelPermalink }}{{ end -}}
+<header class="page-head">
+  <div class="wrap">
+    <h1>{{ .Title }}</h1>
+    {{- with .Params.lead }}
+    <p class="lead">{{ . }}</p>
+    {{- end }}
+  </div>
+</header>
+
+<div class="section--end">
+  <section class="section pg-section-sm" id="details" aria-labelledby="details-title">
+    <div class="wrap">
+      <div class="pg-contact">
+        <div class="pg-details">
+          <h2 id="details-title">{{ i18n "pages_contactDetails" }}</h2>
+          <address>
+            <ul>
+              {{- with site.Params.address }}
+              <li>
+                <span class="icon-tile icon-tile--sm">{{ partial "icon.html" (dict "name" "pin") }}</span>
+                <div class="body"><span class="k">{{ i18n "address" }}</span><span class="v">{{ . }}</span></div>
+              </li>
+              {{- end }}
+              {{- with site.Params.email }}
+              <li>
+                <span class="icon-tile icon-tile--sm">{{ partial "icon.html" (dict "name" "mail") }}</span>
+                <div class="body"><span class="k">{{ i18n "email" }}</span><a class="v" href="mailto:{{ . }}" dir="ltr">{{ . }}</a></div>
+              </li>
+              {{- end }}
+              {{- with site.Params.phone }}
+              <li>
+                <span class="icon-tile icon-tile--sm">{{ partial "icon.html" (dict "name" "phone") }}</span>
+                <div class="body"><span class="k">{{ i18n "phone" }}</span><a class="v" href="tel:{{ replaceRE `[^0-9+]` "" . }}" dir="ltr">{{ partial "digits.html" . }}</a></div>
+              </li>
+              {{- end }}
+              {{- with $.Params.office_hours }}
+              <li>
+                <span class="icon-tile icon-tile--sm">{{ partial "icon.html" (dict "name" "clock") }}</span>
+                <div class="body"><span class="k">{{ i18n "pages_officeHours" }}</span><span class="v">{{ . }}</span></div>
+              </li>
+              {{- end }}
+            </ul>
+          </address>
+        </div>
+        {{- with site.Params.map }}
+        <div class="pg-map">
+          <div class="pg-map-art">{{ partial "pages-map-art.html" . }}</div>
+          <div class="pg-map-foot">
+            <p>{{ site.Params.university }}</p>
+            <a class="btn btn--secondary" href="{{ . }}">{{ i18n "pages_openMap" }}{{ partial "icon.html" (dict "name" "external" "size" 18) }}</a>
+          </div>
+        </div>
+        {{- end }}
+      </div>
+    </div>
+  </section>
+
+  {{- with $faculty }}
+  <section class="section" id="faculty" aria-labelledby="faculty-title">
+    <div class="wrap">
+      {{ partial "section-head.html" (dict "title" (i18n "pages_facultyContacts") "id" "faculty-title" "href" $peopleHref "link" (i18n "allPeople")) }}
+      <p class="pg-note">{{ i18n "pages_facultyNote" }}</p>
+      <div class="grid pg-faculty">
+        {{- range . }}
+        {{ partial "person-card.html" (dict "page" . "variant" "feature") }}
+        {{- end }}
+      </div>
+    </div>
+  </section>
+  {{- end }}
+
+  {{- with .Params.directions }}
+  <section class="section" id="getting-here" aria-labelledby="getting-here-title">
+    <div class="wrap">
+      {{ partial "section-head.html" (dict "title" (i18n "pages_gettingHere") "id" "getting-here-title") }}
+      <div class="prose pg-directions">{{ $.RenderString (dict "display" "block") . }}</div>
+    </div>
+  </section>
+  {{- end }}
+
+  {{- with .Content }}
+  <div class="section">
+    <div class="wrap"><div class="prose">{{ . }}</div></div>
+  </div>
+  {{- end }}
+</div>
+{{ end }}

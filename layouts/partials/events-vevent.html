@@ -1,0 +1,31 @@
+{{- /* context: dict "page" event page "stamp" DTSTAMP (UTC, 20060102T150405Z). Returns the event's VEVENT block, lines joined with CRLF.
+  No time → an all-day event (DTEND is the next day). A time "HH:MM–HH:MM" is Tehran local time (UTC+03:30, no daylight saving), written in UTC. */ -}}
+{{- $e := .page -}}
+{{- $day := $e.Date.Format "2006-01-02" -}}
+{{- $host := (urls.Parse site.BaseURL).Hostname | default "mctn" -}}
+{{- $lines := slice "BEGIN:VEVENT" (printf "UID:%s@%s" $e.Params.pid $host) (printf "DTSTAMP:%s" .stamp) -}}
+{{- $times := findRE `\d{1,2}:\d{2}` (printf "%v" ($e.Params.time | default "")) -}}
+{{- if $times -}}
+  {{- $hm := index $times 0 -}}
+  {{- if eq (len $hm) 4 }}{{ $hm = printf "0%s" $hm }}{{ end -}}
+  {{- $start := time.AsTime (printf "%sT%s:00+03:30" $day $hm) -}}
+  {{- $lines = $lines | append (printf "DTSTART:%s" ($start.UTC.Format "20060102T150405Z")) -}}
+  {{- if gt (len $times) 1 -}}
+    {{- $hm = index $times 1 -}}
+    {{- if eq (len $hm) 4 }}{{ $hm = printf "0%s" $hm }}{{ end -}}
+    {{- $end := time.AsTime (printf "%sT%s:00+03:30" $day $hm) -}}
+    {{- if not ($end.After $start) }}{{ $end = $end.AddDate 0 0 1 }}{{ end -}}
+    {{- $lines = $lines | append (printf "DTEND:%s" ($end.UTC.Format "20060102T150405Z")) -}}
+  {{- end -}}
+{{- else -}}
+  {{- $lines = $lines | append (printf "DTSTART;VALUE=DATE:%s" ($e.Date.Format "20060102")) (printf "DTEND;VALUE=DATE:%s" (($e.Date.AddDate 0 0 1).Format "20060102")) -}}
+{{- end -}}
+{{- $type := $e.Params.type | default "seminar" -}}
+{{- $lines = $lines | append (printf "SUMMARY:%s" (partial "events-ics-text.html" (printf "%s: %s" (i18n (printf "ev_%s" $type)) $e.Title))) -}}
+{{- with partial "loc.html" (dict "m" $e.Params "k" "location") }}{{ $lines = $lines | append (printf "LOCATION:%s" (partial "events-ics-text.html" .)) }}{{ end -}}
+{{- with partial "loc.html" (dict "m" $e.Params "k" "summary") }}{{ $lines = $lines | append (printf "DESCRIPTION:%s" (partial "events-ics-text.html" .)) }}{{ end -}}
+{{- $lines = $lines | append (printf "URL:%s" $e.Permalink) "END:VEVENT" -}}
+{{- $folded := slice -}}
+{{- range $lines }}{{ $folded = $folded | append (partial "events-ics-fold.html" .) }}{{ end -}}
+{{- $res := delimit $folded "\r\n" -}}
+{{- return $res -}}

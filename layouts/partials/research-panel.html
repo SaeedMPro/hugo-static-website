@@ -1,0 +1,36 @@
+{{- /* One research area on the research list: icon, title, summary, topics, counts and a link to the area page. context: area page */ -}}
+{{- $a := . -}}
+{{- $id := $a.Params.pid -}}
+{{- $rel := partial "research-relations.html" $a -}}
+{{- $name := partial "research-inline-name.html" $a -}}
+{{- $counts := slice -}}
+{{- with len $rel.projects }}{{ $counts = $counts | append (i18n (cond (eq . 1) "research_projectOne" "research_projectMany") (dict "Count" .)) }}{{ end -}}
+{{- with len $rel.pubs }}{{ $counts = $counts | append (i18n (cond (eq . 1) "research_pubOne" "research_pubMany") (dict "Count" .)) }}{{ end -}}
+{{- with len $rel.people }}{{ $counts = $counts | append (i18n "membersCount" .) }}{{ end -}}
+<article class="research-panel" aria-labelledby="area-{{ $id }}">
+  <div class="head">
+    <span class="icon-tile">{{ partial "icon.html" (dict "name" ($a.Params.icon | default "sdn") "size" 26) }}</span>
+    <div class="titles">
+      <h3 id="area-{{ $id }}">{{ $a.Title }}</h3>
+      {{- with partial "loc.html" (dict "m" $a.Params "k" "summary") }}
+      <p class="summary">{{ . }}</p>
+      {{- end }}
+    </div>
+  </div>
+  {{- with partial "loc.html" (dict "m" $a.Params "k" "topics") }}
+  <div class="topics">
+    <p class="research-label" id="area-{{ $id }}-topics">{{ i18n "research_topics" }}</p>
+    <ul class="research-topics" aria-labelledby="area-{{ $id }}-topics">
+      {{- range . }}
+      <li>{{ . }}</li>
+      {{- end }}
+    </ul>
+  </div>
+  {{- end }}
+  <div class="foot">
+    {{- with $counts }}
+    <p class="counts">{{ partial "digits.html" (delimit . " · ") }}</p>
+    {{- end }}
+    <a class="link-more" href="{{ $a.RelPermalink }}">{{ i18n "research_explore" (dict "Name" $name) }}{{ partial "icon.html" (dict "name" "arrow" "size" 18) }}</a>
+  </div>
+</article>

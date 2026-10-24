@@ -1,0 +1,6 @@
+{{- /* context: dict "y" Jalali year string "en" optional Gregorian override. English pages get the Gregorian year (Jalali + 621 unless overridden). */ -}}
+{{- if eq site.Language.Lang "fa" -}}
+  {{- partial "digits.html" .y -}}
+{{- else -}}
+  {{- .en | default (add (int .y) 621) -}}
+{{- end -}}

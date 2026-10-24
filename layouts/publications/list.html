@@ -1,30 +1,154 @@
 {{ define "main" }}
-<h1>{{ .Title }}</h1>
-<div class="filters" role="group" aria-label="{{ .Title }}">
-  <button type="button" data-filter="all" aria-pressed="true">{{ i18n "all" }}</button>
-  <button type="button" data-filter="journal" aria-pressed="false">{{ i18n "journal" }}</button>
-  <button type="button" data-filter="conference" aria-pressed="false">{{ i18n "conference" }}</button>
-  <button type="button" data-filter="thesis" aria-pressed="false">{{ i18n "thesisType" }}</button>
+{{- /* Publications, newest first, grouped by year. Type pills and the text box are site.js filters; the area and year selects are a small page script below that works on top of them. */ -}}
+{{- $pubs := sort (site.Data.publications | default slice) "year" "desc" -}}
+{{- $n := len $pubs -}}
+
+{{- /* Years present (newest first), types and research areas present. */ -}}
+{{- $years := slice -}}
+{{- $usedAreas := slice -}}
+{{- range $pubs -}}
+  {{- if not (in $years .year) }}{{ $years = $years | append .year }}{{ end -}}
+  {{- range .areas | default slice }}{{ if not (in $usedAreas .) }}{{ $usedAreas = $usedAreas | append . }}{{ end }}{{ end -}}
+{{- end -}}
+{{- $known := slice "journal" "conference" "thesis" "preprint" -}}
+{{- $types := slice -}}
+{{- range $known }}{{ if where $pubs "type" . }}{{ $types = $types | append . }}{{ end }}{{ end -}}
+{{- range $pubs }}{{ with .type }}{{ if not (in $types .) }}{{ $types = $types | append . }}{{ end }}{{ end }}{{ end -}}
+{{- $areas := slice -}}
+{{- with site.GetPage "research" }}{{ range .Pages.ByWeight }}{{ if in $usedAreas .Params.pid }}{{ $areas = $areas | append . }}{{ end }}{{ end }}{{ end -}}
+
+{{- /* Google Scholar profiles: faculty first, then everyone else, each by weight. */ -}}
+{{- $scholars := slice -}}
+{{- with site.GetPage "people" -}}
+  {{- range .Pages.ByWeight }}{{ if and .Params.scholar (eq .Params.role "faculty") }}{{ $scholars = $scholars | append . }}{{ end }}{{ end -}}
+  {{- range .Pages.ByWeight }}{{ if and .Params.scholar (ne .Params.role "faculty") }}{{ $scholars = $scholars | append . }}{{ end }}{{ end -}}
+{{- end }}
+
+<header class="page-head">
+  <div class="wrap">
+    <h1>{{ .Title }}</h1>
+    {{- with .Params.lead }}
+    <p class="lead">{{ . }}</p>
+    {{- end }}
+    {{- if $n }}
+    <div class="actions">
+      {{- with .OutputFormats.Get "bibtex" }}
+      <a class="btn btn--secondary" href="{{ .RelPermalink }}" download>{{ partial "icon.html" (dict "name" "download") }}<span>{{ i18n "pubs_download" }}</span></a>
+      {{- end }}
+      <span class="pubs-total">{{ partial "digits.html" (i18n (cond (eq $n 1) "pubs_totalOne" "pubs_total") (dict "Count" $n)) }}</span>
+    </div>
+    {{- end }}
+  </div>
+</header>
+
+<div class="pubs-body" data-pubs data-shown="{{ i18n "pubs_shown" }}" data-shown-one="{{ i18n "pubs_shownOne" }}">
+  <div class="wrap pubs-stack">
+    {{- if $n }}
+    <div class="card pubs-toolbar" role="search" aria-label="{{ i18n "pubs_filterLabel" }}">
+      <div class="pubs-fields">
+        <div class="field pubs-field-q">
+          <label for="pubs-q">{{ i18n "pubs_searchLabel" }}</label>
+          <div class="search-field">
+            {{ partial "icon.html" (dict "name" "search") }}
+            <input class="input" id="pubs-q" type="search" placeholder="{{ i18n "pubs_searchPlaceholder" }}" autocomplete="off" spellcheck="false" aria-controls="pubs-list" data-filter-search="pubs">
+          </div>
+        </div>
+        {{- if gt (len $areas) 1 }}
+        <div class="field pubs-field-area">
+          <label for="pubs-area">{{ i18n "pubs_area" }}</label>
+          <select class="select" id="pubs-area" aria-controls="pubs-list" data-pubs-area>
+            <option value="">{{ i18n "pubs_allAreas" }}</option>
+            {{- range $areas }}
+            <option value="{{ .Params.pid }}">{{ .Title }}</option>
+            {{- end }}
+          </select>
+        </div>
+        {{- end }}
+        {{- if gt (len $years) 1 }}
+        <div class="field pubs-field-year">
+          <label for="pubs-year">{{ i18n "pubs_year" }}</label>
+          <select class="select" id="pubs-year" aria-controls="pubs-list" data-pubs-year>
+            <option value="">{{ i18n "pubs_allYears" }}</option>
+            {{- range $years }}
+            <option value="{{ . }}">{{ partial "digits.html" . }}</option>
+            {{- end }}
+          </select>
+        </div>
+        {{- end }}
+      </div>
+      <div class="pubs-types">
+        <span class="pubs-types-label" aria-hidden="true">{{ i18n "pubs_type" }}</span>
+        <div class="pills" role="group" aria-label="{{ i18n "pubs_type" }}" data-filter-group="pubs">
+          <button class="pill" type="button" data-filter="all" aria-pressed="true" aria-controls="pubs-list"><span>{{ i18n "all" }}</span><span class="count">{{ partial "digits.html" $n }}</span></button>
+          {{- range $types }}
+          <button class="pill" type="button" data-filter="{{ . }}" aria-pressed="false" aria-controls="pubs-list"><span>{{ if in $known . }}{{ i18n (cond (eq . "thesis") "thesisType" .) }}{{ else }}{{ . }}{{ end }}</span><span class="count">{{ partial "digits.html" (len (where $pubs "type" .)) }}</span></button>
+          {{- end }}
+        </div>
+      </div>
+      <p class="visually-hidden" role="status" data-pubs-status></p>
+    </div>
+    {{- end }}
+
+    <div class="split pubs-split">
+      <div class="main pubs-list" id="pubs-list" data-filter-scope="pubs">
+        {{- range $years }}
+        {{- $y := . }}
+        <section class="pubs-year" data-filter-section aria-labelledby="pubs-y{{ $y }}">
+          {{ partial "section-head.html" (dict "title" (partial "digits.html" $y) "id" (printf "pubs-y%v" $y)) }}
+          <div class="list-card">
+            {{- range where $pubs "year" $y }}
+            {{ partial "pub-item.html" (dict "pub" . "open" false) }}
+            {{- end }}
+          </div>
+        </section>
+        {{- end }}
+        {{- if $n }}
+        <div class="empty pubs-empty" data-filter-empty hidden>
+          <span class="icon-tile icon-tile--sm" aria-hidden="true">{{ partial "icon.html" (dict "name" "search") }}</span>
+          <p>{{ i18n "pubs_noMatch" }}</p>
+          <button class="btn btn--ghost btn--sm" type="button" data-pubs-reset>{{ i18n "pubs_clearFilters" }}</button>
+        </div>
+        {{- else }}
+        <div class="empty pubs-empty">
+          <span class="icon-tile icon-tile--sm" aria-hidden="true">{{ partial "icon.html" (dict "name" "document") }}</span>
+          <p>{{ i18n "pubs_none" }}</p>
+        </div>
+        {{- end }}
+      </div>
+
+      {{- if or $scholars $n }}
+      <aside class="aside pubs-aside">
+        {{- with $scholars }}
+        <section class="card pubs-card" aria-labelledby="pubs-scholar-title">
+          <h2 id="pubs-scholar-title">{{ partial "icon.html" (dict "name" "scholar") }}<span>{{ i18n "pubs_scholarTitle" }}</span></h2>
+          <ul class="pubs-scholars">
+            {{- range . }}
+            <li>
+              <a href="{{ .Params.scholar }}">
+                {{ partial "avatar.html" (dict "page" . "size" 40) }}
+                <span class="who"><span class="name">{{ .Title }}</span><span class="role">{{ partial "person-role.html" . }}</span></span>
+                {{ partial "icon.html" (dict "name" "external" "size" 18) }}
+              </a>
+            </li>
+            {{- end }}
+          </ul>
+        </section>
+        {{- end }}
+        {{- if $n }}
+        <section class="card pubs-card pubs-card--bib" aria-labelledby="pubs-bib-title">
+          <h2 id="pubs-bib-title">{{ partial "icon.html" (dict "name" "code") }}<span>{{ i18n "pubs_bibTitle" }}</span></h2>
+          <p>{{ i18n "pubs_bibText" }}</p>
+        </section>
+        {{- end }}
+      </aside>
+      {{- end }}
+    </div>
+  </div>
 </div>
-{{ $years := slice }}
-{{ range site.Data.publications }}{{ $years = $years | append .year }}{{ end }}
-{{ range $y := sort (uniq $years) "value" "desc" }}
-  <section class="year-group">
-    <h2>{{ partial "digits.html" $y }}</h2>
-    <ul class="pubs">{{ range where site.Data.publications "year" $y }}{{ partial "pub-item.html" (dict "pub" .) }}{{ end }}</ul>
-  </section>
 {{ end }}
-<script>
-  (function () {
-    var btns = document.querySelectorAll('.filters button');
-    btns.forEach(function (b) {
-      b.addEventListener('click', function () {
-        var f = b.dataset.filter;
-        btns.forEach(function (x) { x.setAttribute('aria-pressed', x === b); });
-        document.querySelectorAll('.pub').forEach(function (p) { p.hidden = f !== 'all' && p.dataset.type !== f; });
-        document.querySelectorAll('.year-group').forEach(function (g) { g.hidden = !g.querySelector('.pub:not([hidden])'); });
-      });
-    });
-  })();
-</script>
+
+{{ define "scripts" }}
+{{- if site.Data.publications }}
+{{ partial "pubs-filter.html" . }}
+{{- end }}
 {{ end }}

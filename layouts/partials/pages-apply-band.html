@@ -1,0 +1,20 @@
+{{- /* The Join page's closing night band ("Ready to apply?"): the shared cta-join band would link "How to join" back to this same page. Same markup and classes as cta-join.html. */ -}}
+{{- with site.Params.email }}
+<section class="section section--lg section--end">
+  <div class="wrap">
+    <div class="cta-band">
+      <svg class="decor" viewBox="0 0 360 220" aria-hidden="true" focusable="false"><path d="M40 60L150 110L290 50M150 110L120 190M150 110L250 170M290 50L330 140" fill="none" stroke="#253945" stroke-width="2"/><circle cx="40" cy="60" r="7" fill="#0f1c26" stroke="#253945" stroke-width="2"/><circle cx="290" cy="50" r="9" fill="#0f1c26" stroke="#253945" stroke-width="2"/><circle cx="120" cy="190" r="6" fill="#0f1c26" stroke="#253945" stroke-width="2"/><circle cx="250" cy="170" r="7" fill="#0f1c26" stroke="#253945" stroke-width="2"/><circle cx="330" cy="140" r="6" fill="#0f1c26" stroke="#253945" stroke-width="2"/><circle cx="150" cy="110" r="11" fill="#162733" stroke="#7fd0e6" stroke-width="2"/><circle cx="220" cy="80" r="5" fill="#f2b33d"/></svg>
+      <div class="text">
+        <span class="eyebrow">{{ i18n "pages_applyEyebrow" }}</span>
+        <h2>{{ i18n "pages_applyTitle" }}</h2>
+        <p>{{ i18n "pages_applyText" }}</p>
+      </div>
+      <div class="actions">
+        <a class="btn btn--lg btn--night" href="mailto:{{ . }}">{{ partial "icon.html" (dict "name" "mail" "size" 18) }}<span dir="ltr">{{ . }}</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+{{- else }}
+<div class="section--end"></div>
+{{- end }}

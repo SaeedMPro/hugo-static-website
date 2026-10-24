@@ -1,0 +1,19 @@
+weight: 1
+icon: "sdn"
+short_fa: "SDN"
+short_en: "SDN"
+title_fa: "شبکه‌های نرم‌افزارمحور"
+title_en: "Software-defined networking"
+summary_fa: "کنترل متمرکز، توازن بار و سوییچ‌های برنامه‌پذیر."
+summary_en: "Centralised control, load balancing and programmable switches."
+topics_fa: ["کنترل متمرکز شبکه", "توازن بار بین مسیرهای مرکز داده", "سوییچ‌های برنامه‌پذیر و زبان P4", "زمان‌بندی جریان در مراکز داده"]
+topics_en: ["Centralised network control", "Load balancing across data-centre paths", "Programmable switches and P4", "Flow scheduling in data centres"]
+body_fa: |
+  پژوهش‌های این حوزه زمان‌بندی جریان در مراکز داده و توازن بار با یادگیری تقویتی را هم در بر می‌گیرد.
+body_en: |
+  Work in this area also covers flow scheduling in data centres and load balancing with reinforcement learning.
+tools:
+  - name: "Mininet"
+    url: "https://mininet.org/"
+  - name: "ONOS"
+    url: "https://opennetworking.org/onos/"

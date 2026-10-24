@@ -1,0 +1,5 @@
+{{- /* An event page is upcoming from its day on (dates compare as ISO strings). */ -}}
+{{- /* Today in Tehran (UTC+03:30, no daylight saving): the nightly build runs at local midnight on a UTC machine. */ -}}
+{{- $today := (now.UTC.Add (time.ParseDuration "3h30m")).Format "2006-01-02" -}}
+{{- $up := ge (.Date.Format "2006-01-02") $today -}}
+{{- return $up -}}

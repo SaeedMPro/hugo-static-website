@@ -1,0 +1,30 @@
+{{- /* context: one resource entry (software). A list row: title, summary and related links, with the link shown as its address. */ -}}
+{{- $r := . -}}
+{{- $l := partial "pages-res-links.html" $r -}}
+{{- $title := partial "loc.html" (dict "m" $r "k" "title") -}}
+<li>
+  <div class="body">
+    <h3>{{ $title }}</h3>
+    {{- with partial "loc.html" (dict "m" $r "k" "summary") }}
+    <p>{{ . }}</p>
+    {{- end }}
+    {{- with partial "loc.html" (dict "m" $r "k" "access") }}
+    <p class="access"><span class="k">{{ i18n "pages_access" }}:</span> {{ . }}</p>
+    {{- end }}
+    {{- if or $l.project $l.pub }}
+    <div class="related">
+      {{- /* Named in hidden text, as in pages-res-card.html: an aria-label cannot mark the language of the paper's title. */}}
+      {{- with $l.project }}
+      <a class="link-more" href="{{ .RelPermalink }}">{{ i18n "pages_relatedProject" }}<span class="visually-hidden">: {{ .Title }}</span>{{ partial "icon.html" (dict "name" "arrow" "size" 16) }}</a>
+      {{- end }}
+      {{- with $l.pub }}
+      {{- $plang := .lang | default "en" }}
+      <a class="link-more" href="{{ $l.pubHref }}">{{ i18n "pages_relatedPaper" }}<span class="visually-hidden">: <span lang="{{ $plang }}" dir="{{ cond (eq $plang "fa") "rtl" "ltr" }}">{{ .title }}</span></span>{{ partial "icon.html" (dict "name" "arrow" "size" 16) }}</a>
+      {{- end }}
+    </div>
+    {{- end }}
+  </div>
+  {{- with $l.href }}
+  <a class="url" href="{{ . }}"><span dir="ltr">{{ $l.short }}</span>{{ partial "icon.html" (dict "name" $l.icon "size" 16) }}</a>
+  {{- end }}
+</li>

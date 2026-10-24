@@ -3,6 +3,7 @@
 - id: sadri2025telemetry
   year: 2025
   type: conference
+  areas: ["te", "sdn"]
   title: "Lightweight In-band Telemetry for Congestion Detection with P4"
   authors: [sadri, kaviani]
   venue: "International Conference on Network Systems (demo venue)"
@@ -12,6 +13,7 @@
 - id: nouri2025iot
   year: 2025
   type: journal
+  areas: ["sec", "iot"]
   title: "A Resource-Aware Intrusion Detector for Constrained IoT Gateways"
   authors: [nouri, rastegar]
   venue: "Journal of Networked Systems (demo venue)"
@@ -21,6 +23,7 @@
 - id: tavakoli2024lb
   year: 2024
   type: conference
+  areas: ["sdn", "te"]
   title: "Reinforcement-Learning Load Balancing for SDN Data Centres"
   authors: [tavakoli, "B. Example", kaviani]
   venue: "Iranian Conference on Computer Engineering (demo venue)"
@@ -30,6 +33,7 @@
 - id: moghadam2023wsn
   year: 2023
   type: journal
+  areas: ["iot"]
   title: "Energy-Aware Cluster Routing for Wireless Sensor Networks"
   authors: [moghadam, kaviani]
   venue: "Wireless Networks Letters (demo venue)"
@@ -39,6 +43,7 @@
 - id: jahani2022ddos
   year: 2022
   type: thesis
+  areas: ["sdn", "sec"]
   title: "DDoS Detection at the SDN Controller using Entropy Features"
   authors: [jahani]
   venue: "MSc thesis, Bu-Ali Sina University"

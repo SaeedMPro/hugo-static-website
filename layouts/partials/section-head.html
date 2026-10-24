@@ -1,0 +1,8 @@
+{{- /* context: dict "title" "id" "href" "link" — a section heading with the link-and-node rule and an optional "see all" link. */ -}}
+<div class="section-head">
+  <h2{{ with .id }} id="{{ . }}"{{ end }}>{{ .title }}</h2>
+  <span class="rule" aria-hidden="true"></span>
+  {{- with .href }}
+  <a class="more" href="{{ . }}">{{ $.link }}{{ partial "icon.html" (dict "name" "arrow" "size" 18) }}</a>
+  {{- end }}
+</div>

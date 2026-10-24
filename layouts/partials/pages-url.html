@@ -1,0 +1,7 @@
+{{- /* A url from data: full URLs (http, https, mailto, tel, //), and #anchors are kept; a local path ("files/x.pdf" or "/files/x.pdf") becomes site-relative, keeping the base path ("/netlab-demo/files/x.pdf"; relURL alone drops it for a leading slash). */ -}}
+{{- $u := . | default "" -}}
+{{- $res := $u -}}
+{{- if and $u (not (or (hasPrefix $u "http://") (hasPrefix $u "https://") (hasPrefix $u "mailto:") (hasPrefix $u "tel:") (hasPrefix $u "//") (hasPrefix $u "#"))) -}}
+  {{- $res = strings.TrimPrefix "/" $u | relURL -}}
+{{- end -}}
+{{- return $res -}}

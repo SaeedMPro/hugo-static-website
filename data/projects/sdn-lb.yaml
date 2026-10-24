@@ -2,9 +2,11 @@ title_fa: "توازن بار هوشمند در SDN"
 title_en: "Smart load balancing in SDN"
 status: active           # active | done
 weight: 1
+areas: ["sdn", "te"]
 members: [kaviani, tavakoli]
 publications: [tavakoli2024lb]
 code: "https://github.com/"
+tools: ["Mininet", "ONOS"]
 summary_fa: "یک کنترلر SDN که با یادگیری تقویتی جریان‌ها را بین مسیرهای مرکز داده پخش می‌کند."
 summary_en: "An SDN controller that spreads flows across data-centre paths with reinforcement learning."
 body_fa: |

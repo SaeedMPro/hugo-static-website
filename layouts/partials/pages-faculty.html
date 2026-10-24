@@ -1,0 +1,6 @@
+{{- /* The group's current faculty (people pages with role faculty that are not alumni), in their weight order. Returns a slice, empty when there are none. */ -}}
+{{- $res := slice -}}
+{{- with site.GetPage "people" -}}
+  {{- $res = where (where .Pages.ByWeight "Params.role" "faculty") "Params.status" "ne" "alumni" -}}
+{{- end -}}
+{{- return $res -}}

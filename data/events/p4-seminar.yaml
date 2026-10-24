@@ -1,0 +1,23 @@
+type: "seminar"
+date: "2024-11-20"
+time: ""
+title_fa: "مقدمه‌ای بر زبان P4"
+title_en: "An introduction to P4"
+speaker: ""
+speaker_fa: ""
+speaker_en: ""
+supervisor: ""
+location_fa: ""
+location_en: ""
+summary_fa: "معرفی زبان P4 و اجرای یک مثال ساده روی سوییچ نرم‌افزاری BMv2."
+summary_en: "An introduction to the P4 language with a simple example on the BMv2 software switch."
+body_fa: |
+  جلسهٔ این هفته به معرفی زبان P4 و اجرای یک مثال ساده روی سوییچ نرم‌افزاری BMv2 اختصاص داشت. اسلایدها در مخزن گروه قرار گرفته است.
+body_en: |
+  This week's session introduced the P4 language and ran a simple example on the BMv2 software switch. The slides are in the group repository.
+slides: "https://github.com/"
+video: ""
+online: ""
+news: "seminar"
+publications: []
+projects: []

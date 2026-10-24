@@ -1,0 +1,18 @@
+{{- /* context: dict "page" research-area page "summary" bool. A research area as one link row: icon tile, title (+ summary), forward arrow. Without "summary" it is the compact row of the Teaching page. */ -}}
+{{- $p := .page -}}
+{{- $full := .summary -}}
+<a class="pg-area{{ if not $full }} pg-area--compact{{ end }}" href="{{ $p.RelPermalink }}">
+  <span class="icon-tile">{{ partial "icon.html" (dict "name" ($p.Params.icon | default "sdn") "size" 26) }}</span>
+  {{- if $full }}
+  <div class="body">
+    <h3>{{ $p.Title }}</h3>
+    {{- with partial "loc.html" (dict "m" $p.Params "k" "summary") }}
+    <p>{{ . }}</p>
+    {{- end }}
+  </div>
+  {{- else }}
+  <span class="body">{{ $p.Title }}</span>
+  {{- end }}
+  {{ partial "icon.html" (dict "name" (cond $full "arrow" "chevron") "size" (cond $full 20 18) "class" "pg-area-go") }}
+</a>
+{{- /**/ -}}

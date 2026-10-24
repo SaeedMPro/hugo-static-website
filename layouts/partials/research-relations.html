@@ -1,0 +1,18 @@
+{{- /* What a research area links to, computed from data. context: area page.
+  Returns dict "projects" (project pages by weight) "pubs" (publications, newest first)
+  "people" (current members by role and weight, then alumni). */ -}}
+{{- $ids := slice .Params.pid -}}
+{{- $projects := slice -}}
+{{- with site.GetPage "projects" }}{{ $projects = where .Pages.ByWeight "Params.areas" "intersect" $ids }}{{ end -}}
+{{- $pubs := slice -}}
+{{- with site.Data.publications }}{{ $pubs = sort (where . "areas" "intersect" $ids) "year" "desc" }}{{ end -}}
+{{- $people := slice -}}
+{{- with site.GetPage "people" -}}
+  {{- $all := where .Pages.ByWeight "Params.areas" "intersect" $ids -}}
+  {{- $current := where $all "Params.status" "ne" "alumni" -}}
+  {{- $roles := slice "faculty" "postdoc" "phd" "msc" "bsc" "staff" -}}
+  {{- range $roles }}{{ range where $current "Params.role" . }}{{ $people = $people | append . }}{{ end }}{{ end -}}
+  {{- range $current }}{{ if not (in $roles .Params.role) }}{{ $people = $people | append . }}{{ end }}{{ end -}}
+  {{- range where $all "Params.status" "alumni" }}{{ $people = $people | append . }}{{ end -}}
+{{- end -}}
+{{- return (dict "projects" $projects "pubs" $pubs "people" $people) -}}

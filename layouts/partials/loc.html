@@ -1,0 +1,3 @@
+{{- /* The current language's value of a bilingual field: dict "m" .Params "k" "title" → .Params.title_fa on Persian pages. */ -}}
+{{- $v := index .m (printf "%s_%s" .k site.Language.Lang) | default "" -}}
+{{- return $v -}}

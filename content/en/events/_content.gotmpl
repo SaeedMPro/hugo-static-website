@@ -1,0 +1,12 @@
+{{/* صفحهٔ هر رویداد از فایل‌های data/events ساخته می‌شود. */}}
+{{ $lang := .Site.Language.Lang }}
+{{ range $id, $e := .Site.Data.events }}
+  {{ $.AddPage (dict
+    "path" $id
+    "title" (index $e (printf "title_%s" $lang))
+    "kind" "page"
+    "dates" (dict "date" (time.AsTime $e.date))
+    "content" (dict "mediaType" "text/markdown" "value" (index $e (printf "body_%s" $lang) | default ""))
+    "params" (merge $e (dict "pid" $id))
+  ) }}
+{{ end }}

@@ -1,0 +1,7 @@
+{{- /* An iCalendar TEXT value (RFC 5545 §3.3.11): backslash, semicolon and comma escaped, newlines as \n. Returns a string. */ -}}
+{{- $s := trim (printf "%v" .) " \r\n\t" -}}
+{{- $s = replace $s `\` `\\` -}}
+{{- $s = replace $s ";" `\;` -}}
+{{- $s = replace $s "," `\,` -}}
+{{- $s = replaceRE `\r?\n` `\n` $s -}}
+{{- return $s -}}

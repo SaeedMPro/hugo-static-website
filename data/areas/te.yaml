@@ -1,0 +1,17 @@
+weight: 4
+icon: "te"
+short_fa: "مهندسی ترافیک"
+short_en: "Traffic"
+title_fa: "مهندسی ترافیک"
+title_en: "Traffic engineering"
+summary_fa: "پایش، اندازه‌گیری و بهینه‌سازی جریان‌های شبکه."
+summary_en: "Telemetry, measurement and flow optimisation."
+topics_fa: ["پایش درون‌باندی شبکه", "اندازه‌گیری و تشخیص ازدحام", "بهینه‌سازی جریان‌ها"]
+topics_en: ["In-band network telemetry", "Measurement and congestion detection", "Flow optimisation"]
+body_fa: |
+  این حوزه پایش درون‌باندی شبکه با سوییچ‌های برنامه‌پذیر P4 را هم در بر می‌گیرد.
+body_en: |
+  This includes in-band network telemetry with programmable P4 switches.
+tools:
+  - name: "BMv2"
+    url: "https://github.com/p4lang/behavioral-model"

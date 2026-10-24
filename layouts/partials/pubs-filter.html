@@ -1,0 +1,62 @@
+{{- /* Publications page: the area and year selects, a "clear filters" button and a polite count for screen readers.
+  site.js does the type pills and the text box with listeners on those controls; these listeners sit on the page body,
+  so they run after site.js's and only narrow its result. Changing a select re-runs site.js's filter first. */ -}}
+<script>
+(function () {
+  'use strict';
+  var root = document.querySelector('[data-pubs]');
+  var scope = document.querySelector('[data-filter-scope="pubs"]');
+  var search = document.querySelector('[data-filter-search="pubs"]');
+  if (!root || !scope || !search) return;
+  var area = root.querySelector('[data-pubs-area]');
+  var year = root.querySelector('[data-pubs-year]');
+  var status = root.querySelector('[data-pubs-status]');
+  var format = window.Intl && Intl.NumberFormat ? new Intl.NumberFormat(document.documentElement.lang || 'en') : null;
+  var timer = 0;
+
+  function refine() {
+    var a = area ? area.value : '';
+    var y = year ? year.value : '';
+    var shown = 0;
+    scope.querySelectorAll('[data-filter-item]').forEach(function (item) {
+      var areas = ' ' + (item.getAttribute('data-areas') || '') + ' ';
+      if (!item.hidden && ((a && areas.indexOf(' ' + a + ' ') === -1) || (y && item.getAttribute('data-year') !== y))) item.hidden = true;
+      if (!item.hidden) shown++;
+    });
+    scope.querySelectorAll('[data-filter-section]').forEach(function (section) {
+      section.hidden = !section.querySelector('[data-filter-item]:not([hidden])');
+    });
+    scope.querySelectorAll('[data-filter-empty]').forEach(function (empty) { empty.hidden = shown > 0; });
+    if (status) {
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        var text = root.getAttribute(shown === 1 ? 'data-shown-one' : 'data-shown') || '';
+        status.textContent = text.replace('{n}', format ? format.format(shown) : String(shown));
+      }, 600);
+    }
+  }
+
+  // site.js filters again whenever the text box reports input.
+  function rerun() { search.dispatchEvent(new Event('input', { bubbles: true })); }
+
+  root.addEventListener('click', function (e) {
+    if (e.target.closest('[data-filter-group="pubs"] [data-filter]')) {
+      refine();
+    } else if (e.target.closest('[data-pubs-reset]')) {
+      search.value = '';
+      if (area) area.value = '';
+      if (year) year.value = '';
+      var all = root.querySelector('[data-filter-group="pubs"] [data-filter="all"]');
+      if (all) all.click(); else rerun();
+      search.focus();
+    }
+  });
+  root.addEventListener('input', function (e) { if (e.target === search) refine(); });
+  [area, year].forEach(function (select) { if (select) select.addEventListener('change', rerun); });
+
+  // A browser may restore a chosen option on back/forward; filter to match it.
+  window.addEventListener('pageshow', function () {
+    if (search.value || (area && area.value) || (year && year.value)) rerun();
+  });
+})();
+</script>

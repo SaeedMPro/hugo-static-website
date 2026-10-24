@@ -1,0 +1,1 @@
+{{- partial "events-vcalendar.html" (dict "events" .RegularPages.ByDate "name" (printf "%s — %s" site.Title .Title)) -}}

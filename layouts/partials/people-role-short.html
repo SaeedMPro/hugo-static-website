@@ -1,0 +1,12 @@
+{{- /* Short role line for a supervised student (string): "PhD · since 2022" or "MSc · graduated 2025". */ -}}
+{{- $p := . -}}
+{{- $deg := partial "people-degree.html" $p -}}
+{{- $when := "" -}}
+{{- if eq $p.Params.status "alumni" -}}
+  {{- with $p.Params.end_year }}{{ $when = i18n "people_graduated" (dict "Year" (partial "year.html" (dict "y" . "en" $p.Params.end_year_en))) }}{{ end -}}
+{{- else -}}
+  {{- with $p.Params.start_year }}{{ $when = i18n "since" (dict "Year" (partial "year.html" (dict "y" . "en" $p.Params.start_year_en))) }}{{ end -}}
+{{- end -}}
+{{- $res := $deg -}}
+{{- if and $deg $when }}{{ $res = printf "%s · %s" $deg $when }}{{ else if $when }}{{ $res = $when }}{{ end -}}
+{{- return $res -}}

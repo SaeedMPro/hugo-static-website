@@ -1,0 +1,9 @@
+{{- /* A person's degree or position label (string): "MSc", "PhD" … for students and alumni, the role name otherwise. */ -}}
+{{- $r := .Params.role | default "" -}}
+{{- $res := "" -}}
+{{- if in (slice "msc" "phd" "bsc" "faculty") $r -}}
+  {{- $res = i18n (printf "deg_%s" $r) -}}
+{{- else if in (slice "postdoc" "staff") $r -}}
+  {{- $res = i18n (printf "role_%s" $r) -}}
+{{- end -}}
+{{- return $res -}}

@@ -1,0 +1,2 @@
+{{- /* context: the news section. Its paginator, newest first. head.html (canonical URL and title of page 2 onwards) and news/list.html both take it from here: Hugo keeps the first paginator a page asks for and silently returns it to every later call, whatever that call passes. */ -}}
+{{- return (.Paginate .Pages.ByDate.Reverse) -}}

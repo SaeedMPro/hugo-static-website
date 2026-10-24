@@ -1,0 +1,4 @@
+{{- /* Any string or rendered partial → one line of plain text (tags removed, entities decoded, spaces collapsed). */ -}}
+{{- $s := printf "%v" (. | default "") -}}
+{{- $s = $s | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace -}}
+{{- return $s -}}

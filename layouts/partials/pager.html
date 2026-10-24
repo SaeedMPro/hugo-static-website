@@ -1,0 +1,13 @@
+{{- /* context: a paginator. Hidden when there is only one page. */ -}}
+{{- $pag := . -}}
+{{- if gt $pag.TotalPages 1 }}
+<nav class="pager" aria-label="{{ i18n "pagination" }}">
+  <ul>
+    <li>{{ with $pag.Prev }}<a href="{{ .URL }}" aria-label="{{ i18n "prevPage" }}">{{ partial "icon.html" (dict "name" "chevron" "size" 18 "class" "flip") }}</a>{{ else }}<span aria-disabled="true">{{ partial "icon.html" (dict "name" "chevron" "size" 18 "class" "flip") }}</span>{{ end }}</li>
+    {{- range $pag.Pagers }}
+    <li>{{ if eq . $pag }}<span aria-current="page">{{ partial "digits.html" .PageNumber }}</span>{{ else }}<a href="{{ .URL }}">{{ partial "digits.html" .PageNumber }}</a>{{ end }}</li>
+    {{- end }}
+    <li>{{ with $pag.Next }}<a href="{{ .URL }}" aria-label="{{ i18n "nextPage" }}">{{ partial "icon.html" (dict "name" "chevron" "size" 18) }}</a>{{ else }}<span aria-disabled="true">{{ partial "icon.html" (dict "name" "chevron" "size" 18) }}</span>{{ end }}</li>
+  </ul>
+</nav>
+{{- end }}

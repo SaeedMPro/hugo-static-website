@@ -1,0 +1,18 @@
+{{- /* One iCalendar content line folded at 75 octets (RFC 5545 §3.1): CRLF plus a space, never inside a multi-byte character. Returns a string. */ -}}
+{{- $line := printf "%v" . -}}
+{{- $out := $line -}}
+{{- if gt (len $line) 75 -}}
+  {{- $out = "" -}}
+  {{- $cur := "" -}}
+  {{- $limit := 75 -}}
+  {{- range split $line "" -}}
+    {{- if gt (add (len $cur) (len .)) $limit -}}
+      {{- $out = printf "%s%s\r\n " $out $cur -}}
+      {{- $cur = "" -}}
+      {{- $limit = 74 -}}
+    {{- end -}}
+    {{- $cur = printf "%s%s" $cur . -}}
+  {{- end -}}
+  {{- $out = printf "%s%s" $out $cur -}}
+{{- end -}}
+{{- return $out -}}

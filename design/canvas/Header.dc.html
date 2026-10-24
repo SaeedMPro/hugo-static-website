@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="fa">
+<head>
+<meta charset="utf-8">
+<title>MCTN site header</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&amp;family=Vazirmatn:wght@100..900&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<header dir="{{dir}}" lang="{{lang}}" style="width: 100%; background: #ffffff; border-bottom: 1px solid #d6dfe5; font-family: Vazirmatn, Tahoma, 'Segoe UI', system-ui, sans-serif; color: #14212c;">
+<div style="max-width: 1200px; margin: 0 auto; padding: 12px clamp(16px, 4vw, 40px); box-sizing: border-box; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px;">
+<a href="{{homeHref}}" aria-label="{{homeLabel}}" style="display: flex; align-items: center; gap: 12px; min-width: 0; min-height: 44px; color: #14212c; text-decoration: none;">
+<svg width="40" height="40" viewBox="0 0 34 34" aria-hidden="true" style="flex: none;"><path d="M8 9L17 17L26 9M17 17V27" fill="none" stroke="#0b6e8a" stroke-width="2"></path><circle cx="8" cy="9" r="4" fill="#ffffff" stroke="#0b6e8a" stroke-width="2"></circle><circle cx="26" cy="9" r="4" fill="#ffffff" stroke="#0b6e8a" stroke-width="2"></circle><circle cx="17" cy="27" r="4" fill="#ffffff" stroke="#0b6e8a" stroke-width="2"></circle><circle cx="17" cy="17" r="4.5" fill="#c98200"></circle></svg>
+<span style="display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-width: 0;">
+<span dir="ltr" style="font-size: 24px; line-height: 1.1; font-weight: 800; letter-spacing: 0.06em;">MCTN</span>
+<span style="font-size: 13px; line-height: {{lh}}; color: #475764;">{{descriptor}}</span>
+</span>
+</a>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 10px; flex: 0 1 auto;">
+<a href="{{searchHref}}" style="display: flex; align-items: center; gap: 10px; flex: 1 1 220px; min-width: 200px; height: 44px; padding: 0 16px; box-sizing: border-box; border: 1px solid #b8c6d0; border-radius: 999px; background: #f4f7f9; color: #5a6a77; font-size: 15px; text-decoration: none;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none;"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>
+<span>{{searchLabel}}</span>
+</a>
+<a href="{{langHref}}" hreflang="{{otherLang}}" lang="{{otherLang}}" style="display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 16px; box-sizing: border-box; border: 1px solid #d6dfe5; border-radius: 999px; color: #14212c; font-size: 15px; font-weight: 650; text-decoration: none;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none;"><circle cx="12" cy="12" r="9"></circle><path d="M3 12h18"></path><path d="M12 3c2.6 2.8 3.9 5.8 3.9 9s-1.3 6.2-3.9 9c-2.6-2.8-3.9-5.8-3.9-9S9.4 5.8 12 3z"></path></svg>
+<span>{{switchLabel}}</span>
+</a>
+</div>
+</div>
+<nav aria-label="{{navLabel}}" style="border-top: 1px solid #e6ecf0;">
+<div style="max-width: 1200px; margin: 0 auto; padding: 0 clamp(16px, 4vw, 40px); box-sizing: border-box; overflow-x: auto;">
+<ul style="list-style: none; margin: 0; margin-inline-start: -14px; padding: 0; display: flex; gap: 2px; white-space: nowrap;">
+<sc-for list="{{nav}}" as="item" hint-placeholder-count="11">
+<li style="display: flex; flex: none;">
+<a href="{{item.href}}" aria-current="{{item.current}}" style="display: flex; align-items: center; height: 52px; padding: 0 14px; font-size: 15px; text-decoration: none; color: {{item.color}}; font-weight: {{item.weight}}; box-shadow: inset 0 -3px 0 {{item.bar}};">{{item.label}}</a>
+</li>
+</sc-for>
+</ul>
+</div>
+</nav>
+</header>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"lang":{"editor":"enum","options":["fa","en"],"default":"fa"},"active":{"editor":"enum","options":["none","about","research","people","projects","publications","news","events","teaching","resources","join","contact"],"default":"people"},"page":{"editor":"text","default":"Home"},"$preview":{"width":1440,"height":130}}'>
+class Component extends DCLogic {
+renderVals() {
+const lang = this.props.lang ?? 'fa';
+const active = this.props.active ?? 'people';
+const page = this.props.page ?? 'Home';
+const fa = lang === 'fa';
+const other = fa ? 'en' : 'fa';
+const keys = ['about', 'research', 'people', 'projects', 'publications', 'news', 'events', 'teaching', 'resources', 'join', 'contact'];
+const files = { about: 'About', research: 'Research', people: 'People', projects: 'Projects', publications: 'Publications', news: 'News', events: 'Events', teaching: 'Teaching', resources: 'Resources', join: 'Join', contact: 'Contact' };
+const labels = fa
+? { about: 'درباره', research: 'پژوهش', people: 'اعضا', projects: 'پروژه‌ها', publications: 'انتشارات', news: 'اخبار', events: 'رویدادها', teaching: 'آموزش', resources: 'منابع', join: 'پیوستن', contact: 'تماس' }
+: { about: 'About', research: 'Research', people: 'People', projects: 'Projects', publications: 'Publications', news: 'News', events: 'Events', teaching: 'Teaching', resources: 'Resources', join: 'Join us', contact: 'Contact' };
+const nav = keys.map((k) => {
+const on = k === active;
+return {
+label: labels[k],
+href: files[k] + '-' + lang + '.dc.html',
+current: on ? 'page' : 'false',
+color: on ? '#14212c' : '#475764',
+weight: on ? '700' : '500',
+bar: on ? '#0b6e8a' : 'transparent'
+};
+});
+return {
+lang: lang,
+dir: fa ? 'rtl' : 'ltr',
+otherLang: other,
+nav: nav,
+homeHref: 'Home-' + lang + '.dc.html',
+searchHref: 'Search-' + lang + '.dc.html',
+langHref: page + '-' + other + '.dc.html',
+homeLabel: fa ? 'MCTN، صفحهٔ اصلی' : 'MCTN home',
+descriptor: fa ? 'گروه پژوهشی شبکه‌های کامپیوتری · دانشگاه بوعلی سینا' : 'Computer Networks Research Group · Bu-Ali Sina University',
+searchLabel: fa ? 'جستجو در سایت' : 'Search the site',
+switchLabel: fa ? 'English' : 'فارسی',
+navLabel: fa ? 'منوی اصلی' : 'Main menu',
+lh: fa ? '1.7' : '1.45'
+};
+}
+}
+</script>
+</body>
+</html>

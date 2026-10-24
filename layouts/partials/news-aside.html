@@ -1,0 +1,33 @@
+{{- /* context: the news section page — the news list's side column: upcoming events and the feeds to follow. */ -}}
+{{- $events := site.GetPage "events" -}}
+{{- $rss := .OutputFormats.Get "rss" -}}
+{{- $cal := "" -}}
+{{- with $events }}{{ $cal = .OutputFormats.Get "calendar" }}{{ end -}}
+<aside class="aside news-aside">
+  {{- with $events }}
+  {{- $up := slice }}
+  {{- range .RegularPages.ByDate }}{{ if partial "is-upcoming.html" . }}{{ $up = $up | append . }}{{ end }}{{ end }}
+  <section class="news-aside-block" aria-labelledby="upcoming-title">
+    <h2 id="upcoming-title">{{ i18n "upcomingEvents" }}</h2>
+    {{- range first 2 $up }}
+    {{ partial "event-card.html" . }}
+    {{- else }}
+    <p class="empty news-empty-sm">{{ partial "icon.html" (dict "name" "calendar" "size" 20) }}<span>{{ i18n "noUpcoming" }}</span></p>
+    {{- end }}
+    <a class="link-more" href="{{ .RelPermalink }}">{{ i18n "allEvents" }}{{ partial "icon.html" (dict "name" "arrow" "size" 18) }}</a>
+  </section>
+  {{- end }}
+  {{- if or $rss $cal }}
+  <section class="card news-follow" aria-labelledby="follow-title">
+    <h2 id="follow-title">{{ i18n "news_follow" }}</h2>
+    <ul>
+      {{- with $rss }}
+      <li><a href="{{ .RelPermalink }}" type="application/rss+xml"><span class="icon-tile icon-tile--sm">{{ partial "icon.html" (dict "name" "feed" "size" 20) }}</span><span class="news-follow-text"><span class="news-follow-title">{{ i18n "news_rssTitle" }}</span><span class="news-follow-hint">{{ i18n "news_rssHint" }}</span></span></a></li>
+      {{- end }}
+      {{- with $cal }}
+      <li><a href="{{ .Permalink | safeURL }}"><span class="icon-tile icon-tile--sm">{{ partial "icon.html" (dict "name" "calendar" "size" 20) }}</span><span class="news-follow-text"><span class="news-follow-title">{{ i18n "news_calTitle" }}</span><span class="news-follow-hint">{{ i18n "news_calHint" }}</span></span></a></li>
+      {{- end }}
+    </ul>
+  </section>
+  {{- end }}
+</aside>

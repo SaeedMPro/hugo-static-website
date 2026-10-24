@@ -1,7 +1,11 @@
-{{/* context: dict "page" page "size" "sm"|"lg" */}}
-{{ $p := .page }}
-{{ $src := "people/default.svg" }}
-{{ $alt := "" }}
-{{ with $p.Params.photo }}{{ $src = . }}{{ $alt = $p.Title }}{{ end }}
-{{ $px := cond (eq .size "lg") 176 104 }}
-<img class="avatar{{ if eq .size "lg" }} lg{{ end }}" src="{{ $src | relURL }}" alt="{{ $alt }}" width="{{ $px }}" height="{{ $px }}" loading="lazy" decoding="async">
+{{- /* context: dict "page" person page "size" 32|56|88|120. Photo if set, otherwise initials. */ -}}
+{{- $p := .page -}}
+{{- $s := .size | default 56 -}}
+<span class="avatar avatar--{{ $s }}" aria-hidden="true">
+{{- with $p.Params.photo -}}
+<img src="{{ partial "pages-url.html" . }}" alt="" width="{{ $s }}" height="{{ $s }}" loading="lazy" decoding="async">
+{{- else -}}
+{{- partial "initials.html" $p.Title -}}
+{{- end -}}
+</span>
+{{- /**/ -}}

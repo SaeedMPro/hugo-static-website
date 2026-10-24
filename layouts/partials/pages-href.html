@@ -1,0 +1,11 @@
+{{- /* A link target from data: a page path or section name ("research", "people/kaviani") becomes that page's RelPermalink; a full URL (http, https, mailto, tel) or an in-page anchor is kept. Returns "" when nothing resolves. */ -}}
+{{- $in := . | default "" -}}
+{{- $res := "" -}}
+{{- if $in -}}
+  {{- if or (hasPrefix $in "http://") (hasPrefix $in "https://") (hasPrefix $in "mailto:") (hasPrefix $in "tel:") (hasPrefix $in "#") -}}
+    {{- $res = $in -}}
+  {{- else -}}
+    {{- with site.GetPage $in }}{{ $res = .RelPermalink }}{{ else }}{{ warnf "pages: no page found for link %q" $in }}{{ end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $res -}}

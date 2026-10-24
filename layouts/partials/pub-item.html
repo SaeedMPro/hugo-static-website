@@ -1,21 +1,41 @@
-{{/* context: dict "pub" publication "page" page */}}
-{{ $p := .pub }}
-{{ $lang := site.Language.Lang }}
-<li class="pub" data-type="{{ $p.type }}">
-  <span class="pub-title" dir="ltr">{{ $p.title }}</span>
-  <span class="pub-authors" dir="ltr">
+{{- /* context: dict "pub" publication "open" bool (show BibTeX). Citations keep their own language: English entries stay left-to-right on Persian pages, and Persian entries keep Persian commas and digits on English pages. */ -}}
+{{- $p := .pub -}}
+{{- $plang := $p.lang | default "en" -}}
+{{- $pdir := cond (eq $plang "fa") "rtl" "ltr" -}}
+{{- $sep := cond (eq $plang "fa") "، " ", " -}}
+{{- $year := partial "digits.html" (dict "v" $p.year "lang" $plang) -}}
+{{- $bib := printf "bib-%s" $p.id -}}
+{{- $href := $p.url | default (cond (ne ($p.doi | default "") "") (printf "https://doi.org/%s" $p.doi) "") -}}
+<article class="pub" id="{{ $p.id }}" lang="{{ $plang }}" dir="{{ $pdir }}" data-filter-item data-type="{{ $p.type }}" data-year="{{ $p.year }}" data-areas="{{ delimit ($p.areas | default slice) " " }}">
+  <div class="pub-meta">
+    <span class="badge" lang="{{ site.Language.Lang }}" dir="{{ site.Language.LanguageDirection }}">{{ i18n (cond (eq $p.type "thesis") "thesisType" $p.type) }}</span>
+    <span class="pub-year">{{ $year }}</span>
+  </div>
+  <h3 class="pub-title">{{ with $href }}<a href="{{ . }}">{{ $p.title }}</a>{{ else }}{{ $p.title }}{{ end }}</h3>
+  <p class="pub-authors">
     {{- range $i, $a := $p.authors -}}
-      {{- if $i }}, {{ end -}}
-      {{- with index site.Data.people $a -}}
-        {{- with site.GetPage (printf "/people/%s" $a) }}<strong><a href="{{ .RelPermalink }}">{{ index .Params "name_en" }}</a></strong>{{ end -}}
+      {{- if $i }}{{ $sep }}{{ end -}}
+      {{- with site.GetPage (printf "/people/%s" $a) -}}
+        <a href="{{ .RelPermalink }}">{{ replaceRE `^(Dr\.|دکتر)\s*` "" (index .Params (printf "name_%s" $plang)) }}</a>
       {{- else -}}{{ $a }}{{- end -}}
     {{- end -}}
-  </span>
-  <span class="pub-venue" dir="ltr">{{ $p.venue }}, {{ $p.year }}</span>
-  <span class="pub-links" dir="ltr">
-    <span class="badge">{{ i18n (cond (eq $p.type "thesis") "thesisType" $p.type) }}</span>
-    {{ with $p.pdf }}<a href="{{ . }}">PDF</a>{{ end }}
-    {{ with $p.doi }}<a href="https://doi.org/{{ . }}">DOI</a>{{ end }}
-    {{ with $p.code }}<a href="{{ . }}">{{ i18n "code" }}</a>{{ end }}
-  </span>
-</li>
+  </p>
+  <p class="pub-venue">{{ $p.venue }}{{ $sep }}{{ $year }}</p>
+  {{- /* Hidden words for the publications text filter: members' names in the other script and the areas in both languages. */}}
+  {{- $words := slice }}
+  {{- $other := cond (eq $plang "fa") "en" "fa" }}
+  {{- range $p.authors }}{{ with index site.Data.people . }}{{ $words = $words | append (index . (printf "name_%s" $other)) }}{{ end }}{{ end }}
+  {{- range $p.areas }}{{ with site.GetPage (printf "/research/%s" .) }}{{ $words = $words | append .Params.title_fa .Params.title_en .Params.short_fa .Params.short_en }}{{ end }}{{ end }}
+  {{- with $words }}<span hidden>{{ delimit . " " }}</span>{{ end }}
+  <div class="pub-links">
+    {{- with $p.pdf }}<a href="{{ partial "pages-url.html" . }}">{{ partial "icon.html" (dict "name" "document" "size" 16) }}PDF</a>{{ end }}
+    {{- with $p.doi }}<a href="https://doi.org/{{ . }}">{{ partial "icon.html" (dict "name" "link" "size" 16) }}DOI</a>{{ end }}
+    {{- with $p.code }}<a href="{{ . }}">{{ partial "icon.html" (dict "name" "code" "size" 16) }}<span lang="{{ site.Language.Lang }}">{{ i18n "code" }}</span></a>{{ end }}
+    {{- with $p.slides }}<a href="{{ partial "pages-url.html" . }}">{{ partial "icon.html" (dict "name" "slides" "size" 16) }}<span lang="{{ site.Language.Lang }}">{{ i18n "slides" }}</span></a>{{ end }}
+    <button class="bib-toggle" type="button" aria-expanded="{{ if $.open }}true{{ else }}false{{ end }}" aria-controls="{{ $bib }}" data-bib-toggle>BibTeX{{ partial "icon.html" (dict "name" "chevron-down" "size" 16) }}</button>
+  </div>
+  <div class="bib" id="{{ $bib }}"{{ if not $.open }} hidden{{ end }}>
+    <pre><code id="{{ $bib }}-code">{{ partial "bibtex.html" $p }}</code></pre>
+    <button class="btn btn--ghost btn--sm copy" type="button" data-copy="{{ $bib }}-code" data-copied="{{ i18n "copied" }}">{{ partial "icon.html" (dict "name" "copy" "size" 16) }}<span lang="{{ site.Language.Lang }}" aria-live="polite">{{ i18n "copy" }}</span></button>
+  </div>
+</article>

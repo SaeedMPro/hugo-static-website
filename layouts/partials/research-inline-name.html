@@ -1,0 +1,17 @@
+{{- /* An area's name inside a sentence ("Explore …", "a thesis in …"). context: area page.
+  The short label, as in the designs (SDN, اینترنت اشیا). English short labels that are ordinary words
+  ("Security", "Traffic") are chip labels, so English uses the title instead, without its initial
+  capital ("network security") unless the title starts with an acronym ("IoT and …"). */ -}}
+{{- $short := partial "loc.html" (dict "m" .Params "k" "short") -}}
+{{- $res := $short | default .Title -}}
+{{- if eq site.Language.Lang "en" -}}
+  {{- $abbr := and $short (ne (substr $short 1) (lower (substr $short 1))) -}}
+  {{- if not $abbr -}}
+    {{- $res = .Title -}}
+    {{- $rest := substr (index (split $res " ") 0) 1 -}}
+    {{- if and (eq $rest (lower $rest)) (ne $rest (upper $rest)) -}}
+      {{- $res = printf "%s%s" (lower (substr $res 0 1)) (substr $res 1) -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- return $res -}}

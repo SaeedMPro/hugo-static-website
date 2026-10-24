@@ -1,0 +1,10 @@
+{{- /* context: dict "items" (slice of pages) "current" title */ -}}
+<nav class="crumbs" aria-label="{{ i18n "breadcrumb" }}">
+  <ol>
+    {{- range .items }}
+    <li><a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></li>
+    <li aria-hidden="true">{{ partial "icon.html" (dict "name" "chevron" "size" 16) }}</li>
+    {{- end }}
+    <li aria-current="page">{{ .current }}</li>
+  </ol>
+</nav>

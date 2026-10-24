@@ -1,0 +1,109 @@
+{{ define "main" }}
+{{- $research := site.GetPage "research" -}}
+{{- $peopleHref := "" }}{{ with site.GetPage "people" }}{{ $peopleHref = .RelPermalink }}{{ end -}}
+{{- $faculty := partial "pages-faculty.html" . -}}
+<header class="page-head">
+  <div class="wrap">
+    <span class="eyebrow">{{ site.Title }}</span>
+    <h1>{{ .Title }}</h1>
+    {{- with .Params.lead }}
+    <p class="lead">{{ . }}</p>
+    {{- end }}
+    {{- with .Content }}
+    <div class="prose pg-intro">{{ . }}</div>
+    {{- end }}
+  </div>
+</header>
+
+{{- with .Params.facts }}
+<section class="section pg-section-sm" aria-label="{{ i18n "pages_atAGlance" }}">
+  <div class="wrap">
+    <dl class="pg-facts">
+      {{- range . }}
+      {{- $value := partial "digits.html" .value }}
+      {{- $label := .label }}
+      <div>
+        <dt>{{ $label }}</dt>
+        <dd>
+          {{- with partial "pages-href.html" .href -}}
+          <a href="{{ . }}">{{ $value }}<span class="visually-hidden"> {{ $label }}</span>{{ partial "icon.html" (dict "name" (cond (hasPrefix . "http") "external" "arrow") "size" 20) }}</a>
+          {{- else -}}
+          {{ $value }}
+          {{- end -}}
+        </dd>
+      </div>
+      {{- end }}
+    </dl>
+  </div>
+</section>
+{{- end }}
+
+{{- with $research }}{{ with .Pages.ByWeight }}
+<section class="section" id="areas" aria-labelledby="areas-title">
+  <div class="wrap">
+    {{ partial "section-head.html" (dict "title" (i18n "researchAreas") "id" "areas-title" "href" $research.RelPermalink "link" (i18n "allResearch")) }}
+    <ul class="pg-areas">
+      {{- range . }}
+      <li>{{ partial "pages-area-row.html" (dict "page" . "summary" true) }}</li>
+      {{- end }}
+    </ul>
+  </div>
+</section>
+{{- end }}{{ end }}
+
+{{- with .Params.labs }}
+<section class="section" id="labs" aria-labelledby="labs-title">
+  <div class="wrap">
+    {{ partial "section-head.html" (dict "title" (i18n "pages_labs") "id" "labs-title") }}
+    <div class="grid pg-labs">
+      {{- range . }}
+      {{- $alt := .alt | default "" }}
+      <article class="pg-lab{{ if .image }} pg-lab--image{{ end }}">
+        {{- with .image }}
+        <img src="{{ partial "pages-url.html" . }}" alt="{{ $alt }}" loading="lazy" decoding="async">
+        {{- end }}
+        <div class="text">
+          <h3>{{ .title }}</h3>
+          {{- with .text }}
+          <p>{{ . }}</p>
+          {{- end }}
+        </div>
+      </article>
+      {{- end }}
+    </div>
+  </div>
+</section>
+{{- end }}
+
+{{- with $faculty }}
+<section class="section" id="faculty" aria-labelledby="faculty-title">
+  <div class="wrap">
+    {{ partial "section-head.html" (dict "title" (i18n "faculty") "id" "faculty-title" "href" $peopleHref "link" (i18n "allPeople")) }}
+    <div class="grid pg-faculty">
+      {{- range . }}
+      {{ partial "person-card.html" (dict "page" . "variant" "feature") }}
+      {{- end }}
+    </div>
+  </div>
+</section>
+{{- end }}
+
+{{- with site.Params.address }}
+<section class="section" id="location" aria-labelledby="location-title">
+  <div class="wrap">
+    {{ partial "section-head.html" (dict "title" (i18n "pages_location") "id" "location-title") }}
+    <div class="pg-place">
+      <div class="pg-place-text">
+        <span class="icon-tile">{{ partial "icon.html" (dict "name" "pin" "size" 24) }}</span>
+        <address>{{ . }}</address>
+      </div>
+      {{- with site.GetPage "contact" }}
+      <a class="btn btn--secondary" href="{{ .RelPermalink }}">{{ i18n "pages_mapAndContact" }}</a>
+      {{- end }}
+    </div>
+  </div>
+</section>
+{{- end }}
+
+{{ partial "cta-join.html" . }}
+{{ end }}

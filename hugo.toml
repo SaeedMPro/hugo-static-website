@@ -3,7 +3,12 @@ baseURL = "https://example.github.io/netlab-demo/"
 defaultContentLanguage = "fa"
 defaultContentLanguageInSubdir = false
 enableRobotsTXT = true
+# Upcoming events have future dates; build them too.
+buildFuture = true
 disableKinds = ["taxonomy", "term"]
+
+[pagination]
+  pagerSize = 10
 
 [languages]
   [languages.fa]
@@ -11,26 +16,50 @@ disableKinds = ["taxonomy", "term"]
     languageDirection = "rtl"
     contentDir = "content/fa"
     weight = 1
-    title = "گروه پژوهشی شبکه‌های کامپیوتری"
+    title = "MCTN"
     [languages.fa.params]
-      university = "دانشکده فنی و مهندسی، دانشگاه بوعلی سینا"
+      department = "گروه مهندسی کامپیوتر"
+      group = "گروه پژوهشی شبکه‌های کامپیوتری"
+      university = "دانشگاه بوعلی سینا"
+      faculty = "دانشکده فنی و مهندسی، دانشگاه بوعلی سینا"
+      address = "همدان، دانشگاه بوعلی سینا، دانشکده فنی و مهندسی، گروه مهندسی کامپیوتر"
+      seminar = "چهارشنبه‌ها، ساعت ۱۴ · آزمایشگاه پژوهشی شبکه"
   [languages.en]
     languageName = "English"
     languageDirection = "ltr"
     contentDir = "content/en"
     weight = 2
-    title = "Computer Networks Research Group"
+    title = "MCTN"
     [languages.en.params]
-      university = "Faculty of Engineering, Bu-Ali Sina University"
+      department = "Department of Computer Engineering"
+      group = "Computer Networks Research Group"
+      university = "Bu-Ali Sina University"
+      faculty = "Faculty of Engineering, Bu-Ali Sina University"
+      address = "Department of Computer Engineering, Faculty of Engineering, Bu-Ali Sina University, Hamedan, Iran"
+      seminar = "Wednesdays, 14:00 · Network research laboratory"
 
 [params]
   demo = true
   email = "netlab@example.com"
+  phone = ""
   github = "https://github.com/"
+  map = "https://www.openstreetmap.org/search?query=Bu-Ali%20Sina%20University%20Hamedan"
+  # Header menu, in order. Each name is a page or section of the site.
+  nav = ["about", "research", "people", "projects", "publications", "news", "events", "teaching", "resources", "join", "contact"]
+
+[mediaTypes."text/x-bibtex"]
+  suffixes = ["bib"]
+
+[outputFormats.BibTeX]
+  mediaType = "text/x-bibtex"
+  baseName = "publications"
+  isPlainText = true
+  notAlternative = true
+
+[outputs]
+  home = ["HTML", "JSON"]
+  section = ["HTML"]
+  page = ["HTML"]
 
 [markup.goldmark.renderer]
   unsafe = false
-
-[outputs]
-  home = ["HTML", "RSS"]
-  section = ["HTML"]

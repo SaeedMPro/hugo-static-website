@@ -1,0 +1,57 @@
+{{ define "main" }}
+{{- $pag := partial "news-paginator.html" . -}}
+{{- $items := $pag.Pages -}}
+{{- $rest := $items -}}
+<header class="page-head">
+  <div class="wrap">
+    <h1>{{ .Title }}</h1>
+    {{- with .Params.lead }}
+    <p class="lead">{{ . }}</p>
+    {{- end }}
+    {{- with .OutputFormats.Get "rss" }}
+    <div class="actions">
+      <a class="link-more" href="{{ .RelPermalink }}" type="application/rss+xml">{{ partial "icon.html" (dict "name" "feed" "size" 18) }}<span>{{ i18n "news_rss" }}</span></a>
+    </div>
+    {{- end }}
+  </div>
+</header>
+<div class="wrap section section--end">
+  <div class="split">
+    <div class="main news-main">
+      {{- if not $items }}
+      <div class="empty news-empty">
+        <span class="icon-tile">{{ partial "icon.html" (dict "name" "document" "size" 24) }}</span>
+        <div class="news-empty-text">
+          <p>{{ i18n "news_empty" }}</p>
+          {{- with .OutputFormats.Get "rss" }}
+          <a class="link-more" href="{{ .RelPermalink }}" type="application/rss+xml">{{ i18n "news_rssTitle" }}{{ partial "icon.html" (dict "name" "arrow" "size" 18) }}</a>
+          {{- end }}
+        </div>
+      </div>
+      {{- else if eq $pag.PageNumber 1 }}
+      {{ partial "news-featured.html" (index $items 0) }}
+      {{- $rest = after 1 $items }}
+      {{- end }}
+      {{- if or $rest (gt $pag.TotalPages 1) }}
+      <section class="news-earlier" aria-labelledby="earlier-title">
+        {{ partial "section-head.html" (dict "title" (i18n "news_earlier") "id" "earlier-title") }}
+        {{- with $rest }}
+        <div class="list-card news-list">
+          {{- range . }}
+          {{ partial "news-item.html" (dict "page" . "summary" true) }}
+          {{- end }}
+        </div>
+        {{- end }}
+        {{- if gt $pag.TotalPages 1 }}
+        <div class="news-pager">
+          <p>{{ partial "digits.html" (i18n "news_pageOf" (dict "Page" $pag.PageNumber "Total" $pag.TotalPages)) }}</p>
+          {{ partial "pager.html" $pag }}
+        </div>
+        {{- end }}
+      </section>
+      {{- end }}
+    </div>
+    {{ partial "news-aside.html" . }}
+  </div>
+</div>
+{{ end }}

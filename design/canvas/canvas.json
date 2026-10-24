@@ -1,0 +1,729 @@
+{
+  "v": 3,
+  "attachments": {},
+  "createdOnFiles": {
+    "at": "2026-10-23T22:18:06.709Z",
+    "v": 1
+  },
+  "title": "MCTN Lab Website Design",
+  "launch": {
+    "view": "canvas",
+    "page": "foundations"
+  },
+  "pages": [
+    {
+      "id": "foundations",
+      "name": "Foundations"
+    },
+    {
+      "id": "home",
+      "name": "Home"
+    },
+    {
+      "id": "about",
+      "name": "About · Join · Contact"
+    },
+    {
+      "id": "research",
+      "name": "Research · Projects"
+    },
+    {
+      "id": "people",
+      "name": "People"
+    },
+    {
+      "id": "publications",
+      "name": "Publications"
+    },
+    {
+      "id": "news-events",
+      "name": "News · Events"
+    },
+    {
+      "id": "teaching",
+      "name": "Teaching · Resources"
+    },
+    {
+      "id": "utility",
+      "name": "Search · 404"
+    }
+  ],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 4200,
+      "expand": "fill",
+      "title": "Design foundations",
+      "page": "foundations"
+    },
+    "Header.dc.html": {
+      "x": 1520,
+      "y": 0,
+      "w": 1440,
+      "h": 130,
+      "title": "Header · component",
+      "page": "foundations"
+    },
+    "Footer.dc.html": {
+      "x": 1520,
+      "y": 250,
+      "w": 1440,
+      "h": 500,
+      "title": "Footer · component",
+      "page": "foundations"
+    },
+    "PubItem.dc.html": {
+      "x": 1520,
+      "y": 870,
+      "w": 820,
+      "h": 300,
+      "title": "Publication item · component",
+      "page": "foundations"
+    },
+    "NewsItem.dc.html": {
+      "x": 2420,
+      "y": 870,
+      "w": 640,
+      "h": 180,
+      "title": "News item · component",
+      "page": "foundations"
+    },
+    "PersonCard.dc.html": {
+      "x": 1520,
+      "y": 1290,
+      "w": 440,
+      "h": 220,
+      "title": "Person card · component",
+      "page": "foundations"
+    },
+    "ProjectCard.dc.html": {
+      "x": 2040,
+      "y": 1290,
+      "w": 560,
+      "h": 340,
+      "title": "Project card · component",
+      "page": "foundations"
+    },
+    "EventCard.dc.html": {
+      "x": 2680,
+      "y": 1290,
+      "w": 640,
+      "h": 220,
+      "title": "Event card · component",
+      "page": "foundations"
+    },
+    "Home-fa.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 4800,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Home — fa (RTL)",
+      "page": "home"
+    },
+    "Home-en.dc.html": {
+      "x": 1520,
+      "y": 0,
+      "w": 1440,
+      "h": 4700,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Home — en (LTR)",
+      "page": "home"
+    },
+    "Home-fa-mobile.dc.html": {
+      "x": 3040,
+      "y": 0,
+      "w": 390,
+      "h": 7600,
+      "is_interactive": true,
+      "title": "Home — fa · phone",
+      "page": "home"
+    },
+    "Home-en-mobile.dc.html": {
+      "x": 3510,
+      "y": 0,
+      "w": 390,
+      "h": 7300,
+      "is_interactive": true,
+      "title": "Home — en · phone",
+      "page": "home"
+    },
+    "About-fa.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 3300,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "About — fa (RTL)",
+      "page": "about"
+    },
+    "About-en.dc.html": {
+      "x": 1520,
+      "y": 0,
+      "w": 1440,
+      "h": 3300,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "About — en (LTR)",
+      "page": "about"
+    },
+    "Join-fa.dc.html": {
+      "x": 0,
+      "y": 3720,
+      "w": 1440,
+      "h": 3500,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Join us — fa (RTL)",
+      "page": "about"
+    },
+    "Join-en.dc.html": {
+      "x": 1520,
+      "y": 3720,
+      "w": 1440,
+      "h": 3500,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Join us — en (LTR)",
+      "page": "about"
+    },
+    "Contact-fa.dc.html": {
+      "x": 0,
+      "y": 7640,
+      "w": 1440,
+      "h": 2500,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Contact — fa (RTL)",
+      "page": "about"
+    },
+    "Contact-en.dc.html": {
+      "x": 1520,
+      "y": 7640,
+      "w": 1440,
+      "h": 2500,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Contact — en (LTR)",
+      "page": "about"
+    },
+    "Research-fa.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 3100,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Research — fa (RTL)",
+      "page": "research"
+    },
+    "Research-en.dc.html": {
+      "x": 1520,
+      "y": 0,
+      "w": 1440,
+      "h": 3100,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Research — en (LTR)",
+      "page": "research"
+    },
+    "ResearchArea-fa.dc.html": {
+      "x": 0,
+      "y": 3520,
+      "w": 1440,
+      "h": 3500,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Research area — fa (RTL)",
+      "page": "research"
+    },
+    "ResearchArea-en.dc.html": {
+      "x": 1520,
+      "y": 3520,
+      "w": 1440,
+      "h": 3500,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Research area — en (LTR)",
+      "page": "research"
+    },
+    "Projects-fa.dc.html": {
+      "x": 0,
+      "y": 7440,
+      "w": 1440,
+      "h": 2600,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Projects — fa (RTL)",
+      "page": "research"
+    },
+    "Projects-en.dc.html": {
+      "x": 1520,
+      "y": 7440,
+      "w": 1440,
+      "h": 2600,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Projects — en (LTR)",
+      "page": "research"
+    },
+    "Project-fa.dc.html": {
+      "x": 0,
+      "y": 10460,
+      "w": 1440,
+      "h": 3200,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Project detail — fa (RTL)",
+      "page": "research"
+    },
+    "Project-en.dc.html": {
+      "x": 1520,
+      "y": 10460,
+      "w": 1440,
+      "h": 3200,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Project detail — en (LTR)",
+      "page": "research"
+    },
+    "People-fa.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 3200,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "People — fa (RTL)",
+      "page": "people"
+    },
+    "People-en.dc.html": {
+      "x": 1520,
+      "y": 0,
+      "w": 1440,
+      "h": 3200,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "People — en (LTR)",
+      "page": "people"
+    },
+    "Profile-fa.dc.html": {
+      "x": 0,
+      "y": 3620,
+      "w": 1440,
+      "h": 3600,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Profile — fa (RTL)",
+      "page": "people"
+    },
+    "Profile-en.dc.html": {
+      "x": 1520,
+      "y": 3620,
+      "w": 1440,
+      "h": 3600,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Profile — en (LTR)",
+      "page": "people"
+    },
+    "Publications-fa.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 3800,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Publications — fa (RTL)",
+      "page": "publications"
+    },
+    "Publications-en.dc.html": {
+      "x": 1520,
+      "y": 0,
+      "w": 1440,
+      "h": 3800,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Publications — en (LTR)",
+      "page": "publications"
+    },
+    "News-fa.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 2700,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "News — fa (RTL)",
+      "page": "news-events"
+    },
+    "News-en.dc.html": {
+      "x": 1520,
+      "y": 0,
+      "w": 1440,
+      "h": 2700,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "News — en (LTR)",
+      "page": "news-events"
+    },
+    "Article-fa.dc.html": {
+      "x": 0,
+      "y": 3120,
+      "w": 1440,
+      "h": 2500,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "News article — fa (RTL)",
+      "page": "news-events"
+    },
+    "Article-en.dc.html": {
+      "x": 1520,
+      "y": 3120,
+      "w": 1440,
+      "h": 2500,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "News article — en (LTR)",
+      "page": "news-events"
+    },
+    "Events-fa.dc.html": {
+      "x": 0,
+      "y": 6040,
+      "w": 1440,
+      "h": 3200,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Events — fa (RTL)",
+      "page": "news-events"
+    },
+    "Events-en.dc.html": {
+      "x": 1520,
+      "y": 6040,
+      "w": 1440,
+      "h": 3200,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Events — en (LTR)",
+      "page": "news-events"
+    },
+    "Event-fa.dc.html": {
+      "x": 0,
+      "y": 9660,
+      "w": 1440,
+      "h": 2800,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Event detail — fa (RTL)",
+      "page": "news-events"
+    },
+    "Event-en.dc.html": {
+      "x": 1520,
+      "y": 9660,
+      "w": 1440,
+      "h": 2800,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Event detail — en (LTR)",
+      "page": "news-events"
+    },
+    "Teaching-fa.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 3000,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Teaching — fa (RTL)",
+      "page": "teaching"
+    },
+    "Teaching-en.dc.html": {
+      "x": 1520,
+      "y": 0,
+      "w": 1440,
+      "h": 3000,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Teaching — en (LTR)",
+      "page": "teaching"
+    },
+    "Resources-fa.dc.html": {
+      "x": 0,
+      "y": 3420,
+      "w": 1440,
+      "h": 3000,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Resources — fa (RTL)",
+      "page": "teaching"
+    },
+    "Resources-en.dc.html": {
+      "x": 1520,
+      "y": 3420,
+      "w": 1440,
+      "h": 3000,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Resources — en (LTR)",
+      "page": "teaching"
+    },
+    "Search-fa.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 2600,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Search — fa (RTL)",
+      "page": "utility"
+    },
+    "Search-en.dc.html": {
+      "x": 1520,
+      "y": 0,
+      "w": 1440,
+      "h": 2600,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "Search — en (LTR)",
+      "page": "utility"
+    },
+    "NotFound-fa.dc.html": {
+      "x": 0,
+      "y": 3020,
+      "w": 1440,
+      "h": 1600,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "404 — fa (RTL)",
+      "page": "utility"
+    },
+    "NotFound-en.dc.html": {
+      "x": 1520,
+      "y": 3020,
+      "w": 1440,
+      "h": 1600,
+      "expand": "fill",
+      "is_interactive": true,
+      "title": "404 — en (LTR)",
+      "page": "utility"
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Header.dc.html",
+    "Footer.dc.html",
+    "PubItem.dc.html",
+    "NewsItem.dc.html",
+    "PersonCard.dc.html",
+    "ProjectCard.dc.html",
+    "EventCard.dc.html",
+    "Home-fa.dc.html",
+    "Home-en.dc.html",
+    "Home-fa-mobile.dc.html",
+    "Home-en-mobile.dc.html",
+    "About-fa.dc.html",
+    "About-en.dc.html",
+    "Join-fa.dc.html",
+    "Join-en.dc.html",
+    "Contact-fa.dc.html",
+    "Contact-en.dc.html",
+    "Research-fa.dc.html",
+    "Research-en.dc.html",
+    "ResearchArea-fa.dc.html",
+    "ResearchArea-en.dc.html",
+    "Projects-fa.dc.html",
+    "Projects-en.dc.html",
+    "Project-fa.dc.html",
+    "Project-en.dc.html",
+    "People-fa.dc.html",
+    "People-en.dc.html",
+    "Profile-fa.dc.html",
+    "Profile-en.dc.html",
+    "Publications-fa.dc.html",
+    "Publications-en.dc.html",
+    "News-fa.dc.html",
+    "News-en.dc.html",
+    "Article-fa.dc.html",
+    "Article-en.dc.html",
+    "Events-fa.dc.html",
+    "Events-en.dc.html",
+    "Event-fa.dc.html",
+    "Event-en.dc.html",
+    "Teaching-fa.dc.html",
+    "Teaching-en.dc.html",
+    "Resources-fa.dc.html",
+    "Resources-en.dc.html",
+    "Search-fa.dc.html",
+    "Search-en.dc.html",
+    "NotFound-fa.dc.html",
+    "NotFound-en.dc.html"
+  ],
+  "notes": {
+    "t-components": {
+      "x": 1520,
+      "y": -300,
+      "text": "Components · اجزای مشترک",
+      "kind": "title1",
+      "maxW": 1800,
+      "page": "foundations"
+    },
+    "t-home": {
+      "x": 0,
+      "y": -300,
+      "text": "Home · خانه",
+      "kind": "title1",
+      "maxW": 3900,
+      "page": "home"
+    },
+    "t-about": {
+      "x": 0,
+      "y": -300,
+      "text": "About · درباره",
+      "kind": "title1",
+      "maxW": 2960,
+      "page": "about"
+    },
+    "t-join": {
+      "x": 0,
+      "y": 3420,
+      "text": "Join us · پیوستن به گروه",
+      "kind": "title1",
+      "maxW": 2960,
+      "page": "about"
+    },
+    "t-contact": {
+      "x": 0,
+      "y": 7340,
+      "text": "Contact · تماس",
+      "kind": "title1",
+      "maxW": 2960,
+      "page": "about"
+    },
+    "t-research": {
+      "x": 0,
+      "y": -300,
+      "text": "Research · پژوهش",
+      "kind": "title1",
+      "maxW": 2960,
+      "page": "research"
+    },
+    "t-area": {
+      "x": 0,
+      "y": 3220,
+      "text": "Research area · حوزهٔ پژوهشی",
+      "kind": "title1",
+      "maxW": 2960,
+      "page": "research"
+    },
+    "t-projects": {
+      "x": 0,
+      "y": 7140,
+      "text": "Projects · پروژه‌ها",
+      "kind": "title1",
+      "maxW": 2960,
+      "page": "research"
+    },
+    "t-project": {
+      "x": 0,
+      "y": 10160,
+      "text": "Project detail · صفحهٔ پروژه",
+      "kind": "title1",
+      "maxW": 2960,
+      "page": "research"
+    },
+    "t-people": {
+      "x": 0,
+      "y": -300,
+      "text": "People · اعضا",
+      "kind": "title1",
+      "maxW": 2960,
+      "page": "people"
+    },
+    "t-profile": {
+      "x": 0,
+      "y": 3320,
+      "text": "Profile · صفحهٔ عضو",
+      "kind": "title1",
+      "maxW": 2960,
+      "page": "people"
+    },
+    "t-pubs": {
+      "x": 0,
+      "y": -300,
+      "text": "Publications · انتشارات",
+      "kind": "title1",
+      "maxW": 2960,
+      "page": "publications"
+    },
+    "t-news": {
+      "x": 0,
+      "y": -300,
+      "text": "News · اخبار",
+      "kind": "title1",
+      "maxW": 2960,
+      "page": "news-events"
+    },
+    "t-article": {
+      "x": 0,
+      "y": 2820,
+      "text": "News article · خبر",
+      "kind": "title1",
+      "maxW": 2960,
+      "page": "news-events"
+    },
+    "t-events": {
+      "x": 0,
+      "y": 5740,
+      "text": "Events · رویدادها",
+      "kind": "title1",
+      "maxW": 2960,
+      "page": "news-events"
+    },
+    "t-event": {
+      "x": 0,
+      "y": 9360,
+      "text": "Event detail · رویداد",
+      "kind": "title1",
+      "maxW": 2960,
+      "page": "news-events"
+    },
+    "t-teaching": {
+      "x": 0,
+      "y": -300,
+      "text": "Teaching · آموزش",
+      "kind": "title1",
+      "maxW": 2960,
+      "page": "teaching"
+    },
+    "t-resources": {
+      "x": 0,
+      "y": 3120,
+      "text": "Resources · منابع",
+      "kind": "title1",
+      "maxW": 2960,
+      "page": "teaching"
+    },
+    "t-search": {
+      "x": 0,
+      "y": -300,
+      "text": "Search · جستجو",
+      "kind": "title1",
+      "maxW": 2960,
+      "page": "utility"
+    },
+    "t-404": {
+      "x": 0,
+      "y": 2720,
+      "text": "Not found · صفحه پیدا نشد",
+      "kind": "title1",
+      "maxW": 2960,
+      "page": "utility"
+    }
+  },
+  "designSystems": []
+}

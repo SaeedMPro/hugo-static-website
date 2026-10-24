@@ -1,4 +1,3 @@
-{{/* صفحهٔ هر عضو از فایل‌های data/people ساخته می‌شود. */}}
 {{ $lang := .Site.Language.Lang }}
 {{ range $id, $p := .Site.Data.people }}
   {{ $name := index $p (printf "name_%s" $lang) }}

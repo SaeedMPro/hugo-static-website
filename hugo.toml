@@ -1,4 +1,3 @@
-# آدرس سایت را GitHub Actions موقع ساخت تنظیم می‌کند.
 baseURL = "https://example.github.io/netlab-demo/"
 defaultContentLanguage = "fa"
 defaultContentLanguageInSubdir = false
